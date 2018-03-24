@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 08:03:02 2018
+Last modified: Sat Mar 24 15:01:36 2018
 """
 
 #defaut setting for scientific caculation
@@ -38,6 +38,9 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
 import matplotlib.mlab as mlab
+
+import multiprocessing as mp
+import multiprocessing as wib_mp
 
 def fe_cfg(gain="250", tp="30" ):
     if (gain=="250"):
@@ -86,6 +89,12 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
         stepno = "step" + "0" + runcode 
 
     runpath = rootpath + "/" + runno + "/" 
+    if (os.path.exists(runpath)):
+        pass
+    else:
+        print runpath + " doesn't exist, exit anyway!"
+        exit()
+
     for root, dirs, files in os.walk(runpath):
         break
 
@@ -111,10 +120,8 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
                 fe_set_rd = int(rawfile[fa_pos+11:fa_pos+13], 16) & 0x3C
                 if (fe_set_rd == fecfg_reg0) and (rawfile.find(".bin") >=0 ):
                     files_cs.append(steppath + rawfile)
-
-    if (len(files_cs) == 0):
-        print "there isn't any data related to your request, exit anyway"
-        exit()
+#    if (len(files_cs) == 0):
+#        print "there isn't any data related to your request, please check if that FEMB alive or not"
     return files_cs
 
 #ana_mode = "CHN"
@@ -617,7 +624,7 @@ def ana_a_chn(rootpath, mode="CHN", APAno = 4, \
     cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras)
     cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras)
 
-def ana_a_asic(rootpath, APAno = 4, \
+def mp_ana_a_asic(mpout, rootpath, APAno = 4, \
                rmsrunno = "run01rms", calirunno = "run01fpg",
                wibno=0,  fembno=0, asicno=0, gain="250", tp="05" ,\
                jumbo_flag=False ):
@@ -636,7 +643,7 @@ def ana_a_asic(rootpath, APAno = 4, \
     rmsdata  = read_rawdata(rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     calidata = read_rawdata(rootpath, calirunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
 
-    asic_gains =[]
+    asic_results =[]
     for chni in range(16):
         chnno = chni + 16*asicno
         wireinfo = None
@@ -656,45 +663,165 @@ def ana_a_asic(rootpath, APAno = 4, \
 
         chn_cali_paras = cali_a_chn(calidata, chnno )
         encperlsb, chninl = cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras, ploten=False)
-        asic_gains.append([rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio , encperlsb, chninl])
+        asic_results.append([apainfo, wireinfo, feset_info, rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio , encperlsb, chninl])
+    mpout.put(asic_results)
+
+def ana_a_femb(wib_mpout, rootpath, APAno = 4, \
+               rmsrunno = "run01rms", calirunno = "run01fpg",\
+               wibno=0,  fembno=0,  gain="250", tp="05" ,\
+               jumbo_flag=False ):
+    mpout = mp.Queue()
+    mps = [ mp.Process(target=mp_ana_a_asic, args=(mpout, rootpath, APAno , rmsrunno, calirunno, wibno, fembno, asicno, gain,\
+                      tp, jumbo_flag ) ) for asicno in range(8)]
+    for p in mps:
+        p.start()
+    for p in mps:
+        p.join()
+
+    if (not mpout.empty() ):
+        femb_results = [mpout.get() for p in mps]
+        wib_mpout.put(femb_results)
+
+def chk_a_wib (rootpath, APAno = 4, rmsrunno = "run01rms", calirunno = "run01fpg",\
+               wibno=0,  gain="250", tp="05", jumbo_flag=False ):
+    alive_fembs = []
+    for fembno in range(4):
+        for asicno in range(8):
+            files_flg = False
+            files_cs = generate_rawpaths(rootpath, runno=rmsrunno, wibno=wibno,  fembno=fembno, chnno=asicno*16, gain=gain, tp=tp ) #calirun="run01fpg", 
+            if (len(files_cs) == 1):
+                files_flg = True
+            files_cs = generate_rawpaths(rootpath, runno=calirunno, wibno=wibno,  fembno=fembno, chnno=asicno*16, gain=gain, tp=tp ) #calirun="run01fpg", 
+            if (len(files_cs) >= 1):
+                files_flg = True
+            if (not files_flg):
+                break
+        if files_flg:
+            alive_fembs.append(fembno)
+    return [wibno, alive_fembs]
+
+def chk_a_apa (rootpath, APAno = 4, rmsrunno = "run01rms", calirunno = "run01fpg",\
+               gain="250", tp="05" , jumbo_flag=False ):
+    alive_wibs = []
+    for wibno in range(5):
+        alive_fembs = chk_a_wib(rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+        alive_wibs.append( alive_fembs )
+    return alive_wibs
+
+def mp_ana_a_wib(rootpath, APAno = 4, rmsrunno = "run01rms", calirunno = "run01fpg",\
+               wibno=0,  gain="250", tp="05", jumbo_flag=False ):
+    alive_fembs = chk_a_wib(rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+
+#    wib_mpout = wib_mp.Queue()
+#    ana_a_femb(wib_mpout, rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno, fembno=0,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+#    print "xxx"
+
+    wib_mpout = wib_mp.Queue()
+    wib_mps = [ wib_mp.Process(target=ana_a_femb, args=(wib_mpout, rootpath, APAno , rmsrunno, calirunno, wibno, \
+                               fembno,  gain, tp, jumbo_flag ) ) for fembno in alive_fembs[1]]
+    for p in wib_mps:
+        p.start()
+    for p in wib_mps:
+        p.join()
+    if (not wib_mpout.empty() ):
+        wib_results = [wib_mpout.get() for p in wib_mps]
+        print len(wib_results)
+        print len(wib_results[0])
+        print len(wib_results[0][1])
+
+    print "lllxxx:"
+
+#    for fembno in alive_fembs[1]:
+
+#        ana_a_femb(rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+
+def ana_a_apa(rootpath, APAno = 4, rmsrunno = "run01rms", calirunno = "run01fpg", gain="250", tp="05", jumbo_flag=False ):
+    alive_wibs = chk_a_apa(rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+    for alive_fembs in alive_wibs:
+        wibno = alive_fembs[0]
+        mp_ana_a_wib(rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
 
 
 
-rootpath = "/Users/shanshangao/Documents/data/Rawdata_03_21_2018/" 
+rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+#a = chk_a_apa (rootpath, APAno = 4, \
+#           rmsrunno = "run02rms", calirunno = "run01fpg",\
+#           gain="250", tp="05" ,\
+#           jumbo_flag=False )
+#print a
+
+from timeit import default_timer as timer
+s0= timer()
+print s0
+ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="05", jumbo_flag=False )
+#ana_a_wib(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg", wibno=0,  gain="250", tp="05", jumbo_flag=False )
+print timer() - s0
+#ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="05", jumbo_flag=False )
+#print timer() - s0
+#print timer() - s0
+#ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="10", jumbo_flag=False )
+#print timer() - s0
+#ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="20", jumbo_flag=False )
+#print timer() - s0
+
+
+# 
 #ana_a_chn(rootpath,  APAno = 4, \
 #               rmsrunno = "run02rms", calirunno = "run01fpg",
 #               wibno=0,  fembno=0, chnno=15, gain="250", tp="30", \
 #               jumbo_flag=False,fft_s=5000  )
-from timeit import default_timer as timer
-s0 = timer()
-ana_a_asic(rootpath, APAno = 4, \
-               rmsrunno = "run02rms", calirunno = "run01fpg",
-               wibno=0,  fembno=0, asicno=0, gain="250", tp="30", \
-               jumbo_flag=False  )
+#s0= timer()
+#print s0
+#ana_a_femb(rootpath, APAno = 4, \
+#               rmsrunno = "run02rms", calirunno = "run01fpg",
+#               wibno=0,  fembno=0,  gain="250", tp="05" ,\
+#               jumbo_flag=False )
+#print timer() - s0
+#
+#def a(s0):
+#    ana_a_asic(rootpath, APAno = 4, \
+#                   rmsrunno = "run02rms", calirunno = "run01fpg",
+#                   wibno=0,  fembno=0, asicno=0, gain="250", tp="30", \
+#                   jumbo_flag=False  )
+#    
+#    print str(timer() - s0) + "a"
+#
+#def b(s0):
+#    ana_a_asic(rootpath, APAno = 4, \
+#                   rmsrunno = "run02rms", calirunno = "run01fpg",
+#                   wibno=0,  fembno=0, asicno=1, gain="250", tp="30", \
+#                   jumbo_flag=False  )
+#    
+#    print timer() - s0
+#
+#from multiprocessing import Process
+#
+#s0= timer()
+#if __name__ == '__main__':
+#    a(s0)
+#    p = Process(target=b, args=(s0, ))
+#    p2 = Process(target=a, args=(s0, ))
+#    p.start()
+#    p2.start()
+#    p.join()
+#    p2.join()
 
-print timer() - s0
-s0= timer()
-ana_a_asic(rootpath, APAno = 4, \
-               rmsrunno = "run02rms", calirunno = "run01fpg",
-               wibno=0,  fembno=0, asicno=1, gain="250", tp="30", \
-               jumbo_flag=False  )
 
-print timer() - s0
-s0= timer()
-ana_a_asic(rootpath, APAno = 4, \
-               rmsrunno = "run02rms", calirunno = "run01fpg",
-               wibno=0,  fembno=0, asicno=2, gain="250", tp="30", \
-               jumbo_flag=False  )
-
-print timer() - s0
-s0= timer()
-ana_a_asic(rootpath, APAno = 4, \
-               rmsrunno = "run02rms", calirunno = "run01fpg",
-               wibno=0,  fembno=0, asicno=3, gain="250", tp="30", \
-               jumbo_flag=False  )
-
-
-print timer() - s0
+#s0= timer()
+#ana_a_asic(rootpath, APAno = 4, \
+#               rmsrunno = "run02rms", calirunno = "run01fpg",
+#               wibno=0,  fembno=0, asicno=2, gain="250", tp="30", \
+#               jumbo_flag=False  )
+#
+#print timer() - s0
+#s0= timer()
+#ana_a_asic(rootpath, APAno = 4, \
+#               rmsrunno = "run02rms", calirunno = "run01fpg",
+#               wibno=0,  fembno=0, asicno=3, gain="250", tp="30", \
+#               jumbo_flag=False  )
+#
+#
+#print timer() - s0
 
 
 #

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Mar 23 21:55:47 2018
+Last modified: Sat Mar 24 08:03:02 2018
 """
 
 #defaut setting for scientific caculation
@@ -135,7 +135,7 @@ def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain
             datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
     return datas
 
-def noise_a_chn(rmsdata, chnno, fft_s=2000, fft_avg_cycle=50):
+def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
     asicchn = chnno % 16
 
     chnrmsdata = rmsdata[0][7][asicchn]
@@ -146,31 +146,41 @@ def noise_a_chn(rmsdata, chnno, fft_s=2000, fft_avg_cycle=50):
     ped = np.mean(chnrmsdata[0:100000])
     data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
     data_100us_slice = chnrmsdata[0:100000:200]
-    f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
+    if (fft_en):
+        f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
+    else:
+        f = None
+        p = None
+
 #   data after highpass filter
     flt_chn_data = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 1000, flt_order = 3)
     flt_chn_data = np.array(flt_chn_data) +  ped 
     hfped = ped
     hfrms = np.std(flt_chn_data)
-    hff,hfp = chn_rfft_psd(flt_chn_data, fft_s = fft_s, avg_cycle = fft_avg_cycle)
+    if (fft_en):
+        hff,hfp = chn_rfft_psd(flt_chn_data, fft_s = fft_s, avg_cycle = fft_avg_cycle)
+    else:
+        hff = None
+        hfp = None
     hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[1]]
     hfdata_100us_slice = flt_chn_data[0:100000:200]
+
 #   data after stuck code filter
     tmp_data = []
     lenonechn_data = len(chnrmsdata)
     for tmp in chnrmsdata:
-        if ( tmp % 64 == 63 ) or ( tmp % 64 == 0 ) or ( tmp % 64 == 1 ) or ( tmp % 64 == 62 )  or ( tmp % 64 == 2 ):
+        if ( tmp % 64  == 63 ) or ( tmp % 64  == 0 ) or ( tmp % 64  == 1 ) or ( tmp % 64  == 62 )  or ( tmp % 64  == 2 ):
             pass
         else:
             tmp_data.append(tmp)
     len_tmp_data = len(tmp_data)
     unstk_ratio =1.0 * len_tmp_data / lenonechn_data
-    if ( unstk_ratio > 0.95 ):
-        stuck_type = "Small"
-    elif ( unstk_ratio > 0.8 ):
-        stuck_type = "Middle"
-    else:
-        stuck_type = "Large"
+#    if ( unstk_ratio > 0.95 ):
+#        stuck_type = "Small"
+#    elif ( unstk_ratio > 0.8 ):
+#        stuck_type = "Middle"
+#    else:
+#        stuck_type = "Large"
     sfrms =  np.std(tmp_data[0:100000])
     sfped = np.mean(tmp_data[0:100000])
 
@@ -191,6 +201,8 @@ def linear_fit(x, y):
         error_gain = False 
         try:
             slope = results.params[1]
+            #print results.summary()
+            #exit()
         except IndexError:
             slope = 0
             error_gain = True
@@ -205,7 +217,7 @@ def linear_fit(x, y):
 
     y_fit = np.array(x)*slope + constant
     delta_y = abs(y - y_fit)
-    inl = delta_y / max(y)
+    inl = delta_y / (max(y)-min(y))
     peakinl = max(inl)
 
     return slope, constant, peakinl, error_gain
@@ -596,7 +608,7 @@ def ana_a_chn(rootpath, mode="CHN", APAno = 4, \
 
     feset_info = [gain, tp]
     rmsdata = read_rawdata(rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-    chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_s=fft_s, fft_avg_cycle=50)
+    chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50)
     ped_wf_plot(apainfo, wireinfo, feset_info, chn_noise_paras)
     ped_fft_plot(apainfo, wireinfo, feset_info, chn_noise_paras)
 
@@ -605,9 +617,9 @@ def ana_a_chn(rootpath, mode="CHN", APAno = 4, \
     cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras)
     cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras)
 
-def ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg",\
-               wibno=0,  fembno=0, asicno=0, \
-               gain="250", tp="05" ,\
+def ana_a_asic(rootpath, APAno = 4, \
+               rmsrunno = "run01rms", calirunno = "run01fpg",
+               wibno=0,  fembno=0, asicno=0, gain="250", tp="05" ,\
                jumbo_flag=False ):
     femb_pos_np = femb_position (APAno)
     wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
@@ -621,6 +633,7 @@ def ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg",\
     apa_map = APA_MAP()
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
 
+    rmsdata  = read_rawdata(rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     calidata = read_rawdata(rootpath, calirunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
 
     asic_gains =[]
@@ -632,21 +645,60 @@ def ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg",\
                 wireinfo = onewire
                 break
         
+        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = True)
+        rms          =  chn_noise_paras[1]
+        ped          =  chn_noise_paras[2]
+        hfrms        =  chn_noise_paras[7]
+        hfped        =  chn_noise_paras[8]
+        sfrms        =  chn_noise_paras[13]
+        sfped        =  chn_noise_paras[14]
+        unstk_ratio  =  chn_noise_paras[15]
+
         chn_cali_paras = cali_a_chn(calidata, chnno )
-        ped, rms, encperlsb, enc,chninl = cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras, ploten=False)
-        print ped, rms, encperlsb, enc,chninl
-        asic_gains.append([apainfo, wireinfo, gain, tp,  ped, rms, encperlsb, enc,chninl ])
+        encperlsb, chninl = cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras, ploten=False)
+        asic_gains.append([rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio , encperlsb, chninl])
 
 
 
 rootpath = "/Users/shanshangao/Documents/data/Rawdata_03_21_2018/" 
-#ana_a_chn(rootpath, mode="CHN", APAno = 4, \
+#ana_a_chn(rootpath,  APAno = 4, \
 #               rmsrunno = "run02rms", calirunno = "run01fpg",
 #               wibno=0,  fembno=0, chnno=15, gain="250", tp="30", \
 #               jumbo_flag=False,fft_s=5000  )
-#from timeit import default_timer as timer
-#s0 = timer()
-ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=0, gain="250", tp="05", jumbo_flag=False )
+from timeit import default_timer as timer
+s0 = timer()
+ana_a_asic(rootpath, APAno = 4, \
+               rmsrunno = "run02rms", calirunno = "run01fpg",
+               wibno=0,  fembno=0, asicno=0, gain="250", tp="30", \
+               jumbo_flag=False  )
+
+print timer() - s0
+s0= timer()
+ana_a_asic(rootpath, APAno = 4, \
+               rmsrunno = "run02rms", calirunno = "run01fpg",
+               wibno=0,  fembno=0, asicno=1, gain="250", tp="30", \
+               jumbo_flag=False  )
+
+print timer() - s0
+s0= timer()
+ana_a_asic(rootpath, APAno = 4, \
+               rmsrunno = "run02rms", calirunno = "run01fpg",
+               wibno=0,  fembno=0, asicno=2, gain="250", tp="30", \
+               jumbo_flag=False  )
+
+print timer() - s0
+s0= timer()
+ana_a_asic(rootpath, APAno = 4, \
+               rmsrunno = "run02rms", calirunno = "run01fpg",
+               wibno=0,  fembno=0, asicno=3, gain="250", tp="30", \
+               jumbo_flag=False  )
+
+
+print timer() - s0
+
+
+#
+#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=0, gain="250", tp="05", jumbo_flag=False )
 #print timer() - s0
 #s0= timer()
 #ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=1, gain="250", tp="05", jumbo_flag=False )
@@ -676,4 +728,3 @@ ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asic
 #print timer() - s0
 #   
     
-print "xxxxxx"

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 23:24:20 2018
+Last modified: Sun Mar 25 11:53:27 2018
 """
 
 #defaut setting for scientific caculation
@@ -79,38 +79,34 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
     elif sg == 0:
         stepno = "step" + "0" + runcode 
 
-    runpath = rootpath + "/" + runno + "/" 
-    if (os.path.exists(runpath)):
-        pass
-    else:
-        print runpath + " doesn't exist, exit anyway!"
-        exit()
-
-    for root, dirs, files in os.walk(runpath):
-        break
-
-    steppath = None
-    for onedir in dirs:
-        wibpos = onedir.find("WIB")
-        if ( wibpos >= 0 ):
-            if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
-                steppath = runpath + onedir + "/"
-                break
-
+    runpath = rootpath + runno + "/" 
     files_cs = []
-    if (steppath != None):
-        for root2, dirs2, files2 in os.walk(steppath):
+    if (os.path.exists(runpath)):
+        for root, dirs, files in os.walk(runpath):
             break
+        steppath = None
+        for onedir in dirs:
+            wibpos = onedir.find("WIB")
+            if ( wibpos >= 0 ):
+                if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
+                    steppath = runpath + onedir + "/"
+                    break
+        if (steppath != None):
+            for root2, dirs2, files2 in os.walk(steppath):
+                break
+            for rawfile in files2:
+                chipno = chnno // 16
+                chinchn = chnno  % 16
+                fembasic = "FEMB" + format(fembno, "1d") + "CHIP" + format(chipno, "1d")
+                fa_pos = rawfile.find(fembasic)
+                if (fa_pos >= 0):
+                    fe_set_rd = int(rawfile[fa_pos+11:fa_pos+13], 16) & 0x3C
+                    if (fe_set_rd == fecfg_reg0) and (rawfile.find(".bin") >=0 ):
+                        files_cs.append(steppath + rawfile)
+    else:
+        print runpath + " doesn't exist, ignore anyway!"
+        files_cs = []
 
-        for rawfile in files2:
-            chipno = chnno // 16
-            chinchn = chnno  % 16
-            fembasic = "FEMB" + format(fembno, "1d") + "CHIP" + format(chipno, "1d")
-            fa_pos = rawfile.find(fembasic)
-            if (fa_pos >= 0):
-                fe_set_rd = int(rawfile[fa_pos+11:fa_pos+13], 16) & 0x3C
-                if (fe_set_rd == fecfg_reg0) and (rawfile.find(".bin") >=0 ):
-                    files_cs.append(steppath + rawfile)
     return files_cs
 
 def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", jumbo_flag=False ):

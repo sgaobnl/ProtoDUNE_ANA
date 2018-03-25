@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 23:12:33 2018
+Last modified: Sun Mar 25 00:09:02 2018
 """
 
 #defaut setting for scientific caculation
@@ -200,14 +200,26 @@ def ana_a_apa(rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run01rms", cal
         ana_a_wib(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, pipe_en = True )
 
 
-
-rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+cali_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+#rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+#ali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 from timeit import default_timer as timer
 s0= timer()
-print s0
-ana_a_apa(rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="05", jumbo_flag=False )
-print timer() - s0
+print "Start..., please wait..."
+APAno=4
+rmsrunno = "run02rms" #
+calirunno = "run01fpg" #
+wibno = 0 #0~4
+gains = ["250", "140"] 
+tps = ["05", "10", "20", "30"]
+jumbo_flag = False
+
+for gain in gains: 
+    for tp in tps:
+        ana_a_apa(rms_rootpath, cali_rootpath, APAno, rmsrunno, calirunno,  gain, tp, jumbo_flag)
+        print "time passed %d seconds"%(timer() - s0)
+print "DONE"
 
 
 

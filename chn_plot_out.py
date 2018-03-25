@@ -5,9 +5,10 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 23:23:49 2018
+Last modified: Sun Mar 25 09:17:39 2018
 """
-
+import matplotlib
+matplotlib.use('Agg')
 #defaut setting for scientific caculation
 #import numpy
 #import scipy
@@ -34,7 +35,9 @@ from chn_analysis  import read_rawdata
 from chn_analysis  import noise_a_chn 
 from chn_analysis  import cali_a_chn 
 from chn_analysis  import linear_fit 
+from matplotlib.backends.backend_pdf import PdfPages
 
+import multiprocessing as mp
 
 def fit_plot(ax, x, y, ped, fit_paras, fit_type = "peak" ):
     if (fit_paras!= None):
@@ -74,7 +77,7 @@ def fit_plot(ax, x, y, ped, fit_paras, fit_type = "peak" ):
             ax.set_title("Linear Fit (%s)"%fit_type)
             ax.grid()
 
-def cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras, ploten=True):
+def cali_linear_fitplot(pp, apainfo, wireinfo, cali_info, chn_cali_paras, ploten=True):
     vdacs = []
     ampps  = []
     ampns  = []
@@ -126,13 +129,14 @@ def cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras, ploten=Tr
 
         apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
         wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 
-        fe_gain = int(feset_info[0])/10.0
-        fe_tp = int(feset_info[1])/10.0
-        feset_str = " ; Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s"%(fe_gain, fe_tp)
-        fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 20)
+        fe_gain = int(cali_info[0])/10.0
+        fe_tp = int(cali_info[1])/10.0
+        feset_str = "\n Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s; %s"%(fe_gain, fe_tp, cali_info[2])
+        fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 16)
         plt.tight_layout( rect=[0, 0.05, 1, 0.95])
 
-        plt.show()
+        plt.savefig(pp, format='pdf')
+        #plt.show()
         plt.close()
 
     if (ampp_fit != None):
@@ -170,7 +174,7 @@ def cali_wf_subplot(ax, chn_cali_paras, t=100, pulse = "positive", avg_fg = Fals
     ax.set_ylabel("ADC output / LSB")
     ax.set_xlabel("t / $\mu$s")
 
-def cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras):
+def cali_wf_plot(pp, apainfo, wireinfo, cali_info, chn_cali_paras):
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
@@ -185,13 +189,14 @@ def cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras):
 
     apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
     wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 
-    fe_gain = int(feset_info[0])/10.0
-    fe_tp = int(feset_info[1])/10.0
-    feset_str = " ; Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s"%(fe_gain, fe_tp)
-    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 20)
+    fe_gain = int(cali_info[0])/10.0
+    fe_tp = int(cali_info[1])/10.0
+    feset_str = "\n Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s; %s"%(fe_gain, fe_tp, cali_info[2])
+    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 16)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
  
-    plt.show()
+    plt.savefig(pp, format='pdf')
+    #plt.show()
     plt.close()
 
 def ped_wf_subplot(ax, data_slice, ped, rms,  t_rate=0.5, title="Waveforms of raw data", label="Waveform" ):
@@ -225,7 +230,7 @@ def ped_hg_subplot(ax, data_slice, ped, rms, title="Histogram of raw data", labe
     ax.legend(loc='best')
 
 
-def ped_wf_plot(apainfo, wireinfo, feset_info, chn_noise_paras):
+def ped_wf_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras):
     rms =  chn_noise_paras[1]
     ped =  chn_noise_paras[2]
     data_slice = chn_noise_paras[3]
@@ -256,16 +261,16 @@ def ped_wf_plot(apainfo, wireinfo, feset_info, chn_noise_paras):
     ped_wf_subplot(ax3, data_100us_slice,   ped,   rms,    t_rate=100, title="Waveforms of raw data", label=label )
     ped_wf_subplot(ax4, hfdata_100us_slice, hfped, hfrms,  t_rate=100, title="Waveforms of data after HPF", label=hflabel )
 
-
     apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
     wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 
-    fe_gain = int(feset_info[0])/10.0
-    fe_tp = int(feset_info[1])/10.0
-    feset_str = " ; Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s"%(fe_gain, fe_tp)
-    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 20)
+    fe_gain = int(rms_info[0])/10.0
+    fe_tp = int(rms_info[1])/10.0
+    feset_str = "\n Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s; %s"%(fe_gain, fe_tp, rms_info[2])
+    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 16)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
  
-    plt.show()
+    plt.savefig(pp, format='pdf')
+    #plt.show()
     plt.close()
 
 #histogram
@@ -281,13 +286,14 @@ def ped_wf_plot(apainfo, wireinfo, feset_info, chn_noise_paras):
  
     apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
     wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 
-    fe_gain = int(feset_info[0])/10.0
-    fe_tp = int(feset_info[1])/10.0
-    feset_str = " ; Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s"%(fe_gain, fe_tp)
-    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 20)
+    fe_gain = int(rms_info[0])/10.0
+    fe_tp = int(rms_info[1])/10.0
+    feset_str = "\n Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s; %s"%(fe_gain, fe_tp, rms_info[2])
+    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 16)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
  
-    plt.show()
+    plt.savefig(pp, format='pdf')
+    #plt.show()
     plt.close()
 
 def ped_fft_subplot(ax, f, p, maxx=1000000,  title="FFT specturm", label="FFT" ):
@@ -305,7 +311,7 @@ def ped_fft_subplot(ax, f, p, maxx=1000000,  title="FFT specturm", label="FFT" )
         ax.set_ylim([-40,20])
     ax.legend(loc='best')
 
-def ped_fft_plot(apainfo, wireinfo, feset_info, chn_noise_paras):
+def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras):
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
@@ -338,19 +344,32 @@ def ped_fft_plot(apainfo, wireinfo, feset_info, chn_noise_paras):
   
     apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
     wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 
-    fe_gain = int(feset_info[0])/10.0
-    fe_tp = int(feset_info[1])/10.0
-    feset_str = " ; Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s"%(fe_gain, fe_tp)
-    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 20)
+    fe_gain = int(rms_info[0])/10.0
+    fe_tp = int(rms_info[1])/10.0
+    feset_str = "\n Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s; %s"%(fe_gain, fe_tp, rms_info[2])
+    fig.suptitle(apainfo_str + wireinfo_str + feset_str, fontsize = 16)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
  
-    plt.show()
+    plt.savefig(pp, format='pdf')
+    #plt.show()
     plt.close()
 
-def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
-               rmsrunno = "run01rms", calirunno = "run01fpg",
+def ana_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
+               rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi", 
                wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
                jumbo_flag=False, fft_s=5000 ):
+
+    input_info = ["RMS Raw data Path = %s"%rms_rootpath + rmsrunno, 
+                  "Cali(FPGA DAC) Raw data Path = %s"%fpga_rootpath + fpgarunno, 
+                  "Cali(ASIC DAC) Raw data Path = %s"%asic_rootpath + asicrunno, 
+                  "APA#%d"%APAno , 
+                  "WIB#%d"%wibno , 
+                  "Gain = %2.1f mV/fC"% (int(gain)/10.0) , 
+                  "Tp = %1.1f$\mu$s"% (int(tp)/10.0)  ]
+    out_fn = "APA%d"%APAno + "_WIB%d"%wibno + "_FEMB%d"%fembno + "_CHN%d"%chnno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno + ".pdf"
+
+    fp = out_path + out_fn
+    pp = PdfPages(fp)
     femb_pos_np = femb_position (APAno)
 
     wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
@@ -370,136 +389,76 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
             break
 
     feset_info = [gain, tp]
-    rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-    chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50)
-    ped_wf_plot(apainfo, wireinfo, feset_info, chn_noise_paras)
-    ped_fft_plot(apainfo, wireinfo, feset_info, chn_noise_paras)
+    rms_info = feset_info + ["RMS"]
+    if (os.path.exists(rms_rootpath + rmsrunno)):
+        rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50)
+        ped_wf_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras)
+        ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras)
+    else:
+        print "Path: %s%s doesnt' exist, ignore anyway"%(rms_rootpath, rmsrunno)
 
-    calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-    chn_cali_paras = cali_a_chn(calidata, chnno )
-    cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras)
-    cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras)
+    fpga_info = feset_info + ["FPGA-DAC Cali"]
+    if (os.path.exists(fpga_rootpath + fpgarunno)):
+        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        chn_cali_paras = cali_a_chn(fpgadata, chnno )
+        cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
+        cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
+    else:
+        print "Path: %s%s doesnt' exist, ignore anyway"%(fpga_rootpath, fpgarunno)
 
-rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/run01fpg/"
-cali_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/run01fpg/"
+    asic_info = feset_info + ["ASIC-DAC Cali"]
+    if (os.path.exists(asic_rootpath + asicrunno)):
+        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        chn_cali_paras = cali_a_chn(asicdata, chnno )
+        cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
+        cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
+    else:
+        print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
+
+    print "results path: " + fp
+
+rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
 #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 #cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 from timeit import default_timer as timer
 s0= timer()
-print s0
-ana_a_chn(rms_rootpath, cali_rootpath, APAno = 4, \
-               rmsrunno = "run02rms", calirunno = "run01fpg",
-               wibno=0,  fembno=0, chnno=0, gain="250", tp="30", \
-               jumbo_flag=False,fft_s=5000  )
-print timer() - s0
+print "Start...please wait..."
+
+APAno=4
+rmsrunno = "run02rms" #
+fpgarunno = "run01fpg" #
+asicrunno = "run01asi" #
+wibno = 0 #0~4
+fembno = 0 #0~3
+chnno  = 0 #0~127
+gains = ["250", "140"] 
+tps = ["05", "10", "20", "30"]
+jumbo_flag = False
 
 
+out_path = rms_rootpath + "/" + "results/" + "Chns_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
+if (os.path.exists(out_path)):
+    pass
+else:
+    try: 
+        os.makedirs(out_path)
+    except OSError:
+        print "Can't create a folder, exit"
+        sys.exit()
+mps = []
+for gain in gains: 
+    for tp in tps:
+         ana_a_chn_args = (out_path, rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag)
+         p = mp.Process(target=ana_a_chn, args=ana_a_chn_args)
+         mps.append(p)
+for p in mps:
+    p.start()
+for p in mps:
+    p.join()
+#        ana_a_chn(rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag)
+print "time passed %d seconds"%(timer() - s0)
+print "DONE"
 
-
-
-#ana_a_apa(rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="05", jumbo_flag=False )
-
-
-#ana_a_wib(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg", wibno=0,  gain="250", tp="05", jumbo_flag=False )
-#a = chk_a_apa (rootpath, APAno = 4, \
-#           rmsrunno = "run02rms", calirunno = "run01fpg",\
-#           gain="250", tp="05" ,\
-#           jumbo_flag=False )
-#print a
-
-
-#ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#print timer() - s0
-#ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="10", jumbo_flag=False )
-#print timer() - s0
-#ana_a_apa(rootpath, APAno = 4, rmsrunno = "run02rms", calirunno = "run01fpg",  gain="250", tp="20", jumbo_flag=False )
-#print timer() - s0
-
-
-# 
-#s0= timer()
-#print s0
-#ana_a_femb(rootpath, APAno = 4, \
-#               rmsrunno = "run02rms", calirunno = "run01fpg",
-#               wibno=0,  fembno=0,  gain="250", tp="05" ,\
-#               jumbo_flag=False )
-#print timer() - s0
-#
-#def a(s0):
-#    ana_a_asic(rootpath, APAno = 4, \
-#                   rmsrunno = "run02rms", calirunno = "run01fpg",
-#                   wibno=0,  fembno=0, asicno=0, gain="250", tp="30", \
-#                   jumbo_flag=False  )
-#    
-#    print str(timer() - s0) + "a"
-#
-#def b(s0):
-#    ana_a_asic(rootpath, APAno = 4, \
-#                   rmsrunno = "run02rms", calirunno = "run01fpg",
-#                   wibno=0,  fembno=0, asicno=1, gain="250", tp="30", \
-#                   jumbo_flag=False  )
-#    
-#    print timer() - s0
-#
-#from multiprocessing import Process
-#
-#s0= timer()
-#if __name__ == '__main__':
-#    a(s0)
-#    p = Process(target=b, args=(s0, ))
-#    p2 = Process(target=a, args=(s0, ))
-#    p.start()
-#    p2.start()
-#    p.join()
-#    p2.join()
-
-
-#s0= timer()
-#ana_a_asic(rootpath, APAno = 4, \
-#               rmsrunno = "run02rms", calirunno = "run01fpg",
-#               wibno=0,  fembno=0, asicno=2, gain="250", tp="30", \
-#               jumbo_flag=False  )
-#
-#print timer() - s0
-#s0= timer()
-#ana_a_asic(rootpath, APAno = 4, \
-#               rmsrunno = "run02rms", calirunno = "run01fpg",
-#               wibno=0,  fembno=0, asicno=3, gain="250", tp="30", \
-#               jumbo_flag=False  )
-#
-#
-#print timer() - s0
-
-
-#
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=0, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=1, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=2, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=3, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=4, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=5, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=6, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#s0= timer()
-#
-#ana_a_asic(rootpath, APAno = 4, calirunno = "run01fpg", wibno=0,  fembno=0, asicno=7, gain="250", tp="05", jumbo_flag=False )
-#print timer() - s0
-#   
-    

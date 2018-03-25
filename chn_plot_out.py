@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 23:07:55 2018
+Last modified: Sat Mar 24 23:23:49 2018
 """
 
 #defaut setting for scientific caculation
@@ -380,9 +380,10 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
     cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras)
     cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras)
 
-
-rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/run01fpg/"
+cali_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/run01fpg/"
+#rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+#cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 from timeit import default_timer as timer
 s0= timer()
 print s0

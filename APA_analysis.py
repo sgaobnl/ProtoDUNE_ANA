@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 22:23:40 2018
+Last modified: Sat Mar 24 23:12:33 2018
 """
 
 #defaut setting for scientific caculation
@@ -23,12 +23,13 @@ import os.path
 import math
 import multiprocessing as mp
 import time
-
+import pickle
 from femb_position import femb_position
 from apa_mapping   import APA_MAP
 from chn_analysis  import read_rawdata 
 from chn_analysis  import noise_a_chn 
-from chn_analysis  import cali_linear_fitplot 
+from chn_analysis  import cali_a_chn 
+from chn_analysis  import cali_linear_calc 
 from chn_analysis  import generate_rawpaths
 
 def mp_ana_a_asic(mpout, rms_rootpath, cali_rootpath, APAno = 4, \
@@ -69,7 +70,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, cali_rootpath, APAno = 4, \
         unstk_ratio  =  chn_noise_paras[15]
 
         chn_cali_paras = cali_a_chn(calidata, chnno )
-        encperlsb, chninl = cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras, ploten=False)
+        encperlsb, chninl = cali_linear_calc(chn_cali_paras)
         asic_results.append([apainfo, wireinfo, feset_info, rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio , encperlsb, chninl])
     mpout.put(asic_results)
 
@@ -92,6 +93,16 @@ def ana_a_femb(rms_rootpath, cali_rootpath, APAno = 4, \
         femb_results = None
 
     return femb_results
+
+def mp_ana_a_femb(cc, rms_rootpath, cali_rootpath, APAno = 4, \
+               rmsrunno = "run01rms", calirunno = "run01fpg",\
+               wibno=0,  fembno=0,  gain="250", tp="05" ,\
+               jumbo_flag=False ):
+    #multiprocessing mp_ana_a_asic, process a FEMB at a time
+    print "WIB#%d FEMB%d is being analyzed..." %(wibno, fembno)
+    tmp = ana_a_femb(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+    cc.send(tmp)
+    cc.close()
 
 
 def chk_a_wib (rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run01rms", calirunno = "run01fpg",\
@@ -121,26 +132,41 @@ def chk_a_apa (rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run01rms", ca
     return alive_wibs
 
 def ana_a_wib(rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run01rms", calirunno = "run01fpg",\
-               wibno=0,  gain="250", tp="05", jumbo_flag=False ):
+               wibno=0,  gain="250", tp="05", jumbo_flag=False, pipe_en = False ):
     alive_fembs = chk_a_wib(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
     wib_results = []
-    for fembno in alive_fembs[1]:
-        print "WIB#%d FEMB%d is being analyzed..." %(wibno, fembno)
-        tmp = ana_a_femb(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
-        wib_results.append(tmp)
 
-##   don't use
-#    wib_mpout = wib_mp.Queue()
-#    wib_mps = [ wib_mp.Process(target=ana_a_femb, args=(wib_mpout, rootpath, APAno , rmsrunno, calirunno, wibno, \
-#                               fembno,  gain, tp, jumbo_flag ) ) for fembno in [0,1] ] #alive_fembs[1]]
-#    for p in wib_mps:
-#        p.start()
-#    for p in wib_mps:
-#        p.join()
-#    if (not wib_mpout.empty() ):
-#        wib_results = [wib_mpout.get() for p in wib_mps]
-#
-    import pickle
+    if pipe_en:
+        from multiprocessing import Pipe
+        pc0, cc0 = Pipe()
+        pc1, cc1 = Pipe()
+        pc2, cc2 = Pipe()
+        pc3, cc3 = Pipe()
+        pcs = [pc0, pc1, pc2, pc3]
+        ccs = [cc0, cc1, cc2, cc3]
+ 
+        import multiprocessing as wib_mp
+        wib_wps = []
+        for fembno in alive_fembs[1]:
+            cc = ccs[fembno]
+            ptmp =  wib_mp.Process(target=mp_ana_a_femb, args=(cc, rms_rootpath, cali_rootpath, APAno , rmsrunno, calirunno, wibno, fembno,  gain, tp, jumbo_flag ) ) 
+            wib_wps.append(ptmp)
+        for p in wib_wps:
+            p.start()
+ 
+        for fembno in alive_fembs[1]:
+            pc = pcs[fembno]
+            wib_results.append(pc.recv())
+
+        for p in wib_wps:
+            p.join()
+
+    else:
+        for fembno in alive_fembs[1]:
+            print "WIB#%d FEMB%d is being analyzed..." %(wibno, fembno)
+            tmp = ana_a_femb(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+            wib_results.append(tmp)
+
     out_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + calirunno +"/"
     if (os.path.exists(out_path)):
         pass
@@ -171,7 +197,7 @@ def ana_a_apa(rms_rootpath, cali_rootpath, APAno = 4, rmsrunno = "run01rms", cal
     alive_wibs = chk_a_apa(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
     for alive_fembs in alive_wibs:
         wibno = alive_fembs[0]
-        ana_a_wib(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+        ana_a_wib(rms_rootpath, cali_rootpath, APAno = APAno, rmsrunno=rmsrunno, calirunno =calirunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, pipe_en = True )
 
 
 

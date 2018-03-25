@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 22:21:33 2018
+Last modified: Sat Mar 24 22:58:56 2018
 """
 
 #defaut setting for scientific caculation
@@ -216,6 +216,53 @@ def linear_fit(x, y):
 
     return slope, constant, peakinl, error_gain
 
+def cali_linear_calc(chn_cali_paras):
+    vdacs = []
+    ampps  = []
+    ampns  = []
+    areaps = []
+    areans = []
+    fc_daclsb = chn_cali_paras[0][3]
+    ped = chn_cali_paras[0][10]
+
+    for onecp in chn_cali_paras:
+        if (ped >1000): #induction plane
+            if onecp[4] < 3800 : #region inside linearity
+                vdacs.append(onecp[2])
+                ampps.append(onecp[4])
+                ampns.append(onecp[5])
+                areaps.append(onecp[11])
+                areans.append(onecp[12])
+        elif (ped <1000): #induction plane
+            if onecp[4] < 3000 : #region inside linearity
+                vdacs.append(onecp[2])
+                ampps.append(onecp[4])
+                ampns.append(onecp[5])
+                areaps.append(onecp[11])
+                areans.append(onecp[12])
+    fc_dacs = np.array(vdacs) * fc_daclsb
+    
+    if (ped >1000): #induction plane
+        #amplitude, positive pulse
+        ampp_fit = linear_fit(fc_dacs,  ampps )
+        ampn_fit = linear_fit(fc_dacs,  ampns )
+        areap_fit = linear_fit(fc_dacs, areaps)
+        arean_fit = linear_fit(fc_dacs, areans)
+    else:
+        ampp_fit = linear_fit(fc_dacs, ampps)
+        areap_fit = linear_fit(fc_dacs,areaps)
+        ampn_fit =  None
+        arean_fit = None
+
+    if (ampp_fit != None):
+        encperlsb = int(6250/ampp_fit[0])
+        chninl    = ampp_fit[2]
+    else:
+        encperlsb = None
+        chninl    = None
+
+    return  encperlsb, chninl
+
 def cali_a_chn(calidata, chnno, cap=1.85E-13 ):
     asicchn = chnno % 16
     fc_per_v = cap / (1.602E-19 * 6250)
@@ -289,6 +336,10 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
     calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     
     chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle)
+    for j in range(10):
+        for i in range(16):
+            chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle)
+
     chn_cali_paras  = cali_a_chn (calidata, chnno, cap )
     for j in range(100):
         for i in range(16):
@@ -297,7 +348,7 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
     a = chn_noise_paras
     b = chn_cali_paras 
 
-
+####multiprocessing, 
 def mp_noise_a_chn(cc, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
     chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle)
     for j in range(10):
@@ -365,18 +416,18 @@ def mp_ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
 #    ped_fft_plot(apainfo, wireinfo, feset_info, chn_noise_paras)
 #    cali_linear_fitplot(apainfo, wireinfo, feset_info, chn_cali_paras)
 #    cali_wf_plot(apainfo, wireinfo, feset_info, chn_cali_paras)
-rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-from timeit import default_timer as timer
-s0= timer()
-print "xxxxx"
-mp_ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
-               rmsrunno = "run02rms", calirunno = "run01fpg",
-               wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
-               jumbo_flag=False, fft_en= True, fft_s=5000, fft_avg_cycle=50, cap=1.85E-13 )
- 
-print timer() - s0
-
+#rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+#cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+#from timeit import default_timer as timer
+#s0= timer()
+#print "xxxxx"
+#ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
+#               rmsrunno = "run02rms", calirunno = "run01fpg",
+#               wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
+#               jumbo_flag=False, fft_en= True, fft_s=5000, fft_avg_cycle=50, cap=1.85E-13 )
+# 
+#print timer() - s0
+#
 
 
 #    print len(a)

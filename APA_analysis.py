@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Mar 25 14:09:09 2018
+Last modified: Tue Mar 27 16:00:13 2018
 """
 
 #defaut setting for scientific caculation
@@ -154,9 +154,9 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
             asi_encperlsb, asi_chninl = cali_linear_calc(chn_asic_paras)
         else:
             asi_encperlsb, asi_chninl = [-1, -1]
-        asic_results.append([rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio, fpg_cali_flg, fpg_encperlsb, fpg_chninl, asi_cali_flg, asi_encperlsb, asi_chninl])
+        asic_results.append([apainfo, wireinfo, feset_info, wibno, fembno, chnno, rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio, fpg_cali_flg, fpg_encperlsb, fpg_chninl, asi_cali_flg, asi_encperlsb, asi_chninl])
 
-    toqueue = [apainfo, wireinfo, feset_info] + asic_results
+    toqueue =  asic_results
     cc.send(toqueue)
 
 def ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
@@ -302,17 +302,83 @@ def ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, rmsrunno = 
     out_result =[input_info,  wib_results]
     out_fn = "APA%d"%APAno + "_WIB%d"%wibno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".sum"
     fp = out_path + out_fn
-    print fp
-    if (os.path.isfile(fp)): 
-        os.remove(fp)
-        with open(fp, "wb") as fp:
-            pickle.dump(out_result, fp)
+#    if (os.path.isfile(fp)): 
+#        os.remove(fp)
+    with open(fp, "wb") as fp:
+        pickle.dump(out_result, fp)
 
 def ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asic", gain="250", tp="05", jumbo_flag=False ):
     alive_wibs = chk_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, gain=gain, tp=tp, jumbo_flag=jumbo_flag )
     for alive_fembs in alive_wibs:
         wibno = alive_fembs[0]
         ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, pipe_en = True )
+
+def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tp, jumbo_flag ):
+    for gain in gains: 
+        for tp in tps:
+            print "Gain = %2.1f mV/fC, "% (int(gain)/10.0) +  "Tp = %1.1fus"% (int(tp)/10.0) 
+            ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, gain, tp, jumbo_flag)
+            print "time passed %d seconds"%(timer() - s0)
+
+    sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
+   
+    if (os.path.exists(sum_path)):
+        for root, dirs, files in os.walk(sum_path):
+            break
+
+    sumfiles = []
+    for afile in files:
+        if afile.find(".sum") == (len(afile)-4) :
+           sumfiles.append(afile)
+
+    dict_chn = {"rmspath": None, "fpgapath": None, "calipath": None, "apaloc":None, "wib":None, "femb":None, "cebox":None, "wire":None, 
+                "fembchn":None, "gain":None, "tp":None, "ped":None, "rms":None, "hfped":None, "hfrms":None, "sfped":None, "sfrms":None, 
+                "unstk_ratio":None, "fpgadac_en":None, "fpg_gain":None, "fpg_inl":None, "asicdac_en":None, "asi_gain":None, "asi_inl":None }
+ 
+    sumtodict = []
+    if (len(files) > 0 ):
+        for sumfile in sumfiles:
+            with open (sum_path+sumfile, 'rb') as fp:
+                fsum = pickle.load(fp)
+                info = fsum[0]
+                for femb_rec in fsum[1]:
+                    for asic_rec in femb_rec :
+                        for chn_rec in asic_rec:
+                            newdict = dict_chn.copy()
+                            newdict["rmspath"]      =  info[0]               
+                            newdict["fpgapath"]     =  info[1]           
+                            newdict["calipath"]     =  info[2]          
+                            newdict["apaloc"]       =  chn_rec[0][0]        
+                            newdict["wib"]          =  chn_rec[3]          
+                            newdict["femb"]         =  chn_rec[4]            
+                            newdict["cebox"]        =  chn_rec[0][2]            
+                            newdict["wire"]         =  chn_rec[1][0]           
+                            newdict["fembchn"]      =  chn_rec[5]             
+                            newdict["gain"]         =  chn_rec[2][0]          
+                            newdict["tp"]           =  chn_rec[2][1]           
+                            newdict["rms"]          =  chn_rec[6]            
+                            newdict["ped"]          =  chn_rec[7]           
+                            newdict["hfrms"]        =  chn_rec[8]              
+                            newdict["hfped"]        =  chn_rec[9]              
+                            newdict["sfrms"]        =  chn_rec[10]              
+                            newdict["sfped"]        =  chn_rec[11]              
+                            newdict["unstk_ratio"]  =  chn_rec[12]                    
+                            newdict["fpgadac_en"]   =  chn_rec[13]                   
+                            newdict["fpg_gain"]     =  chn_rec[14]                 
+                            newdict["fpg_inl"]      =  chn_rec[15]                
+                            newdict["asicdac_en"]   =  chn_rec[16]                   
+                            newdict["asi_gain"]     =  chn_rec[17]                 
+                            newdict["asi_inl"]      =  chn_rec[18]                
+                            sumtodict.append(newdict)
+#            os.remove(sum_path+sumfile)
+
+    out_fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".allsum"
+    fp = sum_path + out_fn
+    print fp
+#    if (os.path.isfile(fp)): 
+#        os.remove(fp)
+    with open(fp, "wb") as fp:
+        pickle.dump(sumtodict, fp)
 
 
 if __name__ == '__main__':
@@ -332,12 +398,11 @@ if __name__ == '__main__':
     gains = ["250", "140"] 
     tps = ["05", "10", "20", "30"]
     jumbo_flag = False
-    
-    for gain in gains: 
-        for tp in tps:
-            print "Gain = %2.1f mV/fC, "% (int(gain)/10.0) +  "Tp = %1.1fus"% (int(tp)/10.0) 
-            ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, gain, tp, jumbo_flag)
-            print "time passed %d seconds"%(timer() - s0)
-    print "DONE"
+
+    results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag )
+
+    print "Done, please punch \"Eneter\" or \"return\" if necessary! "
+
+ 
 
 

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Mar 25 11:53:27 2018
+Last modified: Fri Mar 30 10:18:47 2018
 """
 
 #defaut setting for scientific caculation
@@ -117,8 +117,8 @@ def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain
             raw_data = f.read()
             filelength = len(raw_data )
             smps = (filelength-1024)/2/16 
-            if smps > 200000:
-                smps = 200000
+#            if smps > 200000:
+#                smps = 200000
 
             data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
             ###############0         1      2       3       4     5    6    7      8           9         10#########
@@ -135,12 +135,21 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
     rms =  np.std(chnrmsdata[0:100000])
     ped = np.mean(chnrmsdata[0:100000])
     data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
-    data_100us_slice = chnrmsdata[0:100000:200]
+    data_200ms_slice = chnrmsdata[0:200000:200]
+
+    avg_cycle_l = 1
+    fft_s_l = len(chnrmsdata)//avg_cycle_l
+
+
     if (fft_en):
         f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
+        f_l, p_l = chn_rfft_psd(chnrmsdata, fft_s = fft_s_l, avg_cycle = avg_cycle_l)
     else:
         f = None
         p = None
+        f_l = None
+        p_l = None
+
 
 #   data after highpass filter
     flt_chn_data = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 1000, flt_order = 3)
@@ -149,9 +158,13 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
     hfrms = np.std(flt_chn_data)
     if (fft_en):
         hff,hfp = chn_rfft_psd(flt_chn_data, fft_s = fft_s, avg_cycle = fft_avg_cycle)
+        hff_l,hfp_l = chn_rfft_psd(flt_chn_data, fft_s = fft_s_l, avg_cycle = avg_cycle_l)
     else:
         hff = None
         hfp = None
+        hff_l = None
+        hfp_l = None
+        
     hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[1]]
     hfdata_100us_slice = flt_chn_data[0:100000:200]
 
@@ -175,9 +188,9 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
     sfped = np.mean(tmp_data[0:100000])
 
     chn_noise_paras = [chnno, 
-                       rms,   ped,   data_slice,   data_100us_slice,   f,   p,
+                       rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
                        hfrms, hfped, hfdata_slice, hfdata_100us_slice, hff, hfp,
-                       sfrms, sfped, unstk_ratio  ]
+                       sfrms, sfped, unstk_ratio, f_l, p_l, hff_l, hfp_l  ]
     return chn_noise_paras
 
 def linear_fit(x, y):
@@ -305,6 +318,35 @@ def cali_a_chn(calidata, chnno, cap=1.85E-13 ):
                                # 0   ,  1     ,  2,   3,      4,       5,           6,            7,         8,     9,     10,     11 ,    12   
         chn_cali_paras.append( [chnno, dactype, vdac, fc_daclsb, ppeak, npeak, data_slice, avg_data_slice, pp_loc, np_loc, ped, pp_area, np_area]  )
     return chn_cali_paras
+
+#def chk_a_chn(chkdata, chnno, cap=1.85E-13 ):
+#    asicchn = chnno % 16
+#    fc_per_v = cap / (1.602E-19 * 6250)
+#
+#    chn_chk_paras = [ ]
+#    for onechk in chkdata:
+#        chnchkdata = onechk[2][7][asicchn]
+#        feed_loc = onechk[2][8]
+#        feed_ivl = feed_loc[1] -  feed_loc[0] 
+#        ppeak = np.mean(onechk[2][9][asicchn])
+#        npeak = np.mean(onechk[2][10][asicchn])
+#        data_slice = chnchkdata[feed_loc[0]:feed_loc[1]]
+#        avg_data_slice = np.array(chnchkdata[feed_loc[0]:feed_loc[1]])
+#        avg_cycles = len(feed_loc) - 2
+#        for loci in range(avg_cycles - 1):
+#            avg_data_slice = avg_data_slice +  np.array(chnchkdata[feed_loc[loci+1]:feed_loc[loci+2]])
+#        avg_data_slice = avg_data_slice / (avg_cycles*1.0)
+#        dactype = onechk[0]
+#        vdac = onechk[1]
+#        fc_daclsb = onechk[3]
+#        pp_loc = np.where (avg_data_slice == max(avg_data_slice))[0][0]
+#        np_loc = np.where (avg_data_slice == min(avg_data_slice))[0][0]
+#        ped    = np.mean (avg_data_slice[feed_ivl//2: feed_ivl])
+#        pp_area = np.sum (avg_data_slice[pp_loc-6:pp_loc+6]-ped)
+#        np_area = np.sum (avg_data_slice[np_loc-6:np_loc+6]-ped)
+#                               # 0   ,  1     ,  2,   3,      4,       5,           6,            7,         8,     9,     10,     11 ,    12   
+#        chn_cali_paras.append( [chnno, dactype, vdac, fc_daclsb, ppeak, npeak, data_slice, avg_data_slice, pp_loc, np_loc, ped, pp_area, np_area]  )
+#    return chn_cali_paras
 
 
 def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \

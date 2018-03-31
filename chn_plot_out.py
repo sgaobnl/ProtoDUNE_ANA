@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Mar 25 10:41:05 2018
+Last modified: Fri Mar 30 23:04:15 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -36,6 +36,7 @@ from chn_analysis  import noise_a_chn
 from chn_analysis  import cali_a_chn 
 from chn_analysis  import linear_fit 
 from matplotlib.backends.backend_pdf import PdfPages
+from detect_peaks import detect_peaks
 
 import multiprocessing as mp
 
@@ -296,7 +297,7 @@ def ped_wf_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras):
     #plt.show()
     plt.close()
 
-def ped_fft_subplot(ax, f, p, maxx=1000000,  title="FFT specturm", label="FFT" ):
+def ped_fft_subplot(ax, f, p, maxx=1000000,  title="FFT specturm", label="FFT", peaks_note = False ):
     ax.set_title(title )
     ax.plot(np.array(f)/1000.0,p,color='r', label=label)
     ax.set_xlim([0,maxx/1000])
@@ -311,7 +312,7 @@ def ped_fft_subplot(ax, f, p, maxx=1000000,  title="FFT specturm", label="FFT" )
         ax.set_ylim([-40,20])
     ax.legend(loc='best')
 
-def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras):
+def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, peaks_note = False ):
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
@@ -337,10 +338,10 @@ def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras):
 
     hflabel = "After HPF:  mean = %d, rms = %2.3f" % (int(hfped), hfrms) 
  
-    ped_fft_subplot(ax1, f, p, maxx=1000000, title="Spectrum of raw data", label=label )
-    ped_fft_subplot(ax2, hff, hfp, maxx=1000000, title="Spectrum of data after HPF", label=hflabel )
-    ped_fft_subplot(ax3, f, p, maxx=100000, title="Spectrum of raw data", label=label )
-    ped_fft_subplot(ax4, hff, hfp, maxx=100000, title="Spectrum of data after HPF", label=hflabel )
+    ped_fft_subplot(ax1, f, p, maxx=1000000, title="Spectrum of raw data", label=label , peaks_note = peaks_note )
+    ped_fft_subplot(ax2, hff, hfp, maxx=1000000, title="Spectrum of data after HPF", label=hflabel, peaks_note = peaks_note  )
+    ped_fft_subplot(ax3, f, p, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = peaks_note  )
+    ped_fft_subplot(ax4, hff, hfp, maxx=100000, title="Spectrum of data after HPF", label=hflabel, peaks_note = peaks_note  )
   
     apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
     wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 
@@ -387,7 +388,6 @@ def ana_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, 
         if (int(onewire[1]) == chnno):
             wireinfo = onewire
             break
-
     feset_info = [gain, tp]
     rms_info = feset_info + ["RMS"]
     if (os.path.exists(rms_rootpath + rmsrunno)):
@@ -415,52 +415,101 @@ def ana_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, 
         cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
-
     print "results path: " + fp
 
+def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
+               rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi", 
+               wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
+               jumbo_flag=False, fft_s=5000 ):
 
-if __name__ == '__main__':
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    #cali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    from timeit import default_timer as timer
-    s0= timer()
-    print "Start...please wait..."
-    
-    APAno=4
-    rmsrunno = "run02rms" #
-    fpgarunno = "run01fpg" #
-    asicrunno = "run01asi" #
-    wibno = 0 #0~4
-    fembno = 0 #0~3
-    chnno  = 0 #0~127
-    gains = ["250", "140"] 
-    tps = ["05", "10", "20", "30"]
-    jumbo_flag = False
-    
-    
-    out_path = rms_rootpath + "/" + "results/" + "Chns_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
-    if (os.path.exists(out_path)):
-        pass
+    input_info = ["RMS Raw data Path = %s"%rms_rootpath + rmsrunno, 
+                  "Cali(FPGA DAC) Raw data Path = %s"%fpga_rootpath + fpgarunno, 
+                  "Cali(ASIC DAC) Raw data Path = %s"%asic_rootpath + asicrunno, 
+                  "APA#%d"%APAno , 
+                  "WIB#%d"%wibno , 
+                  "Gain = %2.1f mV/fC"% (int(gain)/10.0) , 
+                  "Tp = %1.1f$\mu$s"% (int(tp)/10.0)  ]
+    wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
+    print wibfemb + "chn%d"%chnno
+    femb_pos_np = femb_position (APAno)
+    apainfo = None
+    for femb_pos in femb_pos_np:
+        if femb_pos[1] == wibfemb:
+            apainfo = femb_pos
+            break
+
+    apa_map = APA_MAP()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    wireinfo = None
+    for onewire in All_sort:
+        if (int(onewire[1]) == chnno):
+            wireinfo = onewire
+            break
+
+    feset_info = [gain, tp]
+    if (os.path.exists(rms_rootpath + rmsrunno)):
+        rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50)
     else:
-        try: 
-            os.makedirs(out_path)
-        except OSError:
-            print "Can't create a folder, exit"
-            sys.exit()
-    mps = []
-    for gain in gains: 
-        for tp in tps:
-             ana_a_chn_args = (out_path, rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag)
-             p = mp.Process(target=ana_a_chn, args=ana_a_chn_args)
-             mps.append(p)
-    for p in mps:
-        p.start()
-    for p in mps:
-        p.join()
-    #        ana_a_chn(rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag)
-    print "time passed %d seconds"%(timer() - s0)
-    print "DONE"
+        print "Path: %s%s doesnt' exist, ignore anyway"%(rms_rootpath, rmsrunno)
+        chn_noise_paras = None
+
+    cc.send(chn_noise_paras)
+    cc.close()
+
+def ped_fft_plot_avg(pp, ffs, title, lf_flg = False):
+    fig = plt.figure(figsize=(16,9))
+    ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
+    ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
+    ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
+    ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
+
+    i = 0
+    for chn_noise_paras in ffs:
+        if ( i == 0 ):
+            i = 1
+            f_l = chn_noise_paras[16]
+            p_l = chn_noise_paras[17]
+            hff_l = chn_noise_paras[18]
+            hfp_l = chn_noise_paras[19]
+        else:
+            i = i+1
+            f_l = f_l + chn_noise_paras[16]
+            p_l = p_l + chn_noise_paras[17]
+            hff_l = hff_l + chn_noise_paras[18]
+            hfp_l = hfp_l + chn_noise_paras[19]
+    f_l = f_l / ( i*1.0)
+    p_l = p_l / ( i*1.0)
+    hff_l = hff_l / ( i*1.0)
+    hfp_l = hfp_l / ( i*1.0)
+    
+
+    label = "Averaging FFT"
+    hflabel = "Averaging FFT"
+    if (not lf_flg):
+        ped_fft_subplot(ax1, f_l, p_l, maxx=1000000, title="Spectrum of raw data", label=label, peaks_note = True )
+        ped_fft_subplot(ax2, hff_l, hfp_l, maxx=1000000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+        ped_fft_subplot(ax3, f_l, p_l, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = True)
+        ped_fft_subplot(ax4, hff_l, hfp_l, maxx=100000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+    else:
+        #peaks = detect_peaks(p_l, mph=None, mpd=20, threshold=10, edge='rising')
+        ped_fft_subplot(ax1, f_l, p_l, maxx=10000, title="Spectrum of raw data", label=label, peaks_note = True)
+        ped_fft_subplot(ax2, hff_l, hfp_l, maxx=10000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+        ped_fft_subplot(ax3, f_l, p_l, maxx=1000, title="Spectrum of raw data", label=label, peaks_note = True)
+        ped_fft_subplot(ax4, hff_l, hfp_l, maxx=1000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+
+
+    fig.suptitle(title, fontsize = 12)
+    plt.tight_layout( rect=[0, 0.05, 1, 0.95])
+ 
+    plt.tight_layout( rect=[0, 0.05, 1, 0.95])
+ 
+    if (not lf_flg):
+        plt.savefig(pp[0:-4] + "_1M" + pp[-4:], format='png')
+    else:
+        plt.savefig(pp[0:-4] + "_1k" + pp[-4:], format='png')
+    #plt.show()
+    plt.close()
+
+    return f_l, p_l, hff_l, hfp_l
 

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Mar 27 16:00:13 2018
+Last modified: Fri Mar 30 09:47:09 2018
 """
 
 #defaut setting for scientific caculation
@@ -158,6 +158,7 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
 
     toqueue =  asic_results
     cc.send(toqueue)
+    cc.close()
 
 def ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",\

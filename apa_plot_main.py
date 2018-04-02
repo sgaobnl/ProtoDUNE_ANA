@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  1 22:03:22 2018
+Last modified: Sun Apr  1 22:24:44 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -33,23 +33,23 @@ from apa_plot_out import plot2_peds
 from apa_plot_out import plot1_chns_enc
 from apa_plot_out import plot4_chns_gain
 from apa_plot_out import dict_filter
-#rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-#fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-#asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-rms_rootpath =  "/Users/shanshangao/Documents/data2/"
-fpga_rootpath = "/Users/shanshangao/Documents/data2/"
-asic_rootpath = "/Users/shanshangao/Documents/data2/"
+rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+#rms_rootpath =  "/Users/shanshangao/Documents/data2/"
+#fpga_rootpath = "/Users/shanshangao/Documents/data2/"
+#asic_rootpath = "/Users/shanshangao/Documents/data2/"
 
 APAno=4
 rmsrunno = "run02rms" #
 fpgarunno = "run01fpg" #
 asicrunno = "run01asi" #
+fembs_on_apa = range(1,21, 1) 
 
 sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
 fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno
 orgdicts = load_sum (sum_path, fn + ".allsum")
 
-fembs_on_apa = range(1,21, 1) 
 
 femb_cs = []
 for fembloc in fembs_on_apa:

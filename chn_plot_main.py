@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Mar 30 11:25:31 2018
+Last modified: Sun Apr  1 22:23:32 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -29,12 +29,12 @@ from chn_plot_out import ana_a_chn
 
 
 if __name__ == '__main__':
-    #rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    #pga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    #sic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+    #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+    #fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+    #asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     from timeit import default_timer as timer
     s0= timer()
     print "Start...please wait..."
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             os.makedirs(out_path)
         except OSError:
             print "Can't create a folder, exit"
-            sys.exit()
+            exit()
     mps = []
     for gain in gains: 
         for tp in tps:

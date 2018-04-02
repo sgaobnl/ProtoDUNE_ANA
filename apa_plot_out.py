@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  1 20:48:30 2018
+Last modified: Sun Apr  1 21:59:33 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -76,36 +76,42 @@ def enctp_sort_byfemb (femb_dicts ) :
     sdicts = sorted(femb_dicts, key=lambda x:x["fembchn"])
     return sdicts
 
-def dict_filter (dicts, and_dnf =[["gain","250"]], or_dnf = [["gain","250"]]  ) :
-    and_apa_wires = []
-    for chi in dicts:
-        for dn in and_dnf:
-            cs = True
-            if chi[dn[0]] != dn[1]:
-                cs = False
-                break
-        if (cs):
-            and_apa_wires.append(chi)
-    or_apa_wires = []
-    for chi in and_apa_wires:
-        for dn in or_dnf:
-            if chi[dn[0]] == dn[1]:
-                or_apa_wires.append(chi)
-                break
+def dict_filter (dicts, and_dnf =[["gain","250"]], or_dnf = [["gain","250"]], and_flg = True, or_flg = True  ) :
+    if (and_flg):
+        and_apa_wires = []
+        for chi in dicts:
+            for dn in and_dnf:
+                cs = True
+                if chi[dn[0]] != dn[1]:
+                    cs = False
+                    break
+            if (cs):
+                and_apa_wires.append(chi)
+    else:
+        and_apa_wires = dicts
+    if (or_flg):
+        or_apa_wires = []
+        for chi in and_apa_wires:
+            for dn in or_dnf:
+                if chi[dn[0]] == dn[1]:
+                    or_apa_wires.append(chi)
+                    break
+    else:
+        or_apa_wires = and_apa_wires
     return or_apa_wires
 
-def apa_sorted_by_wire(orgdicts, g="250", tp="05") :
+def apa_sorted_by_wire(orgdicts, g="250", tp="05", fembs_on_apa = range(1, 21, 1)) :
     dicts = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
-    xdicts = enctp_sort_bywire (dicts,  wiretype="X"  ) 
-    vdicts = enctp_sort_bywire (dicts,  wiretype="V"  ) 
-    udicts = enctp_sort_bywire (dicts,  wiretype="U"  ) 
+    xdicts = enctp_sort_bywire (dicts,  wiretype="X" , fembs_on_apa = fembs_on_apa ) 
+    vdicts = enctp_sort_bywire (dicts,  wiretype="V" , fembs_on_apa = fembs_on_apa ) 
+    udicts = enctp_sort_bywire (dicts,  wiretype="U" , fembs_on_apa = fembs_on_apa ) 
     return xdicts, vdicts, udicts
 
-def femb_sorted_by_wire(orgdicts, g="250", tp="05", wibno=0, fembno=0) :
+def femb_sorted_by_wire(orgdicts, g="250", tp="05", wibno=0, fembno=0, fembs_on_apa = range(1, 21, 1)) :
     dicts = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp], ["wib", wibno], ["femb", fembno] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
-    xdicts = enctp_sort_bywire (dicts,  wiretype="X"  ) 
-    vdicts = enctp_sort_bywire (dicts,  wiretype="V"  ) 
-    udicts = enctp_sort_bywire (dicts,  wiretype="U"  ) 
+    xdicts = enctp_sort_bywire (dicts,  wiretype="X" , fembs_on_apa = fembs_on_apa) 
+    vdicts = enctp_sort_bywire (dicts,  wiretype="V" , fembs_on_apa = fembs_on_apa) 
+    udicts = enctp_sort_bywire (dicts,  wiretype="U" , fembs_on_apa = fembs_on_apa) 
     return xdicts, vdicts, udicts
 
 def find_a_chn(orgdicts, wibno=0, fembno=0, fembchn=0) :
@@ -144,6 +150,7 @@ def draw_results (dicts) :
 ###############################################################################################################################
 ###############################################################################################################################
 def sub_rms_c_plot5 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1) ) :
+    apachn = [] 
     for loc in fembs_on_apa:
         subdicts = enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
         ymax = 2500
@@ -190,7 +197,7 @@ def sub_rms_c_plot5 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa =
                 ax.vlines((loc-1)*len(apachn), 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
  
     ax.set_ylim([0,ymax])
-    ax.set_xlim([0,len(apachn)*20 ])
+    ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
     tp = int( dicts[0]["tp"]) / 10.0
     gain = int(dicts[0]["gain"]) / 10.0
     ax.set_ylabel("ENC /e$^-$")
@@ -198,7 +205,7 @@ def sub_rms_c_plot5 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa =
     ax.set_title( "%s: ENC of each channel @ (%2.1fmV/fC, %1.1f$\mu$s)"%(t, gain, tp) )
 
 def sub_rms_p_plot5 (ax, dicts, rms_cs="hfrms" ) :
-    apachn = 0
+    apachn = []
     apachn, rms, hfrms, sfrms, ped, hfped, sfped, fpg_gain, asi_gain, unstk_ratio = draw_results (dicts) 
     if (rms_cs=="rms" ):
         plotrms = rms
@@ -237,7 +244,7 @@ def sub_rms_p_plot5 (ax, dicts, rms_cs="hfrms" ) :
     ax.set_ylim([0,1])
     ax.legend(loc='best', fontsize=9)
 
-def apa_plot5 (pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" ) :
+def apa_plot5 (pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" , fembs_on_apa = range(1, 21, 1)) :
     gs=["250", "140"]
     tps=["05", "10", "20", "30"]
     xenc_tps=[]
@@ -245,7 +252,7 @@ def apa_plot5 (pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="
     uenc_tps=[]
     for g in gs:
         for tp in tps:
-            xd,vd,ud=apa_sorted_by_wire(orgdicts, g=g, tp=tp) 
+            xd,vd,ud=apa_sorted_by_wire(orgdicts, g=g, tp=tp, fembs_on_apa=fembs_on_apa) 
             rms_c_plot5 (pp, xd, title="RMS Compare" ) 
             rms_c_plot5 (pp, vd, title="RMS Compare" ) 
             rms_c_plot5 (pp, ud, title="RMS Compare" ) 
@@ -403,7 +410,7 @@ def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain"
 
 ###############################################################################################################################
 ###############################################################################################################################
-def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" ) : #enctype, raw, hf, sf
+def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" , fembs_on_apa = range(1, 21, 1)) : #enctype, raw, hf, sf
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
     ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -417,8 +424,8 @@ def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs=
     uenc_tps=[]
     for tp in tps:
         dicts_xvu = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
-        dicts = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype  ) 
-        sub_chns_plot1 (ax1, dicts, rms_cs=rms_cs, cali_cs=cali_cs ) 
+        dicts = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype , fembs_on_apa = fembs_on_apa ) 
+        sub_chns_plot1 (ax1, dicts, rms_cs=rms_cs, cali_cs=cali_cs, fembs_on_apa = fembs_on_apa  ) 
         if ( tp == "05" ):
             sub_chns_hist_plot1 (ax2, dicts, rms_cs=rms_cs, cali_cs=cali_cs ) 
         elif ( tp == "10" ):
@@ -433,7 +440,8 @@ def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs=
 #    plt.show()
     plt.close()
 
-def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1)  ) :
+def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1) ) :
+    apachn = [] 
     for loc in fembs_on_apa:
         subdicts = enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
         ymax = 2000
@@ -482,7 +490,7 @@ def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = 
  
     if (tp ==2):
         ax.set_ylim([0,ymax])
-        ax.set_xlim([0,len(apachn)*20 ])
+        ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
         gain = int(dicts[0]["gain"]) / 10.0
         ax.set_ylabel("ENC /e$^-$")
         ax.set_xlabel("%s wire no."%dicts[0]["wire"][0])
@@ -490,7 +498,7 @@ def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = 
     ax.legend(loc=7)
 
 def sub_chns_hist_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain" ) :
-    apachn = 0
+    apachn = []
     ymax = 2000
     tp = int( dicts[0]["tp"]) / 10.0
     gain = int(dicts[0]["gain"]) / 10.0
@@ -536,6 +544,7 @@ def sub_chns_hist_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain" ) :
 ###############################################################################################################################
 ###############################################################################################################################
 def sub_ped_plot2 (ax, dicts , fembs_on_apa = range(1, 21, 1) ) :
+    apachn = []
     for loc in fembs_on_apa:
         subdicts = enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
         ymax = 4100
@@ -561,7 +570,7 @@ def sub_ped_plot2 (ax, dicts , fembs_on_apa = range(1, 21, 1) ) :
             if ( loc != 1):
                 ax.vlines((loc-1)*len(apachn), 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
     ax.set_ylim([0,ymax])
-    ax.set_xlim([0,len(apachn)*20 ])
+    ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
     gain = int(dicts[0]["gain"]) / 10.0
     ax.set_ylabel("ADC output / LSB")
     ax.set_xlabel("%s wire no."%dicts[0]["wire"][0])
@@ -588,7 +597,7 @@ def sub_ped_hist_plot2 (ax, dicts ) :
     ax.set_xlabel("ADC output / LSB")
     ax.legend(loc='best')
 
-def plot2_peds (pp, orgdicts, title="Pedestals", g="250", tp="20" ) :
+def plot2_peds (pp, orgdicts, title="Pedestals", g="250", tp="20", fembs_on_apa = range(1, 21, 1)  ) :
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((3, 3), (0, 0), colspan=2, rowspan=1)
     ax2 = plt.subplot2grid((3, 3), (1, 0), colspan=2, rowspan=1)
@@ -598,14 +607,14 @@ def plot2_peds (pp, orgdicts, title="Pedestals", g="250", tp="20" ) :
     ax6 = plt.subplot2grid((3, 3), (2, 2), colspan=1, rowspan=1)
 
     dicts_xvu = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
-    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "X"  ) 
-    sub_ped_plot2 (ax1, dicts) 
+    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "X" , fembs_on_apa = fembs_on_apa ) 
+    sub_ped_plot2 (ax1, dicts, fembs_on_apa = fembs_on_apa) 
     sub_ped_hist_plot2 (ax4, dicts ) 
-    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "V"  ) 
-    sub_ped_plot2 (ax2, dicts) 
+    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "V" , fembs_on_apa = fembs_on_apa) 
+    sub_ped_plot2 (ax2, dicts, fembs_on_apa = fembs_on_apa) 
     sub_ped_hist_plot2 (ax5, dicts ) 
-    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "U"  ) 
-    sub_ped_plot2 (ax3, dicts) 
+    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "U" , fembs_on_apa = fembs_on_apa) 
+    sub_ped_plot2 (ax3, dicts, fembs_on_apa = fembs_on_apa) 
     sub_ped_hist_plot2 (ax6, dicts ) 
 
     fig.suptitle("Pedestal Measurement", fontsize = 16)
@@ -702,7 +711,7 @@ def plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement" ) :
 
 
 ###############################################################################################################################
-def plot4_chns_gain (pp, orgdicts, title="Gain Measurement", wiretype="X", g="250", cali_cs="fpg_gain"): #enctype, raw, hf, sf
+def plot4_chns_gain (pp, orgdicts, title="Gain Measurement", wiretype="X", g="250", cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1) ): #enctype, raw, hf, sf
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
     ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -717,7 +726,7 @@ def plot4_chns_gain (pp, orgdicts, title="Gain Measurement", wiretype="X", g="25
     for tp in tps:
         dicts_xvu = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
         dicts = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype  ) 
-        sub_gain_plot4 (ax1, dicts, cali_cs=cali_cs ) 
+        sub_gain_plot4 (ax1, dicts, cali_cs=cali_cs , fembs_on_apa = fembs_on_apa) 
         if ( tp == "05" ):
             sub_hist_gain_plot4 (ax2, dicts, cali_cs=cali_cs ) 
         elif ( tp == "10" ):
@@ -733,6 +742,7 @@ def plot4_chns_gain (pp, orgdicts, title="Gain Measurement", wiretype="X", g="25
     plt.close()
 
 def sub_gain_plot4 (ax, dicts, cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1)  ) :
+    apachn = []
     for loc in fembs_on_apa:
         subdicts = enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
         ymax = 500
@@ -764,7 +774,8 @@ def sub_gain_plot4 (ax, dicts, cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1
                     ax.vlines((loc-1)*len(apachn), 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
     if (tp ==2):
         ax.set_ylim([0,ymax])
-        ax.set_xlim([0,len(apachn)*20 ])
+        #ax.set_xlim([0,len(apachn)*len(fembs_on_apa) ])
+        ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
         gain = int(dicts[0]["gain"]) / 10.0
         ax.set_ylabel("Gain /e$^-$/LSB")
         ax.set_xlabel("%s wire no."%dicts[0]["wire"][0])

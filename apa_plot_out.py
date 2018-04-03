@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  1 21:59:33 2018
+Last modified: Sun Apr  1 22:53:20 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -157,7 +157,7 @@ def sub_rms_c_plot5 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa =
         if subdicts != None:
             apaloc = subdicts[0]["apaloc"]
             wibno = subdicts[0]["wib"]
-            fembno = subdicts[0]["wib"]
+            fembno = subdicts[0]["femb"]
             apachn, rms, hfrms, sfrms, ped, hfped, sfped, fpg_gain, asi_gain, unstk_ratio = draw_results (subdicts) 
             if (rms_cs=="rms" ):
                 plotrms = rms
@@ -449,7 +449,7 @@ def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = 
         if subdicts != None:
             apaloc = subdicts[0]["apaloc"]
             wibno = subdicts[0]["wib"]
-            fembno = subdicts[0]["wib"]
+            fembno = subdicts[0]["femb"]
             apachn, rms, hfrms, sfrms, ped, hfped, sfped, fpg_gain, asi_gain, unstk_ratio = draw_results (subdicts) 
             if (rms_cs=="rms" ):
                 plotrms = rms
@@ -552,7 +552,7 @@ def sub_ped_plot2 (ax, dicts , fembs_on_apa = range(1, 21, 1) ) :
         if subdicts != None:
             apaloc = subdicts[0]["apaloc"]
             wibno = subdicts[0]["wib"]
-            fembno = subdicts[0]["wib"]
+            fembno = subdicts[0]["femb"]
             apachn, rms, hfrms, sfrms, ped, hfped, sfped, fpg_gain, asi_gain, unstk_ratio = draw_results (subdicts) 
 
             label = "%1.1f$\mu$s)"%tp 
@@ -750,7 +750,7 @@ def sub_gain_plot4 (ax, dicts, cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1
         if subdicts != None:
             apaloc = subdicts[0]["apaloc"]
             wibno = subdicts[0]["wib"]
-            fembno = subdicts[0]["wib"]
+            fembno = subdicts[0]["femb"]
             apachn, rms, hfrms, sfrms, ped, hfped, sfped, fpg_gain, asi_gain, unstk_ratio = draw_results (subdicts) 
             if (cali_cs=="fpg_gain" ):
                 pgain = fpg_gain

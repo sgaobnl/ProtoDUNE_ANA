@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  1 22:24:44 2018
+Last modified: Sun Apr  1 23:15:40 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -41,7 +41,7 @@ asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_201
 #asic_rootpath = "/Users/shanshangao/Documents/data2/"
 
 APAno=4
-rmsrunno = "run02rms" #
+rmsrunno = "run01rms" #
 fpgarunno = "run01fpg" #
 asicrunno = "run01asi" #
 fembs_on_apa = range(1,21, 1) 
@@ -62,10 +62,12 @@ orgdicts = dict_filter (orgdicts, or_dnf =femb_cs, and_flg=False  )
 
 fp = sum_path + fn + ".pdf" 
 pp = PdfPages(fp)
+print "start...wait a few minutes..."
 plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "sf" ) 
 plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "hf" ) 
 plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement" ) 
 plot2_peds (pp, orgdicts,title="Pedestals", g="250", tp="20" ) 
+print "please wait a few minutes..."
 plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "rms",   g="250", fembs_on_apa = fembs_on_apa )  #
 plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "rms",   g="250", fembs_on_apa = fembs_on_apa )  #
 plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "rms",   g="250", fembs_on_apa = fembs_on_apa )  #
@@ -75,9 +77,12 @@ plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali
 plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "hfrms", g="250", fembs_on_apa = fembs_on_apa )  #
 plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "hfrms", g="250", fembs_on_apa = fembs_on_apa )  #
 plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "hfrms", g="250", fembs_on_apa = fembs_on_apa )  #
+print "please wait a few minutes..."
 plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="X", g="250" , fembs_on_apa = fembs_on_apa)  #
 plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="V", g="250" , fembs_on_apa = fembs_on_apa)  #
 plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="U", g="250" , fembs_on_apa = fembs_on_apa)  #
 pp.close()
 
+print fp 
+print "Done"
 

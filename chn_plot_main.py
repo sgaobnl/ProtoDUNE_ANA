@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Apr  3 17:15:14 2018
+Last modified: Sat Apr  7 18:15:45 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -25,14 +25,14 @@ import os.path
 import math
 
 import multiprocessing as mp
-from chn_plot_out import ana_a_chn
+from chn_plot_out import plot_a_chn
 
 
 if __name__ == '__main__':
-    APAno=3
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_02_07_2018/"%APAno
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_02_07_2018/"%APAno
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_02_07_2018/"%APAno
+    APAno=4
+    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
     #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
@@ -50,9 +50,34 @@ if __name__ == '__main__':
     gains = ["250"] 
     tps = ["05", "10", "20", "30"]
     jumbo_flag = False
+    wib_femb_chns = [  
+                        [ 0, 2, 37   ] ,
+                        [ 0, 2, 90   ] ,
+                        [ 0, 2, 100  ] ,
+                        [ 0, 2, 117  ] ,
+                        [ 3, 1,1     ] ,
+                        [ 0, 3, 15   ] ,
+                        [ 1, 0, 114  ] ,
+                        [ 1, 0, 115  ] ,
+                        [ 4, 0, 117  ] ,
+                        [ 4, 1, 50   ] ,
+                        [ 0, 2, 37   ] ,
+                        [ 0, 2, 90   ] ,
+                        [ 0, 2, 100  ] ,
+                        [ 0, 2, 117  ] ,
+                        [ 3, 1,1     ] ,
+                        [ 0, 3, 15   ] ,
+                        [ 1, 0, 114  ] ,
+                        [ 1, 0, 115  ] ,
+                        [ 4, 0, 117  ] ,
+                        [ 4, 1, 50   ] ,
+                        [ 4, 0, 80   ] ,
+                    ]    
     
-    
-    for chnno in chnnos:
+    for wfc in wib_femb_chns:
+        wibno = wfc[0]
+        fembno = wfc[1]
+        chnno = wfc[2]
         out_path = rms_rootpath + "/" + "results/" + "Chns_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
         if (os.path.exists(out_path)):
             pass
@@ -66,7 +91,7 @@ if __name__ == '__main__':
         for gain in gains: 
             for tp in tps:
                  ana_a_chn_args = (out_path, rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag)
-                 p = mp.Process(target=ana_a_chn, args=ana_a_chn_args)
+                 p = mp.Process(target=plot_a_chn, args=ana_a_chn_args)
                  mps.append(p)
         for p in mps:
             p.start()

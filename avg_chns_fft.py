@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Apr  4 12:25:26 2018
+Last modified: Sat Apr  7 18:00:22 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -50,18 +50,18 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    rmsrunno = "run02rms" #
+    rmsrunno = "run01rms" #
     fpgarunno = "run01fpg" #
     asicrunno = "run01asi" #
     wibnos = [0,1,2,3,4]
     fembnos = [0,1,2,3] #0~3
     jumbo_flag = False
-    wire_type = "V"
+    wire_type = "U"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     gains = ["250"]  #["250", "140"]
     tps = ["30"]#["05", "10", "20", "30"]
-    psd_en = True
-    psd = 20
+    psd_en = False
+    psd = 0
     
     out_path = rms_rootpath + "/" + "results/" + "Avg_fft_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
     if (os.path.exists(out_path)):

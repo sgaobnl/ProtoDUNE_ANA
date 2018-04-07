@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Mar 30 10:18:47 2018
+Last modified: Sat Apr  7 17:28:00 2018
 """
 
 #defaut setting for scientific caculation
@@ -125,7 +125,7 @@ def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain
             datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
     return datas
 
-def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
+def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
 
     chnrmsdata = rmsdata[0][7][asicchn]
@@ -139,7 +139,6 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
 
     avg_cycle_l = 1
     fft_s_l = len(chnrmsdata)//avg_cycle_l
-
 
     if (fft_en):
         f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
@@ -190,7 +189,8 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
     chn_noise_paras = [chnno, 
                        rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
                        hfrms, hfped, hfdata_slice, hfdata_100us_slice, hff, hfp,
-                       sfrms, sfped, unstk_ratio, f_l, p_l, hff_l, hfp_l  ]
+                       sfrms, sfped, unstk_ratio, f_l, p_l, hff_l, hfp_l,
+                       wibno,  fembno ]
     return chn_noise_paras
 
 def linear_fit(x, y):
@@ -272,7 +272,7 @@ def cali_linear_calc(chn_cali_paras):
 
     return  encperlsb, chninl
 
-def cali_a_chn(calidata, chnno, cap=1.85E-13 ):
+def cali_a_chn(calidata, chnno, cap=1.85E-13, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
     fc_per_v = cap / (1.602E-19 * 6250)
 
@@ -316,7 +316,7 @@ def cali_a_chn(calidata, chnno, cap=1.85E-13 ):
         pp_area = np.sum (avg_data_slice[pp_loc-6:pp_loc+6]-ped)
         np_area = np.sum (avg_data_slice[np_loc-6:np_loc+6]-ped)
                                # 0   ,  1     ,  2,   3,      4,       5,           6,            7,         8,     9,     10,     11 ,    12   
-        chn_cali_paras.append( [chnno, dactype, vdac, fc_daclsb, ppeak, npeak, data_slice, avg_data_slice, pp_loc, np_loc, ped, pp_area, np_area]  )
+        chn_cali_paras.append( [chnno, dactype, vdac, fc_daclsb, ppeak, npeak, data_slice, avg_data_slice, pp_loc, np_loc, ped, pp_area, np_area, wibno,  fembno]  )
     return chn_cali_paras
 
 #def chk_a_chn(chkdata, chnno, cap=1.85E-13 ):
@@ -373,35 +373,31 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
     rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     
-    chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle)
-    for j in range(10):
-        for i in range(16):
-            chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle)
-
-    chn_cali_paras  = cali_a_chn (calidata, chnno, cap )
-    for j in range(100):
-        for i in range(16):
-            chn_cali_paras  = cali_a_chn (calidata, i, cap )
- 
-    a = chn_noise_paras
-    b = chn_cali_paras 
+    chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
+    chn_cali_paras  = cali_a_chn (calidata, chnno, cap, wibno, fembno )
+#    for j in range(10):
+#    for i in range(16):
+#        chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
+#    for j in range(100):
+#    for i in range(16):
+#        chn_cali_paras  = cali_a_chn (calidata, i, cap, wibno, fembno )
+#    a = chn_noise_paras
+#    b = chn_cali_paras 
 
 ####multiprocessing, 
-def mp_noise_a_chn(cc, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50 ):
-    chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle)
-    for j in range(10):
-        for i in range(16):
-            chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle)
- 
+def mp_noise_a_chn(cc, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0, fembno=0):
+    chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
+#    for j in range(10):
+#    for i in range(16):
+#        chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
     cc.send([1, chn_noise_paras])
     cc.close()
 
-def mp_cali_a_chn(cc, calidata, chnno, cap=1.85E-13 ):
-    chn_cali_paras = cali_a_chn(calidata, chnno, cap )
-    for j in range(200):
-        for i in range(16):
-            chn_cali_paras = cali_a_chn(calidata, i, cap )
-
+def mp_cali_a_chn(cc, calidata, chnno, cap=1.85E-13 , wibno=0, fembno=0):
+    chn_cali_paras = cali_a_chn(calidata, chnno, cap, wibno, fembno )
+#    for j in range(200):
+#    for i in range(16):
+#        chn_cali_paras = cali_a_chn(calidata, i, cap, wibno, fembno )
     cc.send([1, chn_cali_paras])
     cc.close()
 
@@ -433,7 +429,7 @@ def mp_ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
     from multiprocessing import Pipe
     pc1, cc1 = Pipe()
     pc2, cc2 = Pipe()
-    noise_a_chn_argvs = (cc1, rmsdata, chnno,fft_en, fft_s, fft_avg_cycle)
+    noise_a_chn_argvs = (cc1, rmsdata, chnno,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
     cali_a_chn_argvs  = (cc2, calidata, chnno, cap )
     p1 = mp.Process(target=mp_noise_a_chn, args=noise_a_chn_argvs)
     p2 = mp.Process(target=mp_cali_a_chn,  args=cali_a_chn_argvs)
@@ -444,6 +440,6 @@ def mp_ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
     p1.join()
     p2.join()
  
-    a = chn_noise_paras
-    b = chn_cali_paras 
+#    a = chn_noise_paras
+#    b = chn_cali_paras 
 

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Mar 30 23:04:15 2018
+Last modified: Tue Apr  3 21:05:01 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -453,11 +453,10 @@ def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, AP
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(rms_rootpath, rmsrunno)
         chn_noise_paras = None
-
     cc.send(chn_noise_paras)
     cc.close()
 
-def ped_fft_plot_avg(pp, ffs, title, lf_flg = False):
+def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
@@ -465,49 +464,70 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False):
     ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
 
     i = 0
+    f_l   = [] 
+    p_l   = [] 
+    hff_l = [] 
+    hfp_l = [] 
+ 
     for chn_noise_paras in ffs:
-        if ( i == 0 ):
-            i = 1
-            f_l = chn_noise_paras[16]
-            p_l = chn_noise_paras[17]
-            hff_l = chn_noise_paras[18]
-            hfp_l = chn_noise_paras[19]
+        if (psd_en):
+            if np.max(chn_noise_paras[17][10:]) > psd:
+                if ( i == 0 ):
+                    i = 1
+                    f_l = chn_noise_paras[16]
+                    p_l = chn_noise_paras[17]
+                    hff_l = chn_noise_paras[18]
+                    hfp_l = chn_noise_paras[19]
+                else:
+                    i = i+1
+                    f_l = f_l + chn_noise_paras[16]
+                    p_l = p_l + chn_noise_paras[17]
+                    hff_l = hff_l + chn_noise_paras[18]
+                    hfp_l = hfp_l + chn_noise_paras[19]
         else:
-            i = i+1
-            f_l = f_l + chn_noise_paras[16]
-            p_l = p_l + chn_noise_paras[17]
-            hff_l = hff_l + chn_noise_paras[18]
-            hfp_l = hfp_l + chn_noise_paras[19]
-    f_l = f_l / ( i*1.0)
-    p_l = p_l / ( i*1.0)
-    hff_l = hff_l / ( i*1.0)
-    hfp_l = hfp_l / ( i*1.0)
+            if ( i == 0 ):
+                i = 1
+                f_l = chn_noise_paras[16]
+                p_l = chn_noise_paras[17]
+                hff_l = chn_noise_paras[18]
+                hfp_l = chn_noise_paras[19]
+            else:
+                i = i+1
+                f_l = f_l + chn_noise_paras[16]
+                p_l = p_l + chn_noise_paras[17]
+                hff_l = hff_l + chn_noise_paras[18]
+                hfp_l = hfp_l + chn_noise_paras[19]
     
-
-    label = "Averaging FFT"
-    hflabel = "Averaging FFT"
-    if (not lf_flg):
-        ped_fft_subplot(ax1, f_l, p_l, maxx=1000000, title="Spectrum of raw data", label=label, peaks_note = True )
-        ped_fft_subplot(ax2, hff_l, hfp_l, maxx=1000000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
-        ped_fft_subplot(ax3, f_l, p_l, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = True)
-        ped_fft_subplot(ax4, hff_l, hfp_l, maxx=100000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+    if (len(f_l) == 0):
+        print "No wire has noise spike large than %ddB"%psd
     else:
-        #peaks = detect_peaks(p_l, mph=None, mpd=20, threshold=10, edge='rising')
-        ped_fft_subplot(ax1, f_l, p_l, maxx=10000, title="Spectrum of raw data", label=label, peaks_note = True)
-        ped_fft_subplot(ax2, hff_l, hfp_l, maxx=10000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
-        ped_fft_subplot(ax3, f_l, p_l, maxx=1000, title="Spectrum of raw data", label=label, peaks_note = True)
-        ped_fft_subplot(ax4, hff_l, hfp_l, maxx=1000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
-
+        valid_chns = i
+        f_l = f_l / ( i*1.0)
+        p_l = p_l / ( i*1.0)
+        hff_l = hff_l / ( i*1.0)
+        hfp_l = hfp_l / ( i*1.0)
+        
+        label = "Averaging FFT"
+        hflabel = "Averaging FFT"
+        if (not lf_flg):
+            ped_fft_subplot(ax1, f_l, p_l, maxx=1000000, title="Spectrum of raw data", label=label, peaks_note = True )
+            ped_fft_subplot(ax2, hff_l, hfp_l, maxx=1000000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+            ped_fft_subplot(ax3, f_l, p_l, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = True)
+            ped_fft_subplot(ax4, hff_l, hfp_l, maxx=100000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+        else:
+            #peaks = detect_peaks(p_l, mph=None, mpd=20, threshold=10, edge='rising')
+            ped_fft_subplot(ax1, f_l, p_l, maxx=10000, title="Spectrum of raw data", label=label, peaks_note = True)
+            ped_fft_subplot(ax2, hff_l, hfp_l, maxx=10000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+            ped_fft_subplot(ax3, f_l, p_l, maxx=1000, title="Spectrum of raw data", label=label, peaks_note = True)
+            ped_fft_subplot(ax4, hff_l, hfp_l, maxx=1000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
 
     fig.suptitle(title, fontsize = 12)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
  
-    plt.tight_layout( rect=[0, 0.05, 1, 0.95])
- 
     if (not lf_flg):
-        plt.savefig(pp[0:-4] + "_1M" + pp[-4:], format='png')
+        plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + pp[-4:], format='png')
     else:
-        plt.savefig(pp[0:-4] + "_1k" + pp[-4:], format='png')
+        plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1k" + pp[-4:], format='png')
     #plt.show()
     plt.close()
 

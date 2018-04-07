@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Mar 30 09:47:09 2018
+Last modified: Thu Apr  5 17:04:55 2018
 """
 
 #defaut setting for scientific caculation
@@ -383,19 +383,18 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
 
 
 if __name__ == '__main__':
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+    APAno=1
+    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_11_10_2017/"%APAno
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_11_10_2017/"%APAno
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_11_10_2017/"%APAno
     #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #ali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     from timeit import default_timer as timer
     s0= timer()
     print "Start..., please wait..."
-    APAno=4
-    rmsrunno = "run01rms" #
-    fpgarunno = "run01fpg" #
-    asicrunno = "run01asi" #
-    wibno = 0 #0~4
+    rmsrunno = "run03rms" #
+    fpgarunno = "run04fpg" #
+    asicrunno = "run05asi" #
     gains = ["250", "140"] 
     tps = ["05", "10", "20", "30"]
     jumbo_flag = False

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  1 20:46:58 2018
+Last modified: Wed Apr  4 12:25:26 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -39,9 +39,10 @@ import pickle
 
 
 if __name__ == '__main__':
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_03_21_2018/"
+    APAno=4
+    rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
 #    rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 #    fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 #    asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
@@ -49,7 +50,6 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    APAno=4
     rmsrunno = "run02rms" #
     fpgarunno = "run01fpg" #
     asicrunno = "run01asi" #
@@ -59,7 +59,9 @@ if __name__ == '__main__':
     wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     gains = ["250"]  #["250", "140"]
-    tps = ["05"]#["05", "10", "20", "30"]
+    tps = ["30"]#["05", "10", "20", "30"]
+    psd_en = True
+    psd = 20
     
     out_path = rms_rootpath + "/" + "results/" + "Avg_fft_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
     if (os.path.exists(out_path)):
@@ -109,10 +111,13 @@ if __name__ == '__main__':
                         print "time passed %d seconds"%(timer() - s0)
         
             title = "APA" + str(APAno) + "_" + rmsrunno + "_" + log_str + wire_type + "_chns" + str(chn_cnt) + "_" + "gain" + gain + "tp" + tp
-            fp = out_path + title + ".png"
+            if (psd_en):
+                fp = out_path + title + "_psd%d"%psd + ".png"
+            else:
+                fp = out_path + title  + ".png"
             fft_pp = fp
-            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True)
-            avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False)
+            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
+            avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
 
             ffp = out_path + title + ".fft"
             with open(ffp, "wb") as ffp:

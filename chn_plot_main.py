@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  8 11:51:53 2018
+Last modified: Mon Apr  9 17:13:14 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -29,10 +29,10 @@ from chn_plot_out import plot_a_chn
 
 
 if __name__ == '__main__':
-    APAno=4
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+    APAno=5
+    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_04_09_2018/"%APAno
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_04_09_2018/"%APAno
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_04_09_2018/"%APAno
     #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
@@ -40,23 +40,16 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    rmsrunno = "run02rms" #
+    rmsrunno = "run01rms" #
     fpgarunno = "run01fpg" #
     asicrunno = "run01asi" #
-    wibno = 4 #0~4
-    fembno = 0 #0~3
-    chnno  = 0 #0~127
-    chnnos  = [17, 18, 19, 20, 59, 60, 61, 62] #0~127
     gains = ["250"] 
     #tps = ["05", "10", "20", "30"]
-    tps = [  "30"]
+    tps = [  "20"]
     jumbo_flag = False
     wib_femb_chns = [  
+                        #wib(0-4), femb(0-3), chn(0~127)
                         [0, 2, 120   ],
-                        [0, 3, 42   ],
-                        [1, 3, 104   ],
-                        [2, 2, 40   ],
-                        [3, 1, 102   ],
                     ]    
     
     for wfc in wib_femb_chns:

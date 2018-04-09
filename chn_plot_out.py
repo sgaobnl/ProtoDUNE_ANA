@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr  8 13:41:09 2018
+Last modified: Mon Apr  9 17:04:44 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -505,8 +505,8 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
         maxp_loc = np.where (chn_noise_paras[17][1:] == maxp)[0][0] 
         maxp_f_chns.append([chn_noise_paras[16][maxp_loc], maxp, chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0],])
         #if (lf_flg==True) and (int(chn_noise_paras[16][maxp_loc]) > 400 ): #(maxp > 0):
-        if (lf_flg==True) and (maxp > 0):
-            print int(chn_noise_paras[16][maxp_loc]), int(maxp), chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0]
+        #if (lf_flg==True) and (maxp > 0):
+        #    print int(chn_noise_paras[16][maxp_loc]), int(maxp), chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0]
 
         if (psd_en):
             if np.max(chn_noise_paras[17][10:]) > psd:

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Apr  7 18:25:38 2018
+Last modified: Sun Apr  8 13:41:09 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -324,19 +324,16 @@ def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, peaks_note = 
     if (fl_flg):
         f = chn_noise_paras[16]
         p = chn_noise_paras[17]
-    else
+        hff = chn_noise_paras[18]
+        hfp = chn_noise_paras[19]
+    else:
         f = chn_noise_paras[5]
         p = chn_noise_paras[6]
-
-    hfrms =  chn_noise_paras[7]
-    hfped =  chn_noise_paras[8]
-    if (fl_flg):
-        f = chn_noise_paras[18]
-        p = chn_noise_paras[19]
-    else
         hff = chn_noise_paras[11]
         hfp = chn_noise_paras[12]
 
+    hfrms =  chn_noise_paras[7]
+    hfped =  chn_noise_paras[8]
     sfrms =  chn_noise_paras[13]
     sfped =  chn_noise_paras[14]
     unstk_ratio  =  chn_noise_paras[15]
@@ -348,7 +345,7 @@ def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, peaks_note = 
  
     if (fl_flg):
         maxx=10000
-    else
+    else:
         maxx=10000*100
     ped_fft_subplot(ax1, f, p, maxx=maxx, title="Spectrum of raw data", label=label , peaks_note = peaks_note )
     ped_fft_subplot(ax2, hff, hfp, maxx=maxx, title="Spectrum of data after HPF", label=hflabel, peaks_note = peaks_note  )
@@ -502,14 +499,14 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
     hff_l = [] 
     hfp_l = [] 
     maxp_f_chns = []
-
  
     for chn_noise_paras in ffs:
         maxp = np.max(chn_noise_paras[17][1:])
         maxp_loc = np.where (chn_noise_paras[17][1:] == maxp)[0][0] 
         maxp_f_chns.append([chn_noise_paras[16][maxp_loc], maxp, chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0],])
-        if maxp > 0:
-            print chn_noise_paras[16][maxp_loc], maxp, chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0]
+        #if (lf_flg==True) and (int(chn_noise_paras[16][maxp_loc]) > 400 ): #(maxp > 0):
+        if (lf_flg==True) and (maxp > 0):
+            print int(chn_noise_paras[16][maxp_loc]), int(maxp), chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0]
 
         if (psd_en):
             if np.max(chn_noise_paras[17][10:]) > psd:

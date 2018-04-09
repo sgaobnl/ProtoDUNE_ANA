@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Apr  7 18:00:22 2018
+Last modified: Sun Apr  8 17:09:31 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -39,10 +39,10 @@ import pickle
 
 
 if __name__ == '__main__':
-    APAno=4
-    rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+    APAno=2
+    rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_01_16_2018/"%APAno
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_01_17_2018/"%APAno
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_01_17_2018/"%APAno
 #    rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 #    fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
 #    asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
@@ -50,13 +50,13 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    rmsrunno = "run01rms" #
+    rmsrunno = "run05rms" #
     fpgarunno = "run01fpg" #
     asicrunno = "run01asi" #
     wibnos = [0,1,2,3,4]
     fembnos = [0,1,2,3] #0~3
     jumbo_flag = False
-    wire_type = "U"
+    wire_type = "X"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     gains = ["250"]  #["250", "140"]
     tps = ["30"]#["05", "10", "20", "30"]
@@ -83,7 +83,12 @@ if __name__ == '__main__':
             chn_cnt = 0
             for wibno in wibnos:
                 for fembno in fembnos:
-                    if (not ((wibno == 1) and (fembno == 1) ) ) :
+                    if (not ((wibno == 2) and (fembno == 2) ) ) : #APA4
+                    #if (not ((wibno == 1) and (fembno == 1) ) ) : #APA4
+                    #if (not ((wibno == 0) and (fembno == 3) ) ) and \
+                    #   (not ((wibno == 2) and (fembno == 0) ) ) and \
+                    #   (not ((wibno == 2) and (fembno == 1) ) ) and \
+                    #   (not ((wibno == 3) and (fembno == 0) ) ) : #APA3
                         log_str = log_str +str(wibno)+str(fembno)+"_" 
                         #V plane
                         chns = []

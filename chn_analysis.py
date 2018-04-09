@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Apr  7 17:28:00 2018
+Last modified: Sun Apr  8 15:05:34 2018
 """
 
 #defaut setting for scientific caculation
@@ -138,7 +138,8 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     data_200ms_slice = chnrmsdata[0:200000:200]
 
     avg_cycle_l = 1
-    fft_s_l = len(chnrmsdata)//avg_cycle_l
+    if (len(chnrmsdata) >= 400000):
+        fft_s_l = 400000//avg_cycle_l
 
     if (fft_en):
         f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)

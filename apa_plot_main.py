@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Apr  4 12:42:50 2018
+Last modified: Sun Apr  8 18:23:44 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -34,15 +34,15 @@ from apa_plot_out import plot1_chns_enc
 from apa_plot_out import plot4_chns_gain
 from apa_plot_out import dict_filter
 
-APAno=2
-rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_01_17_2018/"%APAno
-fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_01_17_2018/"%APAno
-asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_01_17_2018/"%APAno
+APAno=4
+rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
 #rms_rootpath =  "/Users/shanshangao/Documents/data2/"
 #fpga_rootpath = "/Users/shanshangao/Documents/data2/"
 #asic_rootpath = "/Users/shanshangao/Documents/data2/"
 
-rmsrunno = "run08rms" #
+rmsrunno = "run02rms" #
 fpgarunno = "run01fpg" #
 asicrunno = "run01asi" #
 fembs_on_apa = range(1,21, 1) 

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Apr  7 18:15:45 2018
+Last modified: Sun Apr  8 11:51:53 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    rmsrunno = "run01rms" #
+    rmsrunno = "run02rms" #
     fpgarunno = "run01fpg" #
     asicrunno = "run01asi" #
     wibno = 4 #0~4
@@ -48,30 +48,15 @@ if __name__ == '__main__':
     chnno  = 0 #0~127
     chnnos  = [17, 18, 19, 20, 59, 60, 61, 62] #0~127
     gains = ["250"] 
-    tps = ["05", "10", "20", "30"]
+    #tps = ["05", "10", "20", "30"]
+    tps = [  "30"]
     jumbo_flag = False
     wib_femb_chns = [  
-                        [ 0, 2, 37   ] ,
-                        [ 0, 2, 90   ] ,
-                        [ 0, 2, 100  ] ,
-                        [ 0, 2, 117  ] ,
-                        [ 3, 1,1     ] ,
-                        [ 0, 3, 15   ] ,
-                        [ 1, 0, 114  ] ,
-                        [ 1, 0, 115  ] ,
-                        [ 4, 0, 117  ] ,
-                        [ 4, 1, 50   ] ,
-                        [ 0, 2, 37   ] ,
-                        [ 0, 2, 90   ] ,
-                        [ 0, 2, 100  ] ,
-                        [ 0, 2, 117  ] ,
-                        [ 3, 1,1     ] ,
-                        [ 0, 3, 15   ] ,
-                        [ 1, 0, 114  ] ,
-                        [ 1, 0, 115  ] ,
-                        [ 4, 0, 117  ] ,
-                        [ 4, 1, 50   ] ,
-                        [ 4, 0, 80   ] ,
+                        [0, 2, 120   ],
+                        [0, 3, 42   ],
+                        [1, 3, 104   ],
+                        [2, 2, 40   ],
+                        [3, 1, 102   ],
                     ]    
     
     for wfc in wib_femb_chns:

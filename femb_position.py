@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Mar 21 16:02:57 2018
+Last modified: 4/10/2018 4:27:15 PM
 """
 
 #defaut setting for scientific caculation
@@ -106,7 +106,7 @@ def femb_position (APAno=1):
                         ["B401", "WIB04_FEMB1", "CEbox096", "0x20000",], 
                         ["B402", "WIB03_FEMB1", "CEbox101", "0x20000",], 
                         ["B403", "WIB02_FEMB1", "CEbox038", "0x20000",], 
-                        ["B404", "WIB01_FEMB1", "CEbox085", "0x20000",], 
+                        ["B404", "WIB01_FEMB1", "CEbox102", "0x20000",], #085--> 102
                         ["B405", "WIB00_FEMB1", "CEbox089", "0x20000",], 
     
                         ["B406", "WIB04_FEMB0", "CEbox082", "0x20000",], 
@@ -128,6 +128,32 @@ def femb_position (APAno=1):
                         ["A420", "WIB00_FEMB2", "CEbox100", "0x20000",], 
                     ]
 
+    elif (APAno ==5):
+        femb_pos_np = [ 
+                        ["B501", "WIB04_FEMB1", "CEbox103", "0x20000",], 
+                        ["B502", "WIB03_FEMB1", "CEbox130", "0x20000",], 
+                        ["B503", "WIB02_FEMB1", "CEbox106", "0x20000",], 
+                        ["B504", "WIB01_FEMB1", "CEbox120", "0x20000",], 
+                        ["B505", "WIB00_FEMB1", "CEbox123", "0x20000",], 
+    
+                        ["B506", "WIB04_FEMB0", "CEbox091", "0x20000",], 
+                        ["B507", "WIB03_FEMB0", "CEbox075", "0x20000",], 
+                        ["B508", "WIB02_FEMB0", "CEbox049", "0x20000",], 
+                        ["B509", "WIB01_FEMB0", "CEbox108", "0x20000",], 
+                        ["B510", "WIB00_FEMB0", "CEbox113", "0x20000",], 
+                        
+                        ["A511", "WIB04_FEMB3", "CEbox128", "0x20000",], 
+                        ["A512", "WIB03_FEMB3", "CEbox114", "0x20000",], 
+                        ["A513", "WIB02_FEMB3", "CEbox039", "0x20000",], 
+                        ["A514", "WIB01_FEMB3", "CEbox125", "0x20000",], 
+                        ["A515", "WIB00_FEMB3", "CEbox122", "0x20000",], 
+    
+                        ["A516", "WIB04_FEMB2", "CEbox118", "0x20000",], 
+                        ["A517", "WIB03_FEMB2", "CEbox115", "0x20000",], 
+                        ["A518", "WIB02_FEMB2", "CEbox129", "0x20000",], 
+                        ["A519", "WIB01_FEMB2", "CEbox126", "0x20000",], 
+                        ["A520", "WIB00_FEMB2", "CEbox127", "0x20000",], 
+                    ]
 
     return femb_pos_np
 

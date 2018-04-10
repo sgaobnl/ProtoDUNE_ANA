@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Mar 21 16:02:57 2018
+Last modified: 4/10/2018 4:40:22 PM
 """
 
 #defaut setting for scientific caculation
@@ -126,6 +126,13 @@ def femb_position (APAno=1):
                         ["A418", "WIB02_FEMB2", "CEbox067", "0x20000",], 
                         ["A419", "WIB01_FEMB2", "CEbox037", "0x20000",], 
                         ["A420", "WIB00_FEMB2", "CEbox100", "0x20000",], 
+                    ]
+    elif (APAno ==9): #9 --> 40%APA
+        femb_pos_np = [ 
+                        ["A901", "WIB00_FEMB0", "CEbox001", "0x20000",], 
+                        ["A902", "WIB00_FEMB1", "CEbox002", "0x20000",], 
+                        ["A903", "WIB00_FEMB2", "CEbox003", "0x20000",], 
+                        ["A904", "WIB00_FEMB3", "CEbox004", "0x20000",], 
                     ]
 
 

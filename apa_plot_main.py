@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Apr 10 22:45:54 2018
+Last modified: Wed Apr 11 12:15:02 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -35,9 +35,9 @@ from apa_plot_out import plot4_chns_gain
 from apa_plot_out import dict_filter
 
 APAno=5
-rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
-fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
-asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_21_2018/"%APAno
+rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_20_2018/"%APAno
+fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_20_2018/"%APAno
+asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_20_2018/"%APAno
 #rms_rootpath =  "/Users/shanshangao/Documents/data2/"
 #fpga_rootpath = "/Users/shanshangao/Documents/data2/"
 #asic_rootpath = "/Users/shanshangao/Documents/data2/"
@@ -60,7 +60,10 @@ for fembloc in fembs_on_apa:
         femb_cs.append(["apaloc", "A" + format(APAno, "1d") + format(fembloc, "02d")])
 
 if APAno == 3:
-    femb_cs.remove(["apaloc","B308"])  #APA3 B308 has broken FE ASIC
+    femb_cs.remove(["apaloc","A308"])  #APA3 B308 has broken FE ASIC
+#if APAno == 4: #only at RT
+#    femb_cs.remove(["apaloc","B409"])  #APA3 B308 has broken FE ASIC
+#    femb_cs.remove(["apaloc","A420"])  #APA3 B308 has broken FE ASIC
 
 orgdicts = dict_filter (orgdicts, or_dnf =femb_cs, and_flg=False  ) 
 

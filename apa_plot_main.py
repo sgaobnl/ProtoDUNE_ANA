@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/10/2018 4:41:19 PM
+Last modified: 4/10/2018 9:29:44 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -45,7 +45,7 @@ asic_rootpath = "X:/Rawdata/Rawdata_04_10_2018/"
 rmsrunno = "run01rms" #
 fpgarunno = "run01fpg" #
 asicrunno = "run01asi" #
-fembs_on_apa = range(1,21, 1) 
+fembs_on_apa = range(1,5, 1) 
 
 sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
 fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno
@@ -55,7 +55,7 @@ orgdicts = load_sum (sum_path, fn + ".allsum")
 femb_cs = []
 for fembloc in fembs_on_apa:
     if (fembloc <= 10):
-        femb_cs.append(["apaloc", "B" + format(APAno, "1d") + format(fembloc, "02d")])
+        femb_cs.append(["apaloc", "A" + format(APAno, "1d") + format(fembloc, "02d")])
     else:
         femb_cs.append(["apaloc", "A" + format(APAno, "1d") + format(fembloc, "02d")])
 

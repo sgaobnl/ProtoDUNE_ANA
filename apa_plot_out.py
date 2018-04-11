@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Apr  3 16:29:03 2018
+Last modified: 4/10/2018 9:37:27 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -181,8 +181,10 @@ def sub_rms_c_plot5 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa =
             encmean = np.mean(enc)
             encstd = np.std(enc)
 
-            ax.plot(apachn, enc,color="C" + str(loc%10))
-            ax.scatter(apachn, enc, marker='.',color="C" + str(loc%10))
+            #ax.plot(apachn, enc,color="C" + str(loc%10))
+            ax.plot(apachn, enc,)
+            ax.scatter(apachn, enc, marker='.')
+            #ax.scatter(apachn, enc, marker='.',color="C" + str(loc%10))
             ax.text(apachn[5], ymax*0.96, apaloc, fontsize=8)
             ax.text(apachn[5], ymax*0.92, "wib%d"%wibno, fontsize=6)
             ax.text(apachn[5], ymax*0.88, "femb%d"%fembno, fontsize=6)
@@ -309,8 +311,9 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     e = [xenc_tps[0][1], xenc_tps[1][1], xenc_tps[2][1], xenc_tps[3][1]]
     label = "%d"%xchns +" X " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='g', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
+    #for xye in zip(x, y, e):                                   
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
 
     y = [venc_tps[0][0], venc_tps[1][0], venc_tps[2][0], venc_tps[3][0]]
     if (np.max(y) >  maxy):
@@ -318,8 +321,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     e = [venc_tps[0][1], venc_tps[1][1], venc_tps[2][1], venc_tps[3][1]]
     label = "%d"%vchns +" V " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='b', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
+    #for xye in zip(x, y, e):                                   
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
 
     y = [uenc_tps[0][0], uenc_tps[1][0], uenc_tps[2][0], uenc_tps[3][0]]
     if (np.max(y) >  maxy):
@@ -327,8 +330,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     e = [uenc_tps[0][1], uenc_tps[1][1], uenc_tps[2][1], uenc_tps[3][1]]
     label = "%d"%uchns +" U " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='r', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
+    #for xye in zip(x, y, e):                                   
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
 
     ax.legend(loc=4)
     ax.set_xlim([0,4])
@@ -472,11 +475,14 @@ def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = 
             enc = np.array(plotrms)*np.array(plotgain)
 
             label = "%1.1f$\mu$s)"%tp 
-            ax.scatter(apachn, enc, marker='.',color="C" + str(loc%6+4))
+            #ax.scatter(apachn, enc, marker='.',color="C" + str(loc%6+4))
+            ax.scatter(apachn, enc, marker='.')
             if (loc == 1):
-                ax.plot(apachn, enc,color="C" + str(int(tp)), label=label)
+                #ax.plot(apachn, enc,color="C" + str(int(tp)), label=label)
+                ax.plot(apachn, enc, label=label)
             else:
-                ax.plot(apachn, enc,color="C" + str(int(tp)))
+                #ax.plot(apachn, enc,color="C" + str(int(tp)))
+                ax.plot(apachn, enc)
             if (tp ==2):
                 ax.text(apachn[5], ymax*0.96, apaloc, fontsize=8)
                 ax.text(apachn[5], ymax*0.92, "wib%d"%wibno, fontsize=8)
@@ -556,11 +562,14 @@ def sub_ped_plot2 (ax, dicts , fembs_on_apa = range(1, 21, 1) ) :
             apachn, rms, hfrms, sfrms, ped, hfped, sfped, fpg_gain, asi_gain, unstk_ratio = draw_results (subdicts) 
 
             label = "%1.1f$\mu$s)"%tp 
-            ax.scatter(apachn, ped, marker='.',color="C" + str(loc%6+4))
+            #ax.scatter(apachn, ped, marker='.',color="C" + str(loc%6+4))
+            ax.scatter(apachn, ped, marker='.')
             if (loc == 1):
-                ax.plot(apachn, ped,color="C" + str(int(tp)), label=label)
+                #ax.plot(apachn, ped,color="C" + str(int(tp)), label=label)
+                ax.plot(apachn, ped, label=label)
             else:
-                ax.plot(apachn, ped,color="C" + str(int(tp)))
+                #ax.plot(apachn, ped,color="C" + str(int(tp)))
+                ax.plot(apachn, ped)
             ax.text(apachn[5], ymax*0.90, apaloc, fontsize=8)
             ax.text(apachn[5], ymax*0.80, "wib%d"%wibno, fontsize=8)
             ax.text(apachn[5], ymax*0.70, "femb%d"%fembno, fontsize=8)
@@ -632,22 +641,22 @@ def sub_gain_plot3 (ax, g, tp_us, xchns, xgain, vchns, vgain, uchns, ugain, titl
     e = [xgain[0][1], xgain[1][1], xgain[2][1], xgain[3][1]]
     label = "%d"%xchns + " X " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='g', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
 
     y = [vgain[0][0], vgain[1][0], vgain[2][0], vgain[3][0]]
     e = [vgain[0][1], vgain[1][1], vgain[2][1], vgain[3][1]]
     label = "%d"%vchns +" V " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='b', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
 
     y = [ugain[0][0], ugain[1][0], ugain[2][0], ugain[3][0]]
     e = [ugain[0][1], ugain[1][1], ugain[2][1], ugain[3][1]]
     label = "%d"%uchns +" U " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='r', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
 
     ax.legend(loc=4)
     ax.set_xlim([0,4])
@@ -757,11 +766,14 @@ def sub_gain_plot4 (ax, dicts, cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1
             else:
                 pgain = asi_gain
             label = "%1.1f$\mu$s)"%tp 
-            ax.scatter(apachn, pgain, marker='.',color="C" + str(loc%6+4))
+            #ax.scatter(apachn, pgain, marker='.',color="C" + str(loc%6+4))
+            ax.scatter(apachn, pgain, marker='.')
             if (loc == 1):
-                ax.plot(apachn, pgain,color="C" + str(int(tp)), label=label)
+                #ax.plot(apachn, pgain,color="C" + str(int(tp)), label=label)
+                ax.plot(apachn, pgain, label=label)
             else:
-                ax.plot(apachn, pgain,color="C" + str(int(tp)))
+                #ax.plot(apachn, pgain,color="C" + str(int(tp)))
+                ax.plot(apachn, pgain)
             if (tp ==2):
                 ax.text(apachn[5], ymax*0.96, apaloc, fontsize=8)
                 ax.text(apachn[5], ymax*0.92, "wib%d"%wibno, fontsize=8)

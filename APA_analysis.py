@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Apr  5 17:04:55 2018
+Last modified: 4/10/2018 8:32:24 PM
 """
 
 #defaut setting for scientific caculation
@@ -383,21 +383,23 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
 
 
 if __name__ == '__main__':
-    APAno=1
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_11_10_2017/"%APAno
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_11_10_2017/"%APAno
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_11_10_2017/"%APAno
+    APAno=9
+    rms_rootpath = "X:/Rawdata/Rawdata_04_10_2018/"
+    fpga_rootpath = "X:/Rawdata/Rawdata_04_10_2018/"
+    asic_rootpath = "X:/Rawdata/Rawdata_04_10_2018/"
+
     #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #ali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     from timeit import default_timer as timer
     s0= timer()
     print "Start..., please wait..."
-    rmsrunno = "run03rms" #
-    fpgarunno = "run04fpg" #
-    asicrunno = "run05asi" #
+    rmsrunno = "run01rms" #
+    fpgarunno = "run01fpg" #
+    asicrunno = "run01asi" #
     gains = ["250", "140"] 
+    #gains = ["140"] 
     tps = ["05", "10", "20", "30"]
-    jumbo_flag = False
+    jumbo_flag = True
 
     results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag )
 

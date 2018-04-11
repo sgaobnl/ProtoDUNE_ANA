@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/10/2018 9:37:27 PM
+Last modified: 4/10/2018 11:22:07 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -131,11 +131,11 @@ def draw_results (dicts) :
     unstk_ratio = []
     for i in range(len(dicts)):
         if dicts[i]["wire"][0] == "X":
-            apachn.append(48*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append(64*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
         elif dicts[i]["wire"][0] == "V":
-            apachn.append(40*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append(32*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
         elif dicts[i]["wire"][0] == "U":
-            apachn.append(40*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append(32*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
         rms.append(dicts[i]["rms"])
         hfrms.append(dicts[i]["hfrms"])
         sfrms.append(dicts[i]["sfrms"])

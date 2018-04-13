@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Apr 12 23:44:00 2018
+Last modified: Thu Apr 12 23:52:20 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -21,6 +21,7 @@ import numpy as np
 import struct
 import os
 from sys import exit
+import sys
 import os.path
 import math
 import pickle

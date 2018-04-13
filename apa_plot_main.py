@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Apr 11 12:15:02 2018
+Last modified: Thu Apr 12 23:44:00 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -34,17 +34,24 @@ from apa_plot_out import plot1_chns_enc
 from apa_plot_out import plot4_chns_gain
 from apa_plot_out import dict_filter
 
-APAno=5
-rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_20_2018/"%APAno
-fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_20_2018/"%APAno
-asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_03_20_2018/"%APAno
-#rms_rootpath =  "/Users/shanshangao/Documents/data2/"
-#fpga_rootpath = "/Users/shanshangao/Documents/data2/"
-#asic_rootpath = "/Users/shanshangao/Documents/data2/"
+APAno = sys.argv[1]
+rmsdate = sys.argv[2]
+fpgdate = sys.argv[3]
+asidate = sys.argv[4]
+rmsrunno = sys.argv[5]
+fpgarunno = sys.argv[6]
+asicrunno = sys.argv[7]
+apafolder = sys.argv[8]
 
-rmsrunno = "run01rms" #
-fpgarunno = "run01fpg" #
-asicrunno = "run01asi" #
+if (apafloder != "APA"):
+    rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+else:
+    rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
+    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
+    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+ 
 fembs_on_apa = range(1,21, 1) 
 
 sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"

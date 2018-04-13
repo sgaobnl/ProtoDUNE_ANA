@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Apr 12 23:54:08 2018
+Last modified: Thu Apr 12 23:55:03 2018
 """
 
 #defaut setting for scientific caculation
@@ -384,7 +384,7 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
 
 
 if __name__ == '__main__':
-    APAno = sys.argv[1]
+    APAno = int(sys.argv[1])
     rmsdate = sys.argv[2]
     fpgdate = sys.argv[3]
     asidate = sys.argv[4]

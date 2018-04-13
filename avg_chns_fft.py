@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Apr 12 23:53:53 2018
+Last modified: Thu Apr 12 23:55:17 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -40,7 +40,7 @@ import pickle
 
 
 if __name__ == '__main__':
-    APAno = sys.argv[1]
+    APAno = int(sys.argv[1])
     rmsdate = sys.argv[2]
     fpgdate = sys.argv[3]
     asidate = sys.argv[4]

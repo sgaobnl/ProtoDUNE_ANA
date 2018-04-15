@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 15:17:41 2018
+Last modified: Sun Apr 15 15:56:55 2018
 """
 
 #defaut setting for scientific caculation
@@ -381,8 +381,6 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
     with open(fp, "wb") as fp:
         pickle.dump(sumtodict, fp)
 
-
-
 if __name__ == '__main__':
     APAno = int(sys.argv[1])
     rmsdate = sys.argv[2]
@@ -397,12 +395,14 @@ if __name__ == '__main__':
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+    elif (apafolder == "APA40"):
+        rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
-    #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    #ali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     from timeit import default_timer as timer
     s0= timer()
     print "Start..., please wait..."

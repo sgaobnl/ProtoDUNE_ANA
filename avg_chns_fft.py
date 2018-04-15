@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 15:57:03 2018
+Last modified: Sun Apr 15 16:31:44 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -48,15 +48,19 @@ if __name__ == '__main__':
     fpgarunno = sys.argv[6]
     asicrunno = sys.argv[7]
     apafolder = sys.argv[8]
+    jumbo_flag = (sys.argv[9] == "True")
+    psd_en = (sys.argv[10] == "True")
+    psd = int(sys.argv[11])
+ 
 
-    if (apafolder != "APA"):
-        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
-        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
-        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
-    elif (apafolder == "APA40"):
+    if (apafolder == "APA40"):
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
+    elif (apafolder != "APA"):
+        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
@@ -68,13 +72,10 @@ if __name__ == '__main__':
     
     wibnos = [0,1,2,3,4]
     fembnos = [0,1,2,3] #0~3
-    jumbo_flag = False
     wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     gains = ["250"]  #["250", "140"]
     tps = ["20"]#["05", "10", "20", "30"]
-    psd_en = True
-    psd = 0
     
     out_path = rms_rootpath + "/" + "results/" + "Avg_fft_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
     if (os.path.exists(out_path)):

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Mar 24 18:12:53 2018
+Last modified: Sun Apr 15 15:17:23 2018
 """
 
 #defaut setting for scientific caculation
@@ -607,7 +607,7 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
             break
 
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
     wireinfo = None
     for onewire in All_sort:
         if (int(onewire[1]) == chnno):
@@ -639,7 +639,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, cali_rootpath, APAno = 4, \
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)

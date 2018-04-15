@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Apr 13 08:03:33 2018
+Last modified: Sun Apr 15 15:16:53 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -393,7 +393,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
             break
 
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
     wireinfo = None
     for onewire in All_sort:
         if (int(onewire[1]) == chnno):

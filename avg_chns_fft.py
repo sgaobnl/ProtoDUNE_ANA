@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Apr 13 07:41:48 2018
+Last modified: Sun Apr 15 15:16:32 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -83,7 +83,7 @@ if __name__ == '__main__':
             sys.exit()
     
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     ffts = []
     for gain in gains:

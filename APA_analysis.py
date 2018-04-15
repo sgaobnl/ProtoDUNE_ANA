@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Apr 12 23:55:03 2018
+Last modified: Sun Apr 15 15:17:41 2018
 """
 
 #defaut setting for scientific caculation
@@ -49,7 +49,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     fpg_cali_flg = False 
@@ -114,7 +114,7 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     fpg_cali_flg = False 

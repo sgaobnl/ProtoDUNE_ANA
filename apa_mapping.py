@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/15/2018 3:08:39 PM
+Last modified: Sun Apr 15 16:21:52 2018
 """
 
 #defaut setting for scientific caculation
@@ -18,7 +18,7 @@ Last modified: 4/15/2018 3:08:39 PM
 
 class APA_MAP:
     def apa_femb_mapping(self ):
-        if (self.apa == "ProtoDUNE"):
+        if (self.APA == "ProtoDUNE"):
             apa_femb_loc = [ 
                             #wire   #FEMBchn  #FEMBasic # ASICchn
                             ["X01", "031", 2, "15"], ["X03", "030", 2, "14"], ["X05", "029", 2, "13"], ["X07", "028", 2, "12"],

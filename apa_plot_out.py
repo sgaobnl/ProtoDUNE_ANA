@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 15:46:54 2018
+Last modified: Sun Apr 15 17:11:16 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -123,7 +123,7 @@ def fembwire_cnts (dicts) :
     fembv_cnt = 0
     fembu_cnt = 0
     for i in range(len(dicts)):
-        if (dicts[i]["apaloc"] == dicts[0]["apaloc"])
+        if (dicts[i]["apaloc"] == dicts[0]["apaloc"]):
             if dicts[i]["wire"][0] == "X":
                 fembx_cnt = fembx_cnt + 1
             elif dicts[i]["wire"][0] == "V":

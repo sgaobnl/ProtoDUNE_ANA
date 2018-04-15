@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Apr 12 23:55:17 2018
+Last modified: Fri Apr 13 07:41:48 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     gains = ["250"]  #["250", "140"]
     tps = ["20"]#["05", "10", "20", "30"]
-    psd_en = False
+    psd_en = True
     psd = 0
     
     out_path = rms_rootpath + "/" + "results/" + "Avg_fft_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"

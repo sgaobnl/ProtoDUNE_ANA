@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Mon Apr  9 17:04:44 2018
+Last modified: Fri Apr 13 08:03:33 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -538,6 +538,7 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
     
     if (len(f_l) == 0):
         print "No wire has noise spike large than %ddB"%psd
+        valid_chns = 0
     else:
         valid_chns = i
         f_l = f_l / ( i*1.0)

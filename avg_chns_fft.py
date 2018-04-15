@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 16:31:44 2018
+Last modified: 4/15/2018 5:16:55 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -70,8 +70,12 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    wibnos = [0,1,2,3,4]
-    fembnos = [0,1,2,3] #0~3
+    if (apafolder == "APA40"):
+        wibnos = [0]
+        fembnos = [0,1,2,3] #0~3
+    else:
+        wibnos = [0,1,2,3,4]
+        fembnos = [0,1,2,3] #0~3
     wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     gains = ["250"]  #["250", "140"]

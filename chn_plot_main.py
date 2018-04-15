@@ -30,13 +30,31 @@ from chn_plot_out import plot_a_chn
 
 
 if __name__ == '__main__':
-    APAno=5
-    rms_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_04_09_2018/"%APAno
-    fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_04_09_2018/"%APAno
-    asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_04_09_2018/"%APAno
-    #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    #fpga_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    #asic_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+    APAno = int(sys.argv[1])
+    rmsdate = sys.argv[2]
+    fpgdate = sys.argv[3]
+    asidate = sys.argv[4]
+    rmsrunno = sys.argv[5]
+    fpgarunno = sys.argv[6]
+    asicrunno = sys.argv[7]
+    apafolder = sys.argv[8]
+    wibno  = int(sys.argv[9])
+    fembno  = int(sys.argv[10])
+    chnno  = int(sys.argv[11])
+
+    if (apafolder != "APA"):
+        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+    elif (apafolder == "APA40"):
+        rms_rootpath =  "D:/Rawdata/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "D:/Rawdata/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "D:/Rawdata/Rawdata_" + asidate + "/"
+    else:
+        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
+        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
+        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+ 
     from timeit import default_timer as timer
     s0= timer()
     print "Start...please wait..."

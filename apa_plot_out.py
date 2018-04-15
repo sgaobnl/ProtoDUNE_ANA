@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/11/2018 3:30:44 PM
+Last modified: Sun Apr 15 15:46:54 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -118,6 +118,20 @@ def find_a_chn(orgdicts, wibno=0, fembno=0, fembchn=0) :
     dicts = dict_filter(orgdicts, and_dnf =[["wib", wibno], ["femb", fembno], ["fembchn", fembchn] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
     return dicts
 
+def fembwire_cnts (dicts) :
+    fembx_cnt = 0
+    fembv_cnt = 0
+    fembu_cnt = 0
+    for i in range(len(dicts)):
+        if (dicts[i]["apaloc"] == dicts[0]["apaloc"])
+            if dicts[i]["wire"][0] == "X":
+                fembx_cnt = fembx_cnt + 1
+            elif dicts[i]["wire"][0] == "V":
+                fembv_cnt = fembv_cnt + 1
+            elif dicts[i]["wire"][0] == "U":
+                fembu_cnt = fembu_cnt + 1
+    return fembx_cnt, fembv_cnt, fembu_cnt
+
 def draw_results (dicts) :
     apachn=[]
     rms=[]
@@ -129,13 +143,14 @@ def draw_results (dicts) :
     fpg_gain=[]
     asi_gain=[]
     unstk_ratio = []
+    fembx_cnt, fembv_cnt, fembu_cnt = fembwire_cnts (dicts) 
     for i in range(len(dicts)):
         if dicts[i]["wire"][0] == "X":
-            apachn.append(64*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append(fembx_cnt*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
         elif dicts[i]["wire"][0] == "V":
-            apachn.append(32*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append(fembv_cnt*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
         elif dicts[i]["wire"][0] == "U":
-            apachn.append(32*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append(fembu_cnt*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
         rms.append(dicts[i]["rms"])
         hfrms.append(dicts[i]["hfrms"])
         sfrms.append(dicts[i]["sfrms"])

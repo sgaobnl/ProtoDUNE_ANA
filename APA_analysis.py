@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/11/2018 11:43:01 AM
+Last modified: Sun Apr 15 16:01:48 2018
 """
 
 #defaut setting for scientific caculation
@@ -49,7 +49,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     fpg_cali_flg = False 
@@ -114,7 +114,7 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     fpg_cali_flg = False 
@@ -381,24 +381,34 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
     with open(fp, "wb") as fp:
         pickle.dump(sumtodict, fp)
 
-
 if __name__ == '__main__':
-    APAno=9
-    rms_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
-    fpga_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
-    asic_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
+    APAno = int(sys.argv[1])
+    rmsdate = sys.argv[2]
+    fpgdate = sys.argv[3]
+    asidate = sys.argv[4]
+    rmsrunno = sys.argv[5]
+    fpgarunno = sys.argv[6]
+    asicrunno = sys.argv[7]
+    apafolder = sys.argv[8]
 
-    #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
-    #ali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
+    if (apafolder != "APA"):
+        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+    elif (apafolder == "APA40"):
+        rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
+    else:
+        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
+        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
+        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
     from timeit import default_timer as timer
     s0= timer()
     print "Start..., please wait..."
-    rmsrunno = "run01rms" #
-    fpgarunno = "run01fpg" #
-    asicrunno = "run01asi" #
     gains = ["250", "140"] 
-    #gains = ["140"] 
     tps = ["05", "10", "20", "30"]
+    #jumbo_flag = False
     jumbo_flag = True
 
     results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag )

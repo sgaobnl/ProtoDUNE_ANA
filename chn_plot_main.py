@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Mon Apr  9 17:13:14 2018
+Last modified: Sun Apr 15 16:04:36 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -21,6 +21,7 @@ import numpy as np
 import struct
 import os
 from sys import exit
+import sys
 import os.path
 import math
 
@@ -40,16 +41,14 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    rmsrunno = "run01rms" #
-    fpgarunno = "run01fpg" #
-    asicrunno = "run01asi" #
     gains = ["250"] 
     #tps = ["05", "10", "20", "30"]
     tps = [  "20"]
-    jumbo_flag = False
+    jumbo_flag = True
     wib_femb_chns = [  
                         #wib(0-4), femb(0-3), chn(0~127)
-                        [0, 2, 120   ],
+                        #[0, 2, 120   ],
+                        [wibno, fembno, chnno]
                     ]    
     
     for wfc in wib_femb_chns:

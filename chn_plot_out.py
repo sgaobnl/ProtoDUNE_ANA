@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Mon Apr  9 17:04:44 2018
+Last modified: Sun Apr 15 15:16:53 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -393,7 +393,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
             break
 
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
     wireinfo = None
     for onewire in All_sort:
         if (int(onewire[1]) == chnno):
@@ -538,6 +538,7 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
     
     if (len(f_l) == 0):
         print "No wire has noise spike large than %ddB"%psd
+        valid_chns = 0
     else:
         valid_chns = i
         f_l = f_l / ( i*1.0)

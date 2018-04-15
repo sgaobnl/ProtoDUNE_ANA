@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 16:45:51 2018
+Last modified: 4/15/2018 5:23:21 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -427,6 +427,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
         cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
+    pp.close()
     print "results path: " + fp
 
 def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \

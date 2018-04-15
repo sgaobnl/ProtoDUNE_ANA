@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/11/2018 12:21:27 PM
+Last modified: 4/14/2018 7:08:17 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -35,9 +35,9 @@ from apa_plot_out import plot4_chns_gain
 from apa_plot_out import dict_filter
 
 APAno=9
-rms_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
-fpga_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
-asic_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
+rms_rootpath = "D:/APA40/Rawdata/Rawdata_04_14_2018/"
+fpga_rootpath = "D:/APA40/Rawdata/Rawdata_04_14_2018/"
+asic_rootpath = "D:/APA40/Rawdata/Rawdata_04_14_2018/"
 #rms_rootpath =  "/Users/shanshangao/Documents/data2/"
 #fpga_rootpath = "/Users/shanshangao/Documents/data2/"
 #asic_rootpath = "/Users/shanshangao/Documents/data2/"

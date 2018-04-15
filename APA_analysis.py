@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/11/2018 11:43:01 AM
+Last modified: 4/14/2018 2:06:03 PM
 """
 
 #defaut setting for scientific caculation
@@ -384,9 +384,9 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
 
 if __name__ == '__main__':
     APAno=9
-    rms_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
-    fpga_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
-    asic_rootpath = "X:/Rawdata/Rawdata_04_11_2018/"
+    rms_rootpath = "D:/APA40/Rawdata/Rawdata_04_14_2018/"
+    fpga_rootpath = "D:/APA40/Rawdata/Rawdata_04_14_2018/"
+    asic_rootpath = "D:/APA40/Rawdata/Rawdata_04_14_2018/"
 
     #rms_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 
     #ali_rootpath = "/Users/shanshangao/Documents/data2/Rawdata_03_21_2018/" 

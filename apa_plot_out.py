@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Mon Apr 16 00:32:38 2018
+Last modified: Mon Apr 16 00:39:04 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -43,6 +43,13 @@ def load_sum (sum_path, rd_fn):
         print fp + " doesn't exist, exit anyway"
         exit()
     return sumtodict
+
+def del_bads (dicts, bad_wib_fembchns):
+    for badone in bad_wib_fembchns:
+        for i in range(len(dicts)):
+            if (dicts[i]['wib'] == badone[0]) and (dicts[i]['femb'] == badone[1]) and (dicts[i]['fembchn'] == badone[2]) :
+                dicts.remove(ditcs[i])
+    return dicts
 
 def enctp_sort_bywire (dicts,  wiretype="X", fembs_on_apa = range(1, 21, 1) ) :
     sort_apa_wires = []

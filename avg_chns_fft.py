@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 21:28:06 2018
+Last modified: Sun Apr 15 21:32:44 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -52,8 +52,8 @@ if __name__ == '__main__':
     psd_en = (sys.argv[10] == "True")
     psd = int(sys.argv[11])
     wire_type = sys.argv[12]
-    gains = sys.argv[13]
-    tps = sys.argv[14]
+    gains = [sys.argv[13]]
+    tps = [sys.argv[14]]
 
  
 

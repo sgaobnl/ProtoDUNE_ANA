@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 21:14:59 2018
+Last modified: Sun Apr 15 21:28:06 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -51,6 +51,10 @@ if __name__ == '__main__':
     jumbo_flag = (sys.argv[9] == "True")
     psd_en = (sys.argv[10] == "True")
     psd = int(sys.argv[11])
+    wire_type = sys.argv[12]
+    gains = sys.argv[13]
+    tps = sys.argv[14]
+
  
 
     if (apafolder == "APA40"):
@@ -79,10 +83,10 @@ if __name__ == '__main__':
     else:
         wibnos = [0,1,2,3,4]
         fembnos = [0,1,2,3] #0~3
-    wire_type = "V"
+    #wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
-    gains = ["250"]  #["250", "140"]
-    tps = ["20"]#["05", "10", "20", "30"]
+    #gains = ["250"]  #["250", "140"]
+    #tps = ["20"]#["05", "10", "20", "30"]
     
     out_path = rms_rootpath + "/" + "results/" + "Avg_fft_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
     if (os.path.exists(out_path)):

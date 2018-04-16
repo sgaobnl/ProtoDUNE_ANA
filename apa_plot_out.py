@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 23:29:44 2018
+Last modified: Sun Apr 15 23:37:00 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -236,7 +236,7 @@ def sub_rms_p_plot5 (ax, dicts, rms_cs="hfrms" ) :
         t = "Raw Data"
 
     cmp_rms = np.array(rms) / (np.array(plotrms) *1.0 ) 
-    cmp_rms = filter(lambda x:x<(5*np.std(cmp_rms)), cmp_rms)
+    cmp_rms = filter(lambda x:x< (np.mean(cmp_rms) + 5*np.std(cmp_rms)), cmp_rms)
     rms110_cnt = 0
     rms90_cnt = 0
     for i in cmp_rms:
@@ -550,7 +550,7 @@ def sub_chns_hist_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain" ) :
         plotgain = asi_gain
 
     enc = np.array(plotrms)*np.array(plotgain)
-    enc = filter(lambda x:x<(5*np.std(enc)), enc)
+    enc = filter(lambda x:x<(np.mean(enc) + 5*np.std(enc)), enc)
     encmean = np.mean(enc)
     encstd = np.std(enc)
     N = len(enc)
@@ -615,7 +615,7 @@ def sub_ped_hist_plot2 (ax, dicts ) :
 
     ax.grid()
     label = "%d$\pm$%d"%(int(pedmean), int(pedstd)) 
-    ped = filter(lambda x:x<(5*np.std(ped)), ped)
+    ped = filter(lambda x:x<(np.mean(ped) + 5*np.std(ped)), ped)
     ax.hist(ped, normed=1, bins=sigma5*2, range=(pedmean-sigma5, pedmean+sigma5),  histtype='bar', label=label, color='b', rwidth=0.9 )
 
     gaussian_x = np.linspace(pedmean - 3*pedstd, pedmean + 3*pedstd, 100)
@@ -829,7 +829,7 @@ def sub_hist_gain_plot4 (ax, dicts,  cali_cs="fpg_gain" ) :
 
     ax.grid()
     label = "%1.1f$\mu$s, %d$\pm$%d"%(tp, int(pgainmean), int(pgainstd)) 
-    pgain = filter(lambda x:x<(5*np.std(pgain)), pgain)
+    pgain = filter(lambda x:x<(np.mean(pgain) + 5*np.std(pgain)), pgain)
     ax.hist(pgain, normed=1, bins=sigma3*2, range=(pgainmean-sigma3, pgainmean+sigma3),  histtype='bar', label=label, color='b', rwidth=0.9 )
 
     gaussian_x = np.linspace(pgainmean - 3*pgainstd, pgainmean + 3*pgainstd, 100)

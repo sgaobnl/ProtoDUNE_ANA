@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/15/2018 6:06:31 PM
+Last modified: 4/15/2018 8:20:29 PM
 """
 
 #defaut setting for scientific caculation
@@ -187,6 +187,6 @@ class APA_MAP:
 
     def __init__(self):
 #        self.APA = 'LArIAT'
-#        self.APA = 'APA40'
-        self.APA = 'ProtoDUNE'
+        self.APA = 'APA40'
+#        self.APA = 'ProtoDUNE'
 

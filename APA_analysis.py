@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 16:27:22 2018
+Last modified: Sun Apr 15 20:45:10 2018
 """
 
 #defaut setting for scientific caculation
@@ -38,7 +38,7 @@ import multiprocessing as wib_mp
 def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",
                wibno=0,  fembno=0, asicno=0, gain="250", tp="05" ,\
-               jumbo_flag=False ):
+               jumbo_flag=False, apa= "ProtoDUNE" ):
     femb_pos_np = femb_position (APAno)
     wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
     apainfo = None
@@ -49,6 +49,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
+    apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
@@ -103,7 +104,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
 def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",
                wibno=0,  fembno=0, asicno=0, gain="250", tp="05" ,\
-               jumbo_flag=False ):
+               jumbo_flag=False , apa= "ProtoDUNE" ):
     femb_pos_np = femb_position (APAno)
     wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
     apainfo = None
@@ -114,6 +115,7 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
 
     feset_info = [gain, tp]
     apa_map = APA_MAP()
+    apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
@@ -163,11 +165,11 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
 def ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",\
                wibno=0,  fembno=0,  gain="250", tp="05" ,\
-               jumbo_flag=False ):
+               jumbo_flag=False, apa="ProtoDUNE" ):
     #multiprocessing mp_ana_a_asic, process a FEMB at a time
     mpout = mp.Queue()
     mps = [ mp.Process(target=mp_ana_a_asic, args=(mpout, rms_rootpath, fpga_rootpath, asic_rootpath, APAno , rmsrunno, fpgarunno, asicrunno, wibno, fembno, asicno, gain,\
-                      tp, jumbo_flag ) ) for asicno in range(8)]
+                      tp, jumbo_flag, apa ) ) for asicno in range(8)]
     for p in mps:
         p.start()
     for p in mps:
@@ -183,13 +185,13 @@ def ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
 def pipe_ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",\
                wibno=0,  fembno=0,  gain="250", tp="05" ,\
-               jumbo_flag=False ):
+               jumbo_flag=False, apa="ProtoDUNE" ):
     #multiprocessing mp_ana_a_asic, process a FEMB at a time
     femb_results = []
     mps = []
     for asicno in range(8):
         pc, cc = Pipe()
-        p = mp.Process(target=pipe_ana_a_asic, args=(cc, rms_rootpath, fpga_rootpath, asic_rootpath, APAno , rmsrunno, fpgarunno, asicrunno, wibno, fembno, asicno, gain, tp, jumbo_flag ) ) 
+        p = mp.Process(target=pipe_ana_a_asic, args=(cc, rms_rootpath, fpga_rootpath, asic_rootpath, APAno , rmsrunno, fpgarunno, asicrunno, wibno, fembno, asicno, gain, tp, jumbo_flag, apa ) ) 
         mps.append([pc, cc, p])
 
     for onep in mps:
@@ -207,10 +209,11 @@ def pipe_ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
 def mp_ana_a_femb(cc, rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",\
                wibno=0,  fembno=0,  gain="250", tp="05" ,\
-               jumbo_flag=False ):
+               jumbo_flag=False, apa="ProtoDUNE" ):
     #multiprocessing mp_ana_a_asic, process a FEMB at a time
     print "WIB#%d FEMB%d is being analyzed..." %(wibno, fembno)
-    tmp = pipe_ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+    tmp = pipe_ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, \
+                          wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, apa=apa )
     cc.send(tmp)
     cc.close()
 
@@ -250,7 +253,7 @@ def chk_a_apa (rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, rmsrunno =
     return alive_wibs
 
 def ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, rmsrunno = "run01rms",fpgarunno = "run01fpg", asicrunno = "run01asi",\
-               wibno=0,  gain="250", tp="05", jumbo_flag=False, pipe_en = False ):
+               wibno=0,  gain="250", tp="05", jumbo_flag=False, pipe_en = False , apa="ProtoDUNE"):
     alive_fembs = chk_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
     wib_results = []
 
@@ -265,7 +268,7 @@ def ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, rmsrunno = 
         wib_wps = []
         for fembno in alive_fembs[1]:
             cc = ccs[fembno]
-            ptmp =  wib_mp.Process(target=mp_ana_a_femb, args=(cc, rms_rootpath, fpga_rootpath, asic_rootpath, APAno , rmsrunno, fpgarunno, asicrunno, wibno, fembno,  gain, tp, jumbo_flag ) ) 
+            ptmp =  wib_mp.Process(target=mp_ana_a_femb, args=(cc, rms_rootpath, fpga_rootpath, asic_rootpath, APAno , rmsrunno, fpgarunno, asicrunno, wibno, fembno,  gain, tp, jumbo_flag, apa ) ) 
             wib_wps.append(ptmp)
         for p in wib_wps:
             p.start()
@@ -280,7 +283,8 @@ def ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, rmsrunno = 
     else:
         for fembno in alive_fembs[1]:
             print "WIB#%d FEMB%d is being analyzed..." %(wibno, fembno)
-            tmp = ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag )
+            tmp = ana_a_femb(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, \
+                             wibno=wibno, fembno=fembno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, apa=apa )
             wib_results.append(tmp)
 
     out_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
@@ -308,17 +312,18 @@ def ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = 4, rmsrunno = 
     with open(fp, "wb") as fp:
         pickle.dump(out_result, fp)
 
-def ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asic", gain="250", tp="05", jumbo_flag=False ):
+def ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asic", gain="250", tp="05", jumbo_flag=False, apa="ProtoDUNE"):
     alive_wibs = chk_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, gain=gain, tp=tp, jumbo_flag=jumbo_flag )
     for alive_fembs in alive_wibs:
         wibno = alive_fembs[0]
-        ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, pipe_en = True )
+        ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, \
+                 wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, pipe_en = True , apa=apa)
 
-def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tp, jumbo_flag ):
+def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tp, jumbo_flag, apa="ProtoDUNE" ):
     for gain in gains: 
         for tp in tps:
             print "Gain = %2.1f mV/fC, "% (int(gain)/10.0) +  "Tp = %1.1fus"% (int(tp)/10.0) 
-            ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, gain, tp, jumbo_flag)
+            ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, gain, tp, jumbo_flag, apa)
             print "time passed %d seconds"%(timer() - s0)
 
     sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
@@ -396,21 +401,24 @@ if __name__ == '__main__':
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
+        apa = "APA40"
     elif (apafolder != "APA"):
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+        apa = "ProtoDUNE"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+        apa = "ProtoDUNE"
     from timeit import default_timer as timer
     s0= timer()
     print "Start..., please wait..."
     gains = ["250", "140"] 
     tps = ["05", "10", "20", "30"]
 
-    results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag )
+    results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag, apa )
 
     print "Done, please punch \"Eneter\" or \"return\" if necessary! "
 

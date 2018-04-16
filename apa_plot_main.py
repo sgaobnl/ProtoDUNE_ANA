@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/15/2018 8:17:42 PM
+Last modified: 4/15/2018 8:27:03 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -48,17 +48,18 @@ if (apafolder == "APA40"):
     rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
     fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
     asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
+    fembs_on_apa = range(1,5, 1) 
 elif (apafolder != "APA"):
     rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
     fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
     asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+    fembs_on_apa = range(1,21, 1) 
 else:
     rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
     fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
     asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+    fembs_on_apa = range(1,21, 1) 
  
-fembs_on_apa = range(1,5, 1) 
-
 sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
 fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno
 orgdicts = load_sum (sum_path, fn + ".allsum")

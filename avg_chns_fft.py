@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 20:50:22 2018
+Last modified: Sun Apr 15 21:14:59 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -145,7 +145,7 @@ if __name__ == '__main__':
             else:
                 fp = out_path + title  + ".png"
             fft_pp = fp
-            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd, apa=apa)
+            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
             avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
 
             ffp = out_path + title + ".fft"

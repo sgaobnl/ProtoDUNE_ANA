@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 17:11:16 2018
+Last modified: Sun Apr 15 23:08:10 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -259,9 +259,7 @@ def sub_rms_p_plot5 (ax, dicts, rms_cs="hfrms" ) :
     ax.set_ylim([0,1])
     ax.legend(loc='best', fontsize=9)
 
-def apa_plot5 (pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" , fembs_on_apa = range(1, 21, 1)) :
-    gs=["250", "140"]
-    tps=["05", "10", "20", "30"]
+def apa_plot5 (pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" , fembs_on_apa = range(1, 21, 1), gs=["250", "140"], tps=["05", "10", "20", "30"]) : 
     xenc_tps=[]
     venc_tps=[]
     uenc_tps=[]
@@ -300,15 +298,29 @@ def draw_enctp_plot0(wdicts, calitype = "fpg_gain"):
         plot_gains = dr[7]
     else:
         plot_gains = dr[8]
+    l_notnan = lambda x: 0 if np.isnan(x) else x
     dr_enc = np.array(dr[1]) * np.array(plot_gains)
+#    dr_enc = dr_enc[~np.isnan(dr_enc)]
     dr_encmean = np.mean(dr_enc)
     dr_encstd = np.std(dr_enc)
+    dr_encmean = l_notnan(dr_encmean)
+    dr_encstd = l_notnan(dr_encstd)
+
     dr_sfenc = np.array(dr[3]) * np.array(plot_gains)
+#    dr_sfenc = dr_sfenc[~np.isnan(dr_sfenc)]
     dr_sfencmean = np.mean(dr_sfenc)
     dr_sfencstd = np.std(dr_sfenc)
+    dr_sfencmean = l_notnan(dr_sfencmean)
+    dr_sfencstd = l_notnan(dr_sfencstd)
+
+
     dr_hfenc = np.array(dr[2]) * np.array(plot_gains)
+#    dr_hfenc = dr_hfenc[~np.isnan(dr_hfenc)]
     dr_hfencmean = np.mean(dr_hfenc)
     dr_hfencstd = np.std(dr_hfenc)
+    dr_hfencmean = l_notnan(dr_hfencmean)
+    dr_hfencstd = l_notnan(dr_hfencstd)
+
     return drchns, dr_encmean, dr_encstd, dr_sfencmean, dr_sfencstd, dr_hfencmean, dr_hfencstd
 
 def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uchns, uenc_tps, title="APA ENC vs. Tp" , note="Raw data") :
@@ -325,7 +337,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     label = "%d"%xchns +" X " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='g', marker='o')
     for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
+        ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
 
     y = [venc_tps[0][0], venc_tps[1][0], venc_tps[2][0], venc_tps[3][0]]
     if (np.max(y) >  maxy):
@@ -334,7 +347,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     label = "%d"%vchns +" V " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='b', marker='o')
     for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
+        ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1650], textcoords='data', color='b') 
 
     y = [uenc_tps[0][0], uenc_tps[1][0], uenc_tps[2][0], uenc_tps[3][0]]
     if (np.max(y) >  maxy):
@@ -343,7 +357,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     label = "%d"%uchns +" U " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='r', marker='o')
     for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
+        ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1800], textcoords='data', color='r') 
 
     ax.legend(loc=4)
     ax.set_xlim([0,4])
@@ -357,15 +372,12 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     ax.set_title(title )
     ax.grid()
 
-def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "sf" ) :
+def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "sf", gs =["250", "140"],  tps=["05", "10", "20", "30"] ) :
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
     ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
     ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
-
-    gs=["250", "140"]
-    tps=["05", "10", "20", "30"]
 
     encgs = []
     for g in gs:
@@ -425,7 +437,8 @@ def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain"
 
 ###############################################################################################################################
 ###############################################################################################################################
-def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" , fembs_on_apa = range(1, 21, 1)) : #enctype, raw, hf, sf
+def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" , fembs_on_apa = range(1, 21, 1), tps=["05", "10", "20", "30"]
+) : #enctype, raw, hf, sf
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
     ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -433,7 +446,6 @@ def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs=
     ax4 = plt.subplot2grid((4, 4), (3, 2), colspan=1, rowspan=1)
     ax5 = plt.subplot2grid((4, 4), (3, 3), colspan=1, rowspan=1)
 
-    tps=["05", "10", "20", "30"]
     xenc_tps=[]
     venc_tps=[]
     uenc_tps=[]
@@ -648,21 +660,24 @@ def sub_gain_plot3 (ax, g, tp_us, xchns, xgain, vchns, vgain, uchns, ugain, titl
     label = "%d"%xchns + " X " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='g', marker='o')
     for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
+        ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
 
     y = [vgain[0][0], vgain[1][0], vgain[2][0], vgain[3][0]]
     e = [vgain[0][1], vgain[1][1], vgain[2][1], vgain[3][1]]
     label = "%d"%vchns +" V " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='b', marker='o')
     for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
+        ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='b') 
 
     y = [ugain[0][0], ugain[1][0], ugain[2][0], ugain[3][0]]
     e = [ugain[0][1], ugain[1][1], ugain[2][1], ugain[3][1]]
     label = "%d"%uchns +" U " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='r', marker='o')
     for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
+        ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='r') 
 
     ax.legend(loc=4)
     ax.set_xlim([0,4])
@@ -673,15 +688,12 @@ def sub_gain_plot3 (ax, g, tp_us, xchns, xgain, vchns, vgain, uchns, ugain, titl
     ax.set_title(title )
     ax.grid()
 
-def plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement" ) :
+def plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement", gs=["250", "140"], tps=["05", "10", "20", "30"]) :
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
     ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
     ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
-
-    gs=["250", "140"]
-    tps=["05", "10", "20", "30"]
 
     encgs = []
     for g in gs:

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/15/2018 5:16:55 PM
+Last modified: Sun Apr 15 20:50:22 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -57,20 +57,23 @@ if __name__ == '__main__':
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
+        apa = "APA40"
     elif (apafolder != "APA"):
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+        apa = "ProtoDUNE"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+        apa = "ProtoDUNE"
  
     from timeit import default_timer as timer
     s0= timer()
     print "Start...please wait..."
     
-    if (apafolder == "APA40"):
+    if (apa == "APA40"):
         wibnos = [0]
         fembnos = [0,1,2,3] #0~3
     else:
@@ -92,6 +95,7 @@ if __name__ == '__main__':
             sys.exit()
     
     apa_map = APA_MAP()
+    apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     ffts = []
@@ -120,7 +124,7 @@ if __name__ == '__main__':
                             chn_cnt = chn_cnt + 1 
                             pc, cc = Pipe()
                             fft_s = 5000
-                            ana_a_chn_args = (cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag, fft_s)
+                            ana_a_chn_args = (cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag, fft_s, apa)
                             p = mp.Process(target=pipe_ana_a_chn, args = ana_a_chn_args ) 
                             mps.append([pc, cc, p])
 
@@ -141,7 +145,7 @@ if __name__ == '__main__':
             else:
                 fp = out_path + title  + ".png"
             fft_pp = fp
-            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
+            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd, apa=apa)
             avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
 
             ffp = out_path + title + ".fft"

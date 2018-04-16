@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 15:17:10 2018
+Last modified: Sun Apr 15 20:46:48 2018
 """
 
 #defaut setting for scientific caculation
@@ -353,7 +353,7 @@ def cali_a_chn(calidata, chnno, cap=1.85E-13, wibno=0,  fembno=0 ):
 def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
                rmsrunno = "run01rms", calirunno = "run01fpg",
                wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
-               jumbo_flag=False, fft_en= True, fft_s=5000, fft_avg_cycle=50, cap=1.85E-13 ):
+               jumbo_flag=False, fft_en= True, fft_s=5000, fft_avg_cycle=50, cap=1.85E-13, apa="ProtoDUNE" ):
     femb_pos_np = femb_position (APAno)
     wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
 
@@ -364,6 +364,7 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
             break
 
     apa_map = APA_MAP()
+    apa_map.APA=apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
     wireinfo = None
     for onewire in All_sort:

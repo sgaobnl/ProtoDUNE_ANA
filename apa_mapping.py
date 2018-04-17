@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/16/2018 6:24:37 PM
+Last modified: Mon Apr 16 20:46:48 2018
 """
 
 #defaut setting for scientific caculation
@@ -163,7 +163,6 @@ class APA_MAP:
                 if chn[0][0] == "U" and int(chn[0][1:3]) == i :
                     U_sort.append(chn)
 
-        print "APA is " + self.APA
         return All_sort, X_sort, V_sort, U_sort
     
     def apa_mapping(self):

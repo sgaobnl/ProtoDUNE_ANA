@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 16:07:25 2018
+Last modified: 4/19/2018 3:43:53 PM
 """
 
 #defaut setting for scientific caculation
@@ -154,6 +154,33 @@ def femb_position (APAno=1):
                         ["A519", "WIB01_FEMB2", "CEbox126", "0x20000",], 
                         ["A520", "WIB00_FEMB2", "CEbox127", "0x20000",], 
                     ]
+    elif (APAno ==5):
+        femb_pos_np = [ 
+                        ["B601", "WIB04_FEMB1", "CEbox134", "0x20000",], 
+                        ["B602", "WIB03_FEMB1", "CEbox121", "0x20000",], 
+                        ["B603", "WIB02_FEMB1", "CEbox149", "0x20000",], 
+                        ["B604", "WIB01_FEMB1", "CEbox131", "0x20000",], 
+                        ["B605", "WIB00_FEMB1", "CEbox139", "0x20000",], 
+    
+                        ["B606", "WIB04_FEMB0", "CEbox144", "0x20000",], 
+                        ["B607", "WIB03_FEMB0", "CEbox112", "0x20000",], 
+                        ["B608", "WIB02_FEMB0", "CEbox018", "0x20000",], 
+                        ["B609", "WIB01_FEMB0", "CEbox085", "0x20000",], 
+                        ["B610", "WIB00_FEMB0", "CEbox135", "0x20000",], 
+                        
+                        ["A611", "WIB04_FEMB3", "CEbox136", "0x20000",], 
+                        ["A612", "WIB03_FEMB3", "CEbox137", "0x20000",], 
+                        ["A613", "WIB02_FEMB3", "CEbox111", "0x20000",], 
+                        ["A614", "WIB01_FEMB3", "CEbox105", "0x20000",], 
+                        ["A615", "WIB00_FEMB3", "CEbox119", "0x20000",], 
+    
+                        ["A616", "WIB04_FEMB2", "CEbox133", "0x20000",], 
+                        ["A617", "WIB03_FEMB2", "CEbox140", "0x20000",], 
+                        ["A618", "WIB02_FEMB2", "CEbox138", "0x20000",], 
+                        ["A619", "WIB01_FEMB2", "CEbox151", "0x20000",], 
+                        ["A620", "WIB00_FEMB2", "CEbox104", "0x20000",], 
+                    ]
+
     elif (APAno ==9): #40% APA
         femb_pos_np = [ 
                         ["B901", "WIB00_FEMB0", "CEbox901", "0x20000",], 

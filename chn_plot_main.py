@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 20:51:06 2018
+Last modified: 4/27/2018 9:45:12 AM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -43,7 +43,13 @@ if __name__ == '__main__':
     fembno  = int(sys.argv[11])
     chnno  = int(sys.argv[12])
 
-    if (apafolder == "APA40"):
+    if (apafolder == "FELIX"):
+        rms_rootpath =  "E:/Data_FELIX/"
+        fpga_rootpath = "E:/Data_FELIX/"
+        asic_rootpath = "E:/Data_FELIX/"
+        #apa = "APA40"
+        apa = "ProtoDUNE"
+    elif (apafolder == "APA40"):
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
@@ -65,7 +71,8 @@ if __name__ == '__main__':
     
     gains = ["250"] 
     #tps = ["05", "10", "20", "30"]
-    tps = [  "20"]
+    tps = [  "10"]
+    fft_s = 5000
     wib_femb_chns = [  
                         #wib(0-4), femb(0-3), chn(0~127)
                         #[0, 2, 120   ],
@@ -88,7 +95,7 @@ if __name__ == '__main__':
         mps = []
         for gain in gains: 
             for tp in tps:
-                 ana_a_chn_args = (out_path, rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag, apa)
+                 ana_a_chn_args = (out_path, rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag, fft_s, apa)
                  p = mp.Process(target=plot_a_chn, args=ana_a_chn_args)
                  mps.append(p)
         for p in mps:

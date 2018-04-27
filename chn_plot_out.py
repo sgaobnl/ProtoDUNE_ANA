@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 20:48:46 2018
+Last modified: 4/27/2018 9:37:32 AM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -403,7 +403,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
     feset_info = [gain, tp]
     rms_info = feset_info + ["RMS"]
     if (os.path.exists(rms_rootpath + rmsrunno)):
-        rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp)
         chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50, wibno=wibno, fembno=fembno)
         ped_wf_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras)
         ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, fl_flg=False)
@@ -413,7 +413,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
 
     fpga_info = feset_info + ["FPGA-DAC Cali"]
     if (os.path.exists(fpga_rootpath + fpgarunno)):
-        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp)
         chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
         cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
         cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
@@ -422,7 +422,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
 
     asic_info = feset_info + ["ASIC-DAC Cali"]
     if (os.path.exists(asic_rootpath + asicrunno)):
-        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp)
         chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
         cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
         cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)

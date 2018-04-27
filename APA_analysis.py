@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/26/2018 10:33:44 PM
+Last modified: 4/27/2018 10:48:11 AM
 """
 
 #defaut setting for scientific caculation
@@ -322,11 +322,13 @@ def ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, rmsrunno =
 def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tp, jumbo_flag, apa="ProtoDUNE" ):
     for gain in gains: 
         for tp in tps:
+            print gain, tp
             print "Gain = %2.1f mV/fC, "% (int(gain)/10.0) +  "Tp = %1.1fus"% (int(tp)/10.0) 
             ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, gain, tp, jumbo_flag, apa)
             print "time passed %d seconds"%(timer() - s0)
 
     sum_path = rms_rootpath + "/" + "results/" + "APA%d_"%APAno + rmsrunno + "_" + fpgarunno + "_" + asicrunno +"/"
+    print sum_path
    
     if (os.path.exists(sum_path)):
         for root, dirs, files in os.walk(sum_path):
@@ -398,9 +400,9 @@ if __name__ == '__main__':
     jumbo_flag = (sys.argv[9] == "True")
 
     if (apafolder == "FELIX"):
-        rms_rootpath =  "W:/"
-        fpga_rootpath = "W:/"
-        asic_rootpath = "W:/"
+        rms_rootpath =  "E:/Data_FELIX/"
+        fpga_rootpath = "E:/Data_FELIX/"
+        asic_rootpath = "E:/Data_FELIX/"
         #apa = "APA40"
         apa = "ProtoDUNE"
     elif (apafolder == "APA40"):

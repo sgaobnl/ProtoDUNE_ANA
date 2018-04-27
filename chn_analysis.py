@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/26/2018 10:26:12 PM
+Last modified: 4/27/2018 9:48:16 AM
 """
 
 #defaut setting for scientific caculation
@@ -138,6 +138,10 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     avg_cycle_l = 1
     if (len(chnrmsdata) >= 400000):
         fft_s_l = 400000//avg_cycle_l
+    else:
+        fft_s_l = len(chnrmsdata)
+    print "XXXXXXXXXXX"
+    print fft_s, fft_avg_cycle
 
     if (fft_en):
         f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
@@ -278,16 +282,18 @@ def cali_a_chn(calidata, chnno, cap=1.85E-13, wibno=0,  fembno=0 ):
     calidatasort = []
     for onecali in calidata:
         onefile = onecali[0]
-        fpg_pos = onefile.find("FPGAdac")
-        asi_pos = onefile.find("ASICdac")
+        fpg_pos = onefile.find("_FPGAdac")
+        asi_pos = onefile.find("_ASICdac")
         if (fpg_pos > 0 ):
             dac_type = "FPGADAC"
-            vdac = int(onefile[fpg_pos+7: fpg_pos+9],16)
+            print "XXXXXXXXXXXXXX"
+            print onefile
+            vdac = int(onefile[fpg_pos+8: fpg_pos+10],16)
             fc_daclsb = fpga_dac_fit() * fc_per_v
             calidatasort.append([dac_type, vdac, onecali, fc_daclsb])
         elif (asi_pos > 0 ):
             dac_type = "ASICDAC"
-            vdac = int(onefile[asi_pos+7: asi_pos+9],16)
+            vdac = int(onefile[asi_pos+8: asi_pos+10],16)
             fc_daclsb = asic_dac_fit() * fc_per_v
             if (vdac > 2): # because ASIC-DAC has issue when DAC value is 0,1,2
                 calidatasort.append([dac_type, vdac, onecali, fc_daclsb])

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 20:45:10 2018
+Last modified: 4/26/2018 10:33:44 PM
 """
 
 #defaut setting for scientific caculation
@@ -397,7 +397,13 @@ if __name__ == '__main__':
     apafolder = sys.argv[8]
     jumbo_flag = (sys.argv[9] == "True")
 
-    if (apafolder == "APA40"):
+    if (apafolder == "FELIX"):
+        rms_rootpath =  "W:/"
+        fpga_rootpath = "W:/"
+        asic_rootpath = "W:/"
+        #apa = "APA40"
+        apa = "ProtoDUNE"
+    elif (apafolder == "APA40"):
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
@@ -415,8 +421,10 @@ if __name__ == '__main__':
     from timeit import default_timer as timer
     s0= timer()
     print "Start..., please wait..."
-    gains = ["250", "140"] 
-    tps = ["05", "10", "20", "30"]
+    gains = ["250"] 
+    #gains = ["250", "140"] 
+    tps = [ "10",]
+    #tps = ["05", "10", "20", "30"]
 
     results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag, apa )
 

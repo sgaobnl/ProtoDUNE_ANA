@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 21:32:04 2018
+Last modified: 4/26/2018 10:26:12 PM
 """
 
 #defaut setting for scientific caculation
@@ -32,6 +32,7 @@ from highpass_filter import hp_flt_applied
 from highpass_filter import hp_FIR_applied
 import multiprocessing as mp
 import copy
+import struct
 
 def fe_cfg(gain="250", tp="30" ):
     if (gain=="250"):
@@ -63,67 +64,64 @@ def fe_cfg(gain="250", tp="30" ):
 def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="30" ): #calirun="run01fpg", 
     fecfg_reg0, sg, st = fe_cfg(gain=gain, tp=tp )
     
-    if runno[5:8] == "rms" :
-        runcode = "1"
-    elif runno[5:8] == "fpg" :
-        runcode = "2"
-    elif runno[5:8] == "asi" :
-        runcode = "4"
-
-    if sg == 3:
-        stepno = "step" + "3" + runcode 
-    elif sg == 2:
-        stepno = "step" + "1" + runcode 
-    elif sg == 1:
-        stepno = "step" + "2" + runcode 
-    elif sg == 0:
-        stepno = "step" + "0" + runcode 
-
     runpath = rootpath + runno + "/" 
+
     files_cs = []
     if (os.path.exists(runpath)):
         for root, dirs, files in os.walk(runpath):
             break
-        steppath = None
-        for onedir in dirs:
-            wibpos = onedir.find("WIB")
-            if ( wibpos >= 0 ):
-                if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
-                    steppath = runpath + onedir + "/"
-                    break
-        if (steppath != None):
-            for root2, dirs2, files2 in os.walk(steppath):
-                break
-            for rawfile in files2:
-                chipno = chnno // 16
-                chinchn = chnno  % 16
-                fembasic = "FEMB" + format(fembno, "1d") + "CHIP" + format(chipno, "1d")
-                fa_pos = rawfile.find(fembasic)
-                if (fa_pos >= 0):
-                    fe_set_rd = int(rawfile[fa_pos+11:fa_pos+13], 16) & 0x3C
-                    if (fe_set_rd == fecfg_reg0) and (rawfile.find(".bin") >=0 ):
-                        files_cs.append(steppath + rawfile)
+        for rawfile in files:
+            if (rawfile.find(gain) >=0 ) and (rawfile.find(tp) >=0 ):
+                files_cs.append(runpath + rawfile)
     else:
         print runpath + " doesn't exist, ignore anyway!"
         files_cs = []
-
     return files_cs
 
-def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", jumbo_flag=False ):
+def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", sum_chn = 512, cali_freq = 500 ):
     files = generate_rawpaths(rootpath, runno, wibno,  fembno, chnno, gain, tp ) 
     datas = []
     for onefile in files:
         with open(onefile, 'rb') as f:
+            print onefile
             raw_data = f.read()
-            filelength = len(raw_data )
-            smps = (filelength-1024)/2/16 
-#            if smps > 200000:
-#                smps = 200000
+            len_raw = (len(raw_data)//1024)*512
+            dataNtuple =struct.unpack_from(">%dH"%(len_raw),raw_data)
+            asicno = chnno // 16
+            chn_data = []
+            feed_loc = []
+            for asicchn in range(16):
+                fembchn = asicno*16 + asicchn
+                #apa_chn = wibno*512 + fembno*128 + chnno
+                apa_chn = wibno*512 + fembno*128 + fembchn
+                chn_tuple = dataNtuple[apa_chn::sum_chn]
+                sps_len = len(chn_tuple)
 
-            data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
-            ###############0         1      2       3       4     5    6    7      8           9         10#########
-            datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
+                if (chnno == fembchn):
+                    max_1st = np.max( chn_tuple[0:cali_freq] )
+                    max_1st_pos = np.where(chn_tuple[0:cali_freq] == max_1st)[0][0]
+                    if (max_1st_pos - 50 ) < 0:
+                        max_1st_pos = max_1st_pos + cali_freq - 150
+                    feed_loc = range(max_1st_pos-50,sps_len-2*cali_freq,cali_freq)
+                chn_data.append(chn_tuple)
+
+            if ( len(feed_loc)  ) > 2 :
+                chn_peakp=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],]
+                chn_peakn=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],]
+                for tmp in range(len(feed_loc)-1):
+                    for chn in range(16):
+                        chn_peakp[chn].append ( np.max(chn_data[chn][feed_loc[ tmp]:feed_loc[tmp]+cali_freq ]) )
+                        chn_peakn[chn].append ( np.min(chn_data[chn][feed_loc[ tmp]:feed_loc[tmp]+cali_freq ]) )
+            else:
+                chn_peakp = None
+                chn_peakn = None
+            
+            datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, chn_data, feed_loc, chn_peakp, chn_peakn])
     return datas
+
+#rootpath = "W:/"
+#runno = "FPGAdac"
+#read_rawdata(rootpath, runno = runno, wibno=0,  fembno=0, chnno=15, gain="250", tp="10", sum_chn = 512 )
 
 def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
@@ -280,8 +278,8 @@ def cali_a_chn(calidata, chnno, cap=1.85E-13, wibno=0,  fembno=0 ):
     calidatasort = []
     for onecali in calidata:
         onefile = onecali[0]
-        fpg_pos = onefile.find("FPGADAC")
-        asi_pos = onefile.find("ASICDAC")
+        fpg_pos = onefile.find("FPGAdac")
+        asi_pos = onefile.find("ASICdac")
         if (fpg_pos > 0 ):
             dac_type = "FPGADAC"
             vdac = int(onefile[fpg_pos+7: fpg_pos+9],16)
@@ -372,34 +370,20 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
             wireinfo = onewire
             break
     feset_info = [gain, tp]
-    rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-    calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+    rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp)
+    calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp)
     
     chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
     chn_cali_paras  = cali_a_chn (calidata, chnno, cap, wibno, fembno )
-#    for j in range(10):
-#    for i in range(16):
-#        chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
-#    for j in range(100):
-#    for i in range(16):
-#        chn_cali_paras  = cali_a_chn (calidata, i, cap, wibno, fembno )
-#    a = chn_noise_paras
-#    b = chn_cali_paras 
 
 ####multiprocessing, 
 def mp_noise_a_chn(cc, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0, fembno=0):
     chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
-#    for j in range(10):
-#    for i in range(16):
-#        chn_noise_paras = noise_a_chn(rmsdata, i,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
     cc.send([1, chn_noise_paras])
     cc.close()
 
 def mp_cali_a_chn(cc, calidata, chnno, cap=1.85E-13 , wibno=0, fembno=0):
     chn_cali_paras = cali_a_chn(calidata, chnno, cap, wibno, fembno )
-#    for j in range(200):
-#    for i in range(16):
-#        chn_cali_paras = cali_a_chn(calidata, i, cap, wibno, fembno )
     cc.send([1, chn_cali_paras])
     cc.close()
 

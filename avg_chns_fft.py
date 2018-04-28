@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 21:32:44 2018
+Last modified: 4/28/2018 4:37:40 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -34,8 +34,10 @@ import matplotlib.mlab as mlab
 
 from multiprocessing import Pipe
 import multiprocessing as mp
-from chn_plot_out import pipe_ana_a_chn
-from chn_plot_out import ped_fft_plot_avg 
+from chn_analysis import felix_read_rawdata_all
+from chn_analysis import felix_cs_chn
+from chn_analysis import felix_noise_a_chn
+from chn_plot_out import ped_fft_plot_avg
 import pickle
 
 
@@ -54,6 +56,8 @@ if __name__ == '__main__':
     wire_type = sys.argv[12]
     gains = [sys.argv[13]]
     tps = [sys.argv[14]]
+    sum_chn = 512
+    cali_freq = 500
 
  
 
@@ -62,6 +66,11 @@ if __name__ == '__main__':
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
         apa = "APA40"
+    elif (apafolder == "FELIX"):
+        rms_rootpath =  "W:/"
+        fpga_rootpath = "W:/"
+        asic_rootpath = "W:/"
+        apa = "ProtoDUNE"
     elif (apafolder != "APA"):
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
@@ -82,6 +91,7 @@ if __name__ == '__main__':
         fembnos = [0,1,2,3] #0~3
     else:
         wibnos = [0,1,2,3,4]
+        wibnos = [0]
         fembnos = [0,1,2,3] #0~3
     #wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
@@ -107,6 +117,7 @@ if __name__ == '__main__':
         for tp in tps:
             log_str ="" 
             chn_cnt = 0
+            rmsdatas = felix_read_rawdata_all(rms_rootpath, runno = rmsrunno,  gain=gain, tp=tp, sum_chn = sum_chn, cali_freq=cali_freq )
             for wibno in wibnos:
                 for fembno in fembnos:
                     if (True):
@@ -117,30 +128,19 @@ if __name__ == '__main__':
                     #   (not ((wibno == 2) and (fembno == 0) ) ) and \
                     #   (not ((wibno == 2) and (fembno == 1) ) ) and \
                     #   (not ((wibno == 3) and (fembno == 0) ) ) : #APA3
+                        chn_cnt = chn_cnt + 1
                         log_str = log_str +str(wibno)+str(fembno)+"_" 
                         #V plane
                         chns = []
                         for chn_loc in All_sort:
                             if ( chn_loc[0][0] == wire_type ):
                                 chns.append(int(chn_loc[1]))
-                        mps = []
                         for chnno in chns:
-                            chn_cnt = chn_cnt + 1 
-                            pc, cc = Pipe()
-                            fft_s = 5000
-                            ana_a_chn_args = (cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag, fft_s, apa)
-                            p = mp.Process(target=pipe_ana_a_chn, args = ana_a_chn_args ) 
-                            mps.append([pc, cc, p])
-
-                        for onep in mps:
-                            onep[2].start()
-
-                        for onep in mps:
-                            ffts.append(onep[0].recv())
-                    
-                        for onep in mps:
-                            onep[2].join()
-
+                            apachn = wibno*512+128*fembno+chnno
+                            print "apachn%d"%apachn
+                            rmsdata = felix_cs_chn(rmsdatas, apachn )
+                            chn_noise_paras = felix_noise_a_chn(rmsdata, fft_en = True, fft_s=5000, fft_avg_cycle=50 )
+                            ffts.append(chn_noise_paras)
                         print "time passed %d seconds"%(timer() - s0)
         
             title = "APA" + str(APAno) + "_" + rmsrunno + "_" + log_str + wire_type + "_chns" + str(chn_cnt) + "_" + "gain" + gain + "tp" + tp

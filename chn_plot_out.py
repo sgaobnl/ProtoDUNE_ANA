@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/27/2018 9:37:32 AM
+Last modified: 4/28/2018 2:51:59 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -31,9 +31,9 @@ import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
 import matplotlib.mlab as mlab
 
-from chn_analysis  import read_rawdata 
-from chn_analysis  import noise_a_chn 
-from chn_analysis  import cali_a_chn 
+from chn_analysis  import felix_read_rawdata_chn 
+from chn_analysis  import felix_noise_a_chn 
+from chn_analysis  import felix_cali_a_chn 
 from chn_analysis  import linear_fit 
 from matplotlib.backends.backend_pdf import PdfPages
 from detect_peaks import detect_peaks
@@ -369,8 +369,7 @@ def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, peaks_note = 
 def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi", 
                wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
-               jumbo_flag=False, fft_s=5000, apa="ProtoDUNE" ):
-
+               jumbo_flag=False, fft_s=5000, apa="ProtoDUNE", sum_chn = 512, cali_freq = 500):
     input_info = ["RMS Raw data Path = %s"%rms_rootpath + rmsrunno, 
                   "Cali(FPGA DAC) Raw data Path = %s"%fpga_rootpath + fpgarunno, 
                   "Cali(ASIC DAC) Raw data Path = %s"%asic_rootpath + asicrunno, 
@@ -402,9 +401,13 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
             break
     feset_info = [gain, tp]
     rms_info = feset_info + ["RMS"]
+    apachn = wibno*512 + fembno*128 + chnno
     if (os.path.exists(rms_rootpath + rmsrunno)):
-        rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp)
-        chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50, wibno=wibno, fembno=fembno)
+        #rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp)
+        #chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en = True, fft_s=fft_s, fft_avg_cycle=50, wibno=wibno, fembno=fembno)
+        rmsdata = felix_read_rawdata_chn(rms_rootpath, rmsrunno, apachn, gain, tp, sum_chn, cali_freq )
+        chn_noise_paras = felix_noise_a_chn(rmsdata,  fft_en = True, fft_s=fft_s, fft_avg_cycle=50 )
+
         ped_wf_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras)
         ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, fl_flg=False)
         ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, fl_flg=True)
@@ -413,8 +416,11 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
 
     fpga_info = feset_info + ["FPGA-DAC Cali"]
     if (os.path.exists(fpga_rootpath + fpgarunno)):
-        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp)
-        chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
+        #fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp)
+        #chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
+        fpgadata = felix_read_rawdata_chn(fpga_rootpath, fpgarunno, apachn, gain, tp, sum_chn, cali_freq )
+        chn_cali_paras = felix_cali_a_chn(fpgadata,  cap=1.85E-13 )
+
         cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
         cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
     else:
@@ -422,8 +428,10 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
 
     asic_info = feset_info + ["ASIC-DAC Cali"]
     if (os.path.exists(asic_rootpath + asicrunno)):
-        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp)
-        chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
+        #asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp)
+        #chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
+        asicdata = felix_read_rawdata_chn(asic_rootpath, asicrunno, apachn, gain, tp, sum_chn, cali_freq )
+        chn_cali_paras = felix_cali_a_chn(asicdata,  cap=1.85E-13 )
         cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
         cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
     else:

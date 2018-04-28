@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/16/2018 12:04:49 PM
+Last modified: 4/28/2018 3:29:56 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -333,7 +333,8 @@ class APA_PLOT:
         ax.errorbar(x, y, e, label=label, color='g', marker='o')
         for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
+            pass
     
         y = [venc_tps[0][0], venc_tps[1][0], venc_tps[2][0], venc_tps[3][0]]
         if (np.max(y) >  maxy):
@@ -343,7 +344,8 @@ class APA_PLOT:
         ax.errorbar(x, y, e, label=label, color='b', marker='o')
         for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1650], textcoords='data', color='b') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1650], textcoords='data', color='b') 
+            pass
     
         y = [uenc_tps[0][0], uenc_tps[1][0], uenc_tps[2][0], uenc_tps[3][0]]
         if (np.max(y) >  maxy):
@@ -353,7 +355,8 @@ class APA_PLOT:
         ax.errorbar(x, y, e, label=label, color='r', marker='o')
         for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1800], textcoords='data', color='r') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1800], textcoords='data', color='r') 
+            pass
     
         ax.legend(loc=4)
         ax.set_xlim([0,4])
@@ -432,8 +435,7 @@ class APA_PLOT:
     
     ###############################################################################################################################
     ###############################################################################################################################
-    def plot1_chns_enc (self, pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" ,  tps=["05", "10", "20", "30"]
-    ) : #enctype, raw, hf, sf
+    def plot1_chns_enc (self, pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" ,  tps=["05", "10", "20", "30"]) : #enctype, raw, hf, sf
         fig = plt.figure(figsize=(16,9))
         ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
         ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -464,6 +466,7 @@ class APA_PLOT:
     
     def sub_chns_plot1 (self, ax, dicts, rms_cs="rms", cali_cs="fpg_gain" ) :
         apachn = [] 
+
         for loc in self.fembs_on_apa:
             subdicts = self.enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
             ymax = 2000
@@ -499,19 +502,19 @@ class APA_PLOT:
                     ax.plot(apachn, enc,color="C" + str(int(tp)), label=label)
                 else:
                     ax.plot(apachn, enc,color="C" + str(int(tp)))
-                if (tp ==2):
+                if (tp ==1):
                     ax.text(apachn[5], ymax*0.96, apaloc, fontsize=8)
                     ax.text(apachn[5], ymax*0.92, "wib%d"%wibno, fontsize=8)
                     ax.text(apachn[5], ymax*0.88, "femb%d"%fembno, fontsize=8)
                     ax.vlines(apachn[0], 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
             else:
-                if (tp ==2):
+                if (tp ==1):
                     wire_cnt = np.max(apachn) - np.min(apachn) + 1
                     ax.text(5+(loc-1)*wire_cnt, ymax*0.96, "Dead", fontsize=8)
                     if ( loc != 1):
                         ax.vlines((loc-1)*wire_cnt, 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
      
-        if (tp ==2):
+        if (tp ==1):
             ax.set_ylim([0,ymax])
             #ax.set_xlim([np.min(apachn),np.max(apachn) ])
             gain = int(dicts[0]["gain"]) / 10.0
@@ -665,7 +668,8 @@ class APA_PLOT:
         ax.errorbar(x, y, e, label=label, color='g', marker='o')
         for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
+            pass
     
         y = [vgain[0][0], vgain[1][0], vgain[2][0], vgain[3][0]]
         e = [vgain[0][1], vgain[1][1], vgain[2][1], vgain[3][1]]
@@ -673,7 +677,8 @@ class APA_PLOT:
         ax.errorbar(x, y, e, label=label, color='b', marker='o')
         for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='b') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='b') 
+            pass
     
         y = [ugain[0][0], ugain[1][0], ugain[2][0], ugain[3][0]]
         e = [ugain[0][1], ugain[1][1], ugain[2][1], ugain[3][1]]
@@ -681,7 +686,8 @@ class APA_PLOT:
         ax.errorbar(x, y, e, label=label, color='r', marker='o')
         for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='r') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='r') 
+            pass
     
         ax.legend(loc=4)
         ax.set_xlim([0,4])
@@ -742,7 +748,7 @@ class APA_PLOT:
     
     
     ###############################################################################################################################
-    def plot4_chns_gain (self, pp, orgdicts, title="Gain Measurement", wiretype="X", g="250", cali_cs="fpg_gain" ): #enctype, raw, hf, sf
+    def plot4_chns_gain (self, pp, orgdicts, title="Gain Measurement", wiretype="X", g="250", cali_cs="fpg_gain", tps=["05", "10", "20", "30"] ): #enctype, raw, hf, sf
         fig = plt.figure(figsize=(16,9))
         ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
         ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -750,7 +756,7 @@ class APA_PLOT:
         ax4 = plt.subplot2grid((4, 4), (3, 2), colspan=1, rowspan=1)
         ax5 = plt.subplot2grid((4, 4), (3, 3), colspan=1, rowspan=1)
     
-        tps=["05", "10", "20", "30"]
+        #tps=["05", "10", "20", "30"]
         xg=[]
         vg=[]
         ug=[]
@@ -793,18 +799,18 @@ class APA_PLOT:
                     ax.plot(apachn, pgain,color="C" + str(int(tp)), label=label)
                 else:
                     ax.plot(apachn, pgain,color="C" + str(int(tp)))
-                if (tp ==2):
+                if (tp ==1):
                     ax.text(apachn[5], ymax*0.96, apaloc, fontsize=8)
                     ax.text(apachn[5], ymax*0.92, "wib%d"%wibno, fontsize=8)
                     ax.text(apachn[5], ymax*0.88, "femb%d"%fembno, fontsize=8)
                     ax.vlines(apachn[0], 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
             else:
-                if (tp ==2):
+                if (tp ==1):
                     wire_cnt = np.max(apachn) - np.min(apachn) + 1
                     ax.text(5+(loc-1)*wire_cnt, ymax*0.96, "Dead", fontsize=8)
                     if ( loc != 1):
                         ax.vlines((loc-1)*wire_cnt, 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
-        if (tp ==2):
+        if (tp ==1):
             ax.set_ylim([0,ymax])
             #ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
             #ax.set_xlim([np.min(apachn),np.max(apachn) ])

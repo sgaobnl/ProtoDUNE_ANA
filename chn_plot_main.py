@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/27/2018 9:45:12 AM
+Last modified: 4/28/2018 2:05:45 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -44,9 +44,9 @@ if __name__ == '__main__':
     chnno  = int(sys.argv[12])
 
     if (apafolder == "FELIX"):
-        rms_rootpath =  "E:/Data_FELIX/"
-        fpga_rootpath = "E:/Data_FELIX/"
-        asic_rootpath = "E:/Data_FELIX/"
+        rms_rootpath =  "W:/"
+        fpga_rootpath = "W:/"
+        asic_rootpath = "W:/"
         #apa = "APA40"
         apa = "ProtoDUNE"
     elif (apafolder == "APA40"):

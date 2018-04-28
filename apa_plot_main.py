@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/16/2018 11:47:33 AM
+Last modified: 4/27/2018 10:44:05 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -48,6 +48,13 @@ if (apafolder == "APA40"):
     apaplt.apa = "APA40"
     apaplt.femb_xuv = [56,36,36] 
     apaplt.fembs_on_apa = range(1,5,1)
+elif (apafolder == "FELIX"):
+    rms_rootpath =  "W:/"
+    fpga_rootpath = "W:/"
+    asic_rootpath = "W:/"
+    apaplt.apa = "ProtoDUNE"
+    apaplt.femb_xuv = [48,40,40] 
+    apaplt.fembs_on_apa = range(1,5,1)
 elif (apafolder != "APA"):
     rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
     fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
@@ -55,6 +62,7 @@ elif (apafolder != "APA"):
     apaplt.apa = "ProtoDUNE"
     apaplt.femb_xuv = [48,40,40] 
     apaplt.fembs_on_apa = range(1,21,1)
+
 else:
     rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
     fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
@@ -90,31 +98,39 @@ if APAno == 3:
 orgdicts = apaplt.dict_filter (orgdicts, or_dnf =femb_cs, and_flg=False  ) 
 #gs =["250"]
 gs =["250","140"]
+gs =["250"]
 tps=["05", "10", "20", "30"] 
+tps=[ "10"] 
 fp = sum_path + fn + ".pdf" 
 pp = PdfPages(fp)
+print len(orgdicts)
 print "start...wait a few minutes..."
-apaplt.plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "hf", gs=gs, tps=tps ) 
-apaplt.plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement", gs=gs, tps=tps  ) 
-apaplt.plot2_peds (pp, orgdicts,title="Pedestals", g="250", tp="20"   ) 
+#apaplt.plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "hf", gs=gs, tps=tps ) 
+#apaplt.plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement", gs=gs, tps=tps  ) 
+apaplt.plot2_peds (pp, orgdicts,title="Pedestals", g="250", tp="10"   ) 
 print "please wait a few minutes..."
-apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "rms",   g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "rms",   g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "rms",   g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "hfrms", g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "hfrms", g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "hfrms", g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="X", g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="V", g="250" )  #
-print "please wait a few minutes..."
-apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="U", g="250" )  #
+apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "rms",   g="250", tps=["10"] )  #
+apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "rms",   g="250", tps=["10"] )  #
+apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "rms",   g="250", tps=["10"] )  #
+apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="X", g="250", cali_cs="fpg_gain",  tps=["10"] )  #
+apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="V", g="250", cali_cs="fpg_gain", tps=["10"] )  #
+apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="U", g="250", cali_cs="fpg_gain", tps=["10"] )  #
+#print "please wait a few minutes..."
+#apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "rms",   g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "rms",   g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "hfrms", g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "V", cali_cs="fpg_gain", rms_cs = "hfrms", g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "U", cali_cs="fpg_gain", rms_cs = "hfrms", g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="X", g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="V", g="250" )  #
+#print "please wait a few minutes..."
+#apaplt.plot4_chns_gain (pp, orgdicts, title="Gain Distribution", wiretype="U", g="250" )  #
 #
 ##print "please wait a few minutes..."
 #apaplt.plot1_chns_enc (pp, orgdicts, title="APA ENC Distribution", wiretype = "X", cali_cs="fpg_gain", rms_cs = "rms",   g="140" )  #

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/16/2018 11:47:33 AM
+Last modified: Sat Jun  9 20:40:40 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -39,7 +39,7 @@ asidate = sys.argv[4]
 rmsrunno = sys.argv[5]
 fpgarunno = sys.argv[6]
 asicrunno = sys.argv[7]
-apafolder = sys.argv[8]
+apafolder = sys.argv[8] + sys.argv[1]
 
 if (apafolder == "APA40"):
     rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"

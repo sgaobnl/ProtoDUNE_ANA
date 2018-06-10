@@ -1,58 +1,16 @@
 #!/bin/bash
 ## APA_analysis.py --> # apano   rmsdate      fpgdate     asidate     rmsrunno fpgarunno asicrunno apafolder jumbo_flag
-#python APA_analysis.py   5   "04_12_2018" "04_12_2018" "04_12_2018" run08rms run04fpg   run03asi   Coldbox    False 
+python APA_analysis.py   1   "06_05_2018" "06_05_2018" "06_05_2018" run01rms run01fpg   run01asi   APA    False 
 #
 ## apa_plot_main.py--> # apano   rmsdate      fpgdate     asidate     rmsrunno fpgarunno asicrunno apafolder 
-#python apa_plot_main.py  5   "04_12_2018" "04_12_2018" "04_12_2018" run08rms   run04fpg  run03asi  Coldbox 
+python apa_plot_main.py  1   "06_05_2018" "06_05_2018" "06_05_2018" run01rms   run01fpg  run01asi  APA 
 #
 ## avg_chns_fft.py --> # apano   rmsdate      fpgdate      asidate     rmsrunno fpgarunno asicrunno apafolder jumbo_flag PSD_EN  PSD wire_type gains tps
-#python avg_chns_fft.py   5   "04_12_2018" "04_12_2018" "04_12_2018"  run08rms  run04fpg  run03asi  Coldbox     False     False    0     V       250  20
-
-
-#python APA_analysis.py   1   "11_11_2017" "11_10_2017" "11_10_2017" run06rms   run04fpg   run05asi  APA    False 
-python apa_plot_main.py  1   "11_11_2017" "11_10_2017" "11_10_2017" run06rms   run04fpg   run05asi  APA 
-#python avg_chns_fft.py   1   "11_11_2017" "11_10_2017" "11_10_2017" run06rms   run04fpg   run05asi  APA    False     False    0
+python avg_chns_fft.py   1   "06_05_2018" "06_05_2018" "06_05_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
 
 
 
 
 
 
-                     # apano,   rmsdate,     fpgdate,     asidate, rmsrunno, fpgarunno, asicrunno, apafolder, jumbo_flag
-#python APA_analysis.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run08rms   run04fpg  run03asi  Coldbox  False
 
-#python apa_plot_main.py 5     "04_12_2018" "04_12_2018" "04_12_2018" run01rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run01rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run04rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run05rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run06rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run07rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run08rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_12_2018" "04_12_2018" "04_12_2018" run08rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run08rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run09rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_12_2018" "04_12_2018" "04_12_2018" run09rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_12_2018" "04_12_2018" "04_12_2018" run09rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run01rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_13_2018" "04_12_2018" "04_12_2018" run01rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run01rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run02rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_13_2018" "04_12_2018" "04_12_2018" run02rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run02rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run03rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_13_2018" "04_12_2018" "04_12_2018" run03rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run03rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run04rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_13_2018" "04_12_2018" "04_12_2018" run04rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run04rms   run04fpg  run03asi  Coldbox 
-#
-##python APA_analysis.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run05rms   run04fpg  run03asi  Coldbox 
-##python apa_plot_main.py 5     "04_13_2018" "04_12_2018" "04_12_2018" run05rms   run04fpg  run03asi  Coldbox 
-#python avg_chns_fft.py  5     "04_13_2018" "04_12_2018" "04_12_2018" run05rms   run04fpg  run03asi  Coldbox 
-#

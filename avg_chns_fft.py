@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 21:32:44 2018
+Last modified: Sat Jun  9 20:40:59 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     rmsrunno = sys.argv[5]
     fpgarunno = sys.argv[6]
     asicrunno = sys.argv[7]
-    apafolder = sys.argv[8]
+    apafolder = sys.argv[8] + sys.argv[1]
     jumbo_flag = (sys.argv[9] == "True")
     psd_en = (sys.argv[10] == "True")
     psd = int(sys.argv[11])

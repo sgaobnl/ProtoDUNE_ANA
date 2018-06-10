@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Jun  9 20:51:55 2018
+Last modified: Sat Jun  9 21:54:58 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -81,8 +81,8 @@ for fembloc in apaplt.fembs_on_apa:
     else:
         femb_cs.append(["apaloc", "A" + format(APAno, "1d") + format(fembloc, "02d")])
 
-if APAno == 3:
-    femb_cs.remove(["apaloc","A308"])  #APA3 B308 has broken FE ASIC
+#if APAno == 3:
+#    femb_cs.remove(["apaloc","A308"])  #APA3 B308 has broken FE ASIC
 #if APAno == 4: #only at RT
 #    femb_cs.remove(["apaloc","B409"])  #APA3 B308 has broken FE ASIC
 #    femb_cs.remove(["apaloc","A420"])  #APA3 B308 has broken FE ASIC

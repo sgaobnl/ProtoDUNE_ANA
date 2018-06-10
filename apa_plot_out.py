@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 4/16/2018 12:04:49 PM
+Last modified: Sat Jun  9 21:29:38 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -331,9 +331,9 @@ class APA_PLOT:
         e = [xenc_tps[0][1], xenc_tps[1][1], xenc_tps[2][1], xenc_tps[3][1]]
         label = "%d"%xchns +" X " +  "wires" 
         ax.errorbar(x, y, e, label=label, color='g', marker='o')
-        for xye in zip(x, y, e):                                   
+        #for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
     
         y = [venc_tps[0][0], venc_tps[1][0], venc_tps[2][0], venc_tps[3][0]]
         if (np.max(y) >  maxy):
@@ -341,9 +341,9 @@ class APA_PLOT:
         e = [venc_tps[0][1], venc_tps[1][1], venc_tps[2][1], venc_tps[3][1]]
         label = "%d"%vchns +" V " +  "wires" 
         ax.errorbar(x, y, e, label=label, color='b', marker='o')
-        for xye in zip(x, y, e):                                   
+        #for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1650], textcoords='data', color='b') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1650], textcoords='data', color='b') 
     
         y = [uenc_tps[0][0], uenc_tps[1][0], uenc_tps[2][0], uenc_tps[3][0]]
         if (np.max(y) >  maxy):
@@ -351,9 +351,9 @@ class APA_PLOT:
         e = [uenc_tps[0][1], uenc_tps[1][1], uenc_tps[2][1], uenc_tps[3][1]]
         label = "%d"%uchns +" U " +  "wires" 
         ax.errorbar(x, y, e, label=label, color='r', marker='o')
-        for xye in zip(x, y, e):                                   
+        #for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1800], textcoords='data', color='r') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1800], textcoords='data', color='r') 
     
         ax.legend(loc=4)
         ax.set_xlim([0,4])
@@ -663,25 +663,25 @@ class APA_PLOT:
         e = [xgain[0][1], xgain[1][1], xgain[2][1], xgain[3][1]]
         label = "%d"%xchns + " X " +  "wires" 
         ax.errorbar(x, y, e, label=label, color='g', marker='o')
-        for xye in zip(x, y, e):                                   
+        #for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='g') 
     
         y = [vgain[0][0], vgain[1][0], vgain[2][0], vgain[3][0]]
         e = [vgain[0][1], vgain[1][1], vgain[2][1], vgain[3][1]]
         label = "%d"%vchns +" V " +  "wires" 
         ax.errorbar(x, y, e, label=label, color='b', marker='o')
-        for xye in zip(x, y, e):                                   
+        #for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='b') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='b') 
     
         y = [ugain[0][0], ugain[1][0], ugain[2][0], ugain[3][0]]
         e = [ugain[0][1], ugain[1][1], ugain[2][1], ugain[3][1]]
         label = "%d"%uchns +" U " +  "wires" 
         ax.errorbar(x, y, e, label=label, color='r', marker='o')
-        for xye in zip(x, y, e):                                   
+        #for xye in zip(x, y, e):                                   
             #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
-            ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='r') 
+            #ax.annotate('%d$\pm$%d' % (int(xye[1]), int(xye[2])), xy=[xye[0], 1500], textcoords='data', color='r') 
     
         ax.legend(loc=4)
         ax.set_xlim([0,4])

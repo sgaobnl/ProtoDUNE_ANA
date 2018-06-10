@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Jun  9 20:51:45 2018
+Last modified: Sat Jun  9 21:01:38 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -63,6 +63,7 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
+    fft_s = 5000
     gains = ["250"] 
     #tps = ["05", "10", "20", "30"]
     tps = [  "20"]
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         mps = []
         for gain in gains: 
             for tp in tps:
-                 ana_a_chn_args = (out_path, rms_rootpath, asic_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag, apa)
+                 ana_a_chn_args = (out_path, rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag, fft_s, apa)
                  p = mp.Process(target=plot_a_chn, args=ana_a_chn_args)
                  mps.append(p)
         for p in mps:

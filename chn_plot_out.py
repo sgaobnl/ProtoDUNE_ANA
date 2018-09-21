@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri 14 Sep 2018 11:29:17 PM CEST
+Last modified: Fri Sep 21 15:30:11 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -411,23 +411,23 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(rms_rootpath, rmsrunno)
 
-#    fpga_info = feset_info + ["FPGA-DAC Cali"]
-#    if (os.path.exists(fpga_rootpath + fpgarunno)):
-#        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-#        chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
-#        cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
-#        cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
-#    else:
-#        print "Path: %s%s doesnt' exist, ignore anyway"%(fpga_rootpath, fpgarunno)
-#
-#    asic_info = feset_info + ["ASIC-DAC Cali"]
-#    if (os.path.exists(asic_rootpath + asicrunno)):
-#        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-#        chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
-#        cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
-#        cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
-#    else:
-#        print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
+    fpga_info = feset_info + ["FPGA-DAC Cali"]
+    if (os.path.exists(fpga_rootpath + fpgarunno)):
+        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
+        cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
+        cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
+    else:
+        print "Path: %s%s doesnt' exist, ignore anyway"%(fpga_rootpath, fpgarunno)
+
+    asic_info = feset_info + ["ASIC-DAC Cali"]
+    if (os.path.exists(asic_rootpath + asicrunno)):
+        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+        chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
+        cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
+        cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
+    else:
+        print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
     pp.close()
     print "results path: " + fp
 

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 20:48:46 2018
+Last modified: Fri 14 Sep 2018 11:29:17 PM CEST
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -369,7 +369,7 @@ def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, peaks_note = 
 def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi", 
                wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
-               jumbo_flag=False, fft_s=5000, apa="ProtoDUNE" ):
+               jumbo_flag=False, fft_s=5000, apa="ProtoDUNE", tpcno="0" ):
 
     input_info = ["RMS Raw data Path = %s"%rms_rootpath + rmsrunno, 
                   "Cali(FPGA DAC) Raw data Path = %s"%fpga_rootpath + fpgarunno, 
@@ -378,7 +378,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
                   "WIB#%d"%wibno , 
                   "Gain = %2.1f mV/fC"% (int(gain)/10.0) , 
                   "Tp = %1.1f$\mu$s"% (int(tp)/10.0)  ]
-    out_fn = "APA%d"%APAno + "_WIB%d"%wibno + "_FEMB%d"%fembno + "_CHN%d"%chnno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno + ".pdf"
+    out_fn = "APA%d_"%APAno + tpcno +"_WIB%d"%wibno + "_FEMB%d"%fembno + "_CHN%d"%chnno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno + ".pdf"
 
     fp = out_path + out_fn
     pp = PdfPages(fp)
@@ -411,23 +411,23 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(rms_rootpath, rmsrunno)
 
-    fpga_info = feset_info + ["FPGA-DAC Cali"]
-    if (os.path.exists(fpga_rootpath + fpgarunno)):
-        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-        chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
-        cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
-        cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
-    else:
-        print "Path: %s%s doesnt' exist, ignore anyway"%(fpga_rootpath, fpgarunno)
-
-    asic_info = feset_info + ["ASIC-DAC Cali"]
-    if (os.path.exists(asic_rootpath + asicrunno)):
-        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
-        chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
-        cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
-        cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
-    else:
-        print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
+#    fpga_info = feset_info + ["FPGA-DAC Cali"]
+#    if (os.path.exists(fpga_rootpath + fpgarunno)):
+#        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+#        chn_cali_paras = cali_a_chn(fpgadata, chnno, wibno=wibno, fembno=fembno )
+#        cali_wf_plot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
+#        cali_linear_fitplot(pp, apainfo, wireinfo, fpga_info, chn_cali_paras)
+#    else:
+#        print "Path: %s%s doesnt' exist, ignore anyway"%(fpga_rootpath, fpgarunno)
+#
+#    asic_info = feset_info + ["ASIC-DAC Cali"]
+#    if (os.path.exists(asic_rootpath + asicrunno)):
+#        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+#        chn_cali_paras = cali_a_chn(asicdata, chnno, wibno=wibno, fembno=fembno )
+#        cali_wf_plot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
+#        cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
+#    else:
+#        print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
     pp.close()
     print "results path: " + fp
 

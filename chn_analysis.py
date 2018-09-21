@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 21:32:04 2018
+Last modified: Thu 13 Sep 2018 08:04:39 AM CEST
 """
 
 #defaut setting for scientific caculation
@@ -128,6 +128,7 @@ def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain
 def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
 
+    print asicchn
     chnrmsdata = rmsdata[0][7][asicchn]
     feed_loc = rmsdata[0][8]
 #   raw data

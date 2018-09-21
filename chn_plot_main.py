@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Jun  9 21:01:38 2018
+Last modified: Fri 14 Sep 2018 11:49:14 PM CEST
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -39,9 +39,10 @@ if __name__ == '__main__':
     asicrunno = sys.argv[7]
     apafolder = sys.argv[8] 
     jumbo_flag = (sys.argv[9] == "True")
-    wibno  = int(sys.argv[10])
-    fembno  = int(sys.argv[11])
-    chnno  = int(sys.argv[12])
+    tpcno  = (sys.argv[10])
+    wibno  = int(sys.argv[11])
+    fembno  = int(sys.argv[12])
+    chnno  = int(sys.argv[13])
 
     if (apafolder == "APA40"):
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
@@ -65,7 +66,8 @@ if __name__ == '__main__':
     
     fft_s = 5000
     gains = ["250"] 
-    #tps = ["05", "10", "20", "30"]
+    gains = ["140"] 
+    tps = ["05", "10", "20", "30"]
     tps = [  "20"]
     wib_femb_chns = [  
                         #wib(0-4), femb(0-3), chn(0~127)
@@ -89,7 +91,7 @@ if __name__ == '__main__':
         mps = []
         for gain in gains: 
             for tp in tps:
-                 ana_a_chn_args = (out_path, rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag, fft_s, apa)
+                 ana_a_chn_args = (out_path, rms_rootpath, fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno, fembno, chnno, gain, tp, jumbo_flag, fft_s, apa, tpcno)
                  p = mp.Process(target=plot_a_chn, args=ana_a_chn_args)
                  mps.append(p)
         for p in mps:

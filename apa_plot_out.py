@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Jun  9 21:29:38 2018
+Last modified: Fri 21 Sep 2018 10:36:34 PM CEST
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -254,7 +254,8 @@ class APA_PLOT:
         ax.set_ylim([0,1])
         ax.legend(loc='best', fontsize=9)
     
-    def apa_plot5 (self, pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" , gs=["250", "140"], tps=["05", "10", "20", "30"]) : 
+    #def apa_plot5 (self, pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" , gs=["250", "140"], tps=["05", "10", "20", "30"]) : 
+    def apa_plot5 (self, pp, orgdicts, title="APA ENC vs. Tp", rmstype="sfrms", calitype="fpg_gain" , gs=["250", "140"], tps=["20",]) : 
         xenc_tps=[]
         venc_tps=[]
         uenc_tps=[]
@@ -367,7 +368,7 @@ class APA_PLOT:
         ax.set_title(title )
         ax.grid()
     
-    def plot0_overall_enc (self, pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "sf", gs =["250", "140"],  tps=["05", "10", "20", "30"] ) :
+    def plot0_overall_enc (self, pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain", sfhf = "sf", gs =["250", "140"],  tps=[  "20"] ) :
         fig = plt.figure(figsize=(16,9))
         ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
         ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
@@ -432,7 +433,7 @@ class APA_PLOT:
     
     ###############################################################################################################################
     ###############################################################################################################################
-    def plot1_chns_enc (self, pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" ,  tps=["05", "10", "20", "30"]
+    def plot1_chns_enc (self, pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" ,  tps=["20"]
     ) : #enctype, raw, hf, sf
         fig = plt.figure(figsize=(16,9))
         ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
@@ -692,7 +693,7 @@ class APA_PLOT:
         ax.set_title(title )
         ax.grid()
     
-    def plot3_overall_gain (self, pp, orgdicts, title="APA Gain Measurement", gs=["250", "140"], tps=["05", "10", "20", "30"]) :
+    def plot3_overall_gain (self, pp, orgdicts, title="APA Gain Measurement", gs=["250", "140"], tps=[ "20"]) :
         fig = plt.figure(figsize=(16,9))
         ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
         ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
@@ -750,7 +751,8 @@ class APA_PLOT:
         ax4 = plt.subplot2grid((4, 4), (3, 2), colspan=1, rowspan=1)
         ax5 = plt.subplot2grid((4, 4), (3, 3), colspan=1, rowspan=1)
     
-        tps=["05", "10", "20", "30"]
+        #tps=["05", "10", "20", "30"]
+        tps=["20"]
         xg=[]
         vg=[]
         ug=[]

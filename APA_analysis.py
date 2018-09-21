@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Sep 21 19:26:07 2018
+Last modified: Fri Sep 21 19:36:32 2018
 """
 
 #defaut setting for scientific caculation
@@ -344,6 +344,7 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
                 "unstk_ratio":None, "fpgadac_en":None, "fpg_gain":None, "fpg_inl":None, "asicdac_en":None, "asi_gain":None, "asi_inl":None }
  
     sumtodict = []
+    sumtocsv = [["apaloc", "wib", "femb", "cebox", "wire", "fembchn", "gain", "tp", "rms", "ped", "sfrms", "sfped", "unstk_ratio", "fpgadac_en", "fpga_gain", "fpga_inl" ], ]
     if (len(files) > 0 ):
         for sumfile in sumfiles:
             with open (sum_path+sumfile, 'rb') as fp:
@@ -378,15 +379,37 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
                             newdict["asi_gain"]     =  chn_rec[17]                 
                             newdict["asi_inl"]      =  chn_rec[18]                
                             sumtodict.append(newdict)
+
+                            sumtocsv.append([ chn_rec[0][0]        
+                                             ,chn_rec[3]          
+                                             ,chn_rec[4]            
+                                             ,chn_rec[0][2]            
+                                             ,chn_rec[1][0]           
+                                             ,chn_rec[5]             
+                                             ,chn_rec[2][0]          
+                                             ,chn_rec[2][1]           
+                                             ,chn_rec[6]            
+                                             ,chn_rec[7]           
+                                             ,chn_rec[10]              
+                                             ,chn_rec[11]              
+                                             ,chn_rec[12]                    
+                                             ,chn_rec[13]                   
+                                             ,chn_rec[14]                 
+                                             ,chn_rec[15]                
 #            os.remove(sum_path+sumfile)
 
     out_fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".allsum"
     fp = sum_path + out_fn
     print fp
-#    if (os.path.isfile(fp)): 
-#        os.remove(fp)
-    with open(fp, "wb") as fp:
-        pickle.dump(sumtodict, fp)
+    with open(fp, "wb") as sfp:
+        pickle.dump(sumtodict, sfp)
+    csvout_fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".csv"
+    csvfp = sum_path + csvout_fn
+
+    print csvfp
+    with open(csvfp, "w") as cfp:
+        for x in sumtocsv:
+        cfp.write(",".join(str(i) for i in x) +  "," + "\n")
 
 if __name__ == '__main__':
     APAno = int(sys.argv[1])

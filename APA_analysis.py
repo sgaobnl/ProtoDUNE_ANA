@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri 21 Sep 2018 10:05:54 PM CEST
+Last modified: Fri Sep 21 19:26:07 2018
 """
 
 #defaut setting for scientific caculation
@@ -27,13 +27,15 @@ import time
 import pickle
 from femb_position import femb_position
 from apa_mapping   import APA_MAP
-from chn_analysis  import read_rawdata 
-from chn_analysis  import noise_a_chn 
+from chn_analysis  import read_rawdata_fast 
+from chn_analysis  import noise_a_chn_fast
 from chn_analysis  import cali_a_chn 
 from chn_analysis  import cali_linear_calc 
 from chn_analysis  import generate_rawpaths
 from multiprocessing import Pipe
 import multiprocessing as wib_mp
+
+
 
 def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",
@@ -52,15 +54,15 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
     apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
-    rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+    rmsdata  = read_rawdata_fast(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     fpg_cali_flg = False 
     if (os.path.exists(fpga_rootpath + fpgarunno)):
         fpg_cali_flg = True
-        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+        fpgadata = read_rawdata_fast(fpga_rootpath, fpgarunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     asi_cali_flg = False
     if (os.path.exists(asic_rootpath + asicrunno)):
         asi_cali_flg = True
-        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+        asicdata = read_rawdata_fast(asic_rootpath, asicrunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
 
     asic_results =[]
     for chni in range(16):
@@ -71,7 +73,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
                 wireinfo = onewire
                 break
         
-        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = False)
+        chn_noise_paras = noise_a_chn_fast(rmsdata, chnno, fft_en = False)
         rms          =  chn_noise_paras[1]
         ped          =  chn_noise_paras[2]
         hfrms        =  chn_noise_paras[7]
@@ -118,15 +120,15 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
     apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
-    rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+    rmsdata  = read_rawdata_fast(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     fpg_cali_flg = False 
     if (os.path.exists(fpga_rootpath + fpgarunno)):
         fpg_cali_flg = True
-        fpgadata = read_rawdata(fpga_rootpath, fpgarunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+        fpgadata = read_rawdata_fast(fpga_rootpath, fpgarunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
     asi_cali_flg = False
     if (os.path.exists(asic_rootpath + asicrunno)):
         asi_cali_flg = True
-        asicdata = read_rawdata(asic_rootpath, asicrunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+        asicdata = read_rawdata_fast(asic_rootpath, asicrunno, wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
 
     asic_results =[]
     for chni in range(16):
@@ -137,7 +139,7 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
                 wireinfo = onewire
                 break
         
-        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = False)
+        chn_noise_paras = noise_a_chn_fast(rmsdata, chnno, fft_en = False)
         rms          =  chn_noise_paras[1]
         ped          =  chn_noise_paras[2]
         hfrms        =  chn_noise_paras[7]

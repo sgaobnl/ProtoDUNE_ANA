@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu 13 Sep 2018 08:04:39 AM CEST
+Last modified: Fri Sep 21 19:25:31 2018
 """
 
 #defaut setting for scientific caculation
@@ -117,13 +117,99 @@ def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain
             raw_data = f.read()
             filelength = len(raw_data )
             smps = (filelength-1024)/2/16 
-#            if smps > 200000:
-#                smps = 200000
+            if smps > 200000:
+                smps = 200000
 
             data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
             ###############0         1      2       3       4     5    6    7      8           9         10#########
             datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
     return datas
+
+def read_rawdata_fast(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", jumbo_flag=False ):
+    files = generate_rawpaths(rootpath, runno, wibno,  fembno, chnno, gain, tp ) 
+    datas = []
+    for onefile in files:
+        with open(onefile, 'rb') as f:
+            raw_data = f.read()
+            filelength = len(raw_data )
+            smps = (filelength-1024)/2/16 
+            if smps > 20000:
+                smps = 20000
+
+            data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
+            ###############0         1      2       3       4     5    6    7      8           9         10#########
+            datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
+    return datas
+
+
+def noise_a_chn_fast(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
+    asicchn = chnno % 16
+    chnrmsdata = rmsdata[0][7][asicchn][0:20000]
+    feed_loc = rmsdata[0][8]
+    len_chnrmsdata = len(chnrmsdata)
+    rms =  np.std(chnrmsdata[0:20000])
+    ped = np.mean(chnrmsdata[0:20000])
+    data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
+    data_200ms_slice = chnrmsdata[0:20000:20]
+
+    avg_cycle_l = 1
+    if (len(chnrmsdata) >= 400000):
+        fft_s_l = 400000//avg_cycle_l
+
+    if (False):
+        f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
+        f_l, p_l = chn_rfft_psd(chnrmsdata, fft_s = fft_s_l, avg_cycle = avg_cycle_l)
+    else:
+        f = None
+        p = None
+        f_l = None
+        p_l = None
+
+    if (False ):
+        flt_chn_data = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 1000, flt_order = 3)
+        flt_chn_data = np.array(flt_chn_data) +  ped 
+        hfped = ped
+        hfrms = np.std(flt_chn_data)
+        if (fft_en):
+            hff,hfp = chn_rfft_psd(flt_chn_data, fft_s = fft_s, avg_cycle = fft_avg_cycle)
+            hff_l,hfp_l = chn_rfft_psd(flt_chn_data, fft_s = fft_s_l, avg_cycle = avg_cycle_l)
+        else:
+            hff = None
+            hfp = None
+            hff_l = None
+            hfp_l = None
+        
+        hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[1]]
+        hfdata_100us_slice = flt_chn_data[0:100000:200]
+    else:
+        hfped = ped
+        hfrms = rms
+        hff = None
+        hfp = None
+        hff_l = None
+        hfp_l = None
+        hfdata_slice = data_slice
+        hfdata_100us_slice = chnrmsdata[0:10000:10]
+ 
+    tmp_data = []
+    lenonechn_data = len(chnrmsdata)
+    for tmp in chnrmsdata:
+        if ( tmp % 64  == 63 ) or ( tmp % 64  == 0 ) or ( tmp % 64  == 1 ) or ( tmp % 64  == 62 )  or ( tmp % 64  == 2 ):
+            pass
+        else:
+            tmp_data.append(tmp)
+    len_tmp_data = len(tmp_data)
+    unstk_ratio =1.0 * len_tmp_data / lenonechn_data
+    sfrms =  np.std(tmp_data[0:100000])
+    sfped = np.mean(tmp_data[0:100000])
+
+    chn_noise_paras = [chnno, 
+                       rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
+                       hfrms, hfped, hfdata_slice, hfdata_100us_slice, hff, hfp,
+                       sfrms, sfped, unstk_ratio, f_l, p_l, hff_l, hfp_l,
+                       wibno,  fembno ]
+    return chn_noise_paras
+
 
 def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
@@ -373,7 +459,7 @@ def ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
             wireinfo = onewire
             break
     feset_info = [gain, tp]
-    rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+    rmsdata = read_rawdata_fast(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     
     chn_noise_paras = noise_a_chn(rmsdata, chnno,fft_en, fft_s, fft_avg_cycle, wibno, fembno)
@@ -426,7 +512,7 @@ def mp_ana_a_chn(rms_rootpath,  cali_rootpath, mode="CHN", APAno = 4, \
             wireinfo = onewire
             break
     feset_info = [gain, tp]
-    rmsdata = read_rawdata(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
+    rmsdata = read_rawdata_fast(rms_rootpath, rmsrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     calidata = read_rawdata(cali_rootpath, calirunno, wibno,  fembno, chnno, gain, tp, jumbo_flag)
     
     from multiprocessing import Pipe

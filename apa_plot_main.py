@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Jun  9 21:54:58 2018
+Last modified: Fri Sep 21 15:48:06 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -59,6 +59,10 @@ else:
     rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
     fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
     asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+    rms_rootpath =  "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
+    fpga_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
+    asic_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+ 
     apaplt.apa = "ProtoDUNE"
     apaplt.femb_xuv = [48,40,40] 
     apaplt.fembs_on_apa = range(1,21,1)
@@ -89,8 +93,10 @@ for fembloc in apaplt.fembs_on_apa:
 
 orgdicts = apaplt.dict_filter (orgdicts, or_dnf =femb_cs, and_flg=False  ) 
 #gs =["250"]
-gs =["250","140"]
+#gs =["250","140"]
+gs =["140"]
 tps=["05", "10", "20", "30"] 
+tps=["20"] 
 fp = sum_path + fn + ".pdf" 
 pp = PdfPages(fp)
 print "start...wait a few minutes..."

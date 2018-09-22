@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Sep 21 19:36:32 2018
+Last modified: Sat 22 Sep 2018 01:55:50 PM CEST
 """
 
 #defaut setting for scientific caculation
@@ -321,7 +321,7 @@ def ana_a_apa(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, rmsrunno =
         ana_a_wib(rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, \
                  wibno=wibno,  gain=gain, tp=tp, jumbo_flag=jumbo_flag, pipe_en = True , apa=apa)
 
-def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tp, jumbo_flag, apa="ProtoDUNE" ):
+def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tp, jumbo_flag, apa="ProtoDUNE", fpgdate="00_00_0000" ):
     for gain in gains: 
         for tp in tps:
             print "Gain = %2.1f mV/fC, "% (int(gain)/10.0) +  "Tp = %1.1fus"% (int(tp)/10.0) 
@@ -396,20 +396,20 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
                                              ,chn_rec[13]                   
                                              ,chn_rec[14]                 
                                              ,chn_rec[15]                
+                                             ])
 #            os.remove(sum_path+sumfile)
-
-    out_fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".allsum"
+    out_fn = "APA%d"%APAno + "_"+fpgdate +"_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".allsum"
     fp = sum_path + out_fn
     print fp
     with open(fp, "wb") as sfp:
         pickle.dump(sumtodict, sfp)
-    csvout_fn = "APA%d"%APAno + "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".csv"
-    csvfp = sum_path + csvout_fn
 
+    csvout_fn = "APA%d"%APAno + "_" +fpgdate +"_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".csv"
+    csvfp = sum_path + csvout_fn
     print csvfp
     with open(csvfp, "w") as cfp:
         for x in sumtocsv:
-        cfp.write(",".join(str(i) for i in x) +  "," + "\n")
+            cfp.write(",".join(str(i) for i in x) +  "," + "\n")
 
 if __name__ == '__main__':
     APAno = int(sys.argv[1])
@@ -449,7 +449,7 @@ if __name__ == '__main__':
     tps = ["05", "10", "20", "30"]
     tps = [ "20"]
 
-    results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag, apa )
+    results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, fpgarunno, asicrunno, gains, tps, jumbo_flag, apa, fpgdate )
 
     print "Done, please punch \"Eneter\" or \"return\" if necessary! "
 

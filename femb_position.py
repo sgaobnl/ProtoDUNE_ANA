@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat Jun  9 20:34:33 2018
+Last modified: Mon Sep 24 11:11:06 2018
 """
 
 #defaut setting for scientific caculation
@@ -69,7 +69,7 @@ def femb_position (APAno=1):
     
                         ["A216", "WIB04_FEMB2", "CEbox058", "0x20000",], 
                         ["A217", "WIB03_FEMB2", "CEbox043", "0x20000",], 
-                        ["A218", "WIB02_FEMB2", "CEbox039", "0x20000",], 
+                        ["A218", "WIB02_FEMB2", "CEbox068", "0x20000",], #CEbox039 was replaced
                         ["A219", "WIB01_FEMB2", "CEbox041", "0x20000",], 
                         ["A220", "WIB00_FEMB2", "CEbox019", "0x20000",], 
                     ]
@@ -78,13 +78,13 @@ def femb_position (APAno=1):
         femb_pos_np = [ 
                         ["B301", "WIB04_FEMB1", "CEbox064", "0x20000",], 
                         ["B302", "WIB03_FEMB1", "CEbox056", "0x20000",], 
-                        ["B303", "WIB02_FEMB1", "CEbox018", "0x20000",], 
+                        ["B303", "WIB02_FEMB1", "CEbox081", "0x20000",], #CEbox018 was replaced
                         ["B304", "WIB01_FEMB1", "CEbox084", "0x20000",], 
                         ["B305", "WIB00_FEMB1", "CEbox073", "0x20000",], 
     
                         ["B306", "WIB04_FEMB0", "CEbox087", "0x20000",], 
-                        ["B307", "WIB03_FEMB0", "CEbox075", "0x20000",], 
-                        ["B308", "WIB02_FEMB0", "CEbox022", "0x20001",], 
+                        ["B307", "WIB03_FEMB0", "CEbox078", "0x20000",], #CEbox075 was replaced
+                        ["B308", "WIB02_FEMB0", "CEbox093", "0x20001",], #CEbox022 was replaced
                         ["B309", "WIB01_FEMB0", "CEbox088", "0x20000",], 
                         ["B310", "WIB00_FEMB0", "CEbox076", "0x20000",], 
                         
@@ -92,7 +92,7 @@ def femb_position (APAno=1):
                         ["A312", "WIB03_FEMB3", "CEbox050", "0x20000",], 
                         ["A313", "WIB02_FEMB3", "CEbox077", "0x20000",], 
                         ["A314", "WIB01_FEMB3", "CEbox080", "0x20000",], 
-                        ["A315", "WIB00_FEMB3", "CEbox049", "0x20000",], 
+                        ["A315", "WIB00_FEMB3", "CEbox090", "0x20000",], #CEbox049 was replaced
     
                         ["A316", "WIB04_FEMB2", "CEbox060", "0x20000",], 
                         ["A317", "WIB03_FEMB2", "CEbox079", "0x20000",], 
@@ -132,9 +132,9 @@ def femb_position (APAno=1):
         femb_pos_np = [ 
                         ["A511", "WIB04_FEMB1", "CEbox103", "0x20000",], 
                         ["A512", "WIB03_FEMB1", "CEbox130", "0x20000",], 
-                        ["A513", "WIB02_FEMB1", "CEbox106", "0x20000",], 
+                        ["A513", "WIB02_FEMB1", "CEbox107", "0x20000",], #CEbox106 was replaced
                         ["A514", "WIB01_FEMB1", "CEbox120", "0x20000",], 
-                        ["A515", "WIB00_FEMB1", "CEbox123", "0x20000",], 
+                        ["A515", "WIB00_FEMB1", "CEbox147", "0x20000",], #CEbox123 was replaced
                              
                         ["A516", "WIB04_FEMB0", "CEbox091", "0x20000",], 
                         ["A517", "WIB03_FEMB0", "CEbox075", "0x20000",], 
@@ -146,7 +146,7 @@ def femb_position (APAno=1):
                         ["B502", "WIB03_FEMB3", "CEbox114", "0x20000",], 
                         ["B503", "WIB02_FEMB3", "CEbox039", "0x20000",], 
                         ["B504", "WIB01_FEMB3", "CEbox125", "0x20000",], 
-                        ["B505", "WIB00_FEMB3", "CEbox122", "0x20000",], 
+                        ["B505", "WIB00_FEMB3", "CEbox143", "0x20000",], #CEbox122 was replaced 
                              
                         ["B506", "WIB04_FEMB2", "CEbox118", "0x20000",], 
                         ["B507", "WIB03_FEMB2", "CEbox115", "0x20000",], 
@@ -163,7 +163,7 @@ def femb_position (APAno=1):
                         ["A615", "WIB00_FEMB1", "CEbox139", "0x20000",], 
     
                         ["A616", "WIB04_FEMB0", "CEbox144", "0x20000",], 
-                        ["A617", "WIB03_FEMB0", "CEbox112", "0x20000",], 
+                        ["A617", "WIB03_FEMB0", "CEbox022", "0x20000",],  #CEbox112 was replaced
                         ["A618", "WIB02_FEMB0", "CEbox018", "0x20000",], 
                         ["A619", "WIB01_FEMB0", "CEbox085", "0x20000",], 
                         ["A620", "WIB00_FEMB0", "CEbox135", "0x20000",], 

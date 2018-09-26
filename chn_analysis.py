@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Sep 21 19:25:31 2018
+Last modified: Tue 25 Sep 2018 04:11:57 PM CEST
 """
 
 #defaut setting for scientific caculation
@@ -221,12 +221,18 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     len_chnrmsdata = len(chnrmsdata)
     rms =  np.std(chnrmsdata[0:100000])
     ped = np.mean(chnrmsdata[0:100000])
-    data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
-    data_200ms_slice = chnrmsdata[0:200000:200]
+    if len(feed_loc) > 2:
+        data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
+        data_200ms_slice = chnrmsdata[0:200000:200]
+    else:
+        data_slice = chnrmsdata[0:500]
+        data_200ms_slice = chnrmsdata[0:200000:200]
 
     avg_cycle_l = 1
     if (len(chnrmsdata) >= 400000):
         fft_s_l = 400000//avg_cycle_l
+    else:
+        fft_s_l =len(chnrmsdata) 
 
     if (fft_en):
         f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
@@ -252,7 +258,10 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
         hff_l = None
         hfp_l = None
         
-    hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[1]]
+    if len(feed_loc) > 2:
+        hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[1]]
+    else:
+        hfdata_slice = flt_chn_data[0:500]
     hfdata_100us_slice = flt_chn_data[0:100000:200]
 
 #   data after stuck code filter
@@ -308,7 +317,13 @@ def linear_fit(x, y):
 
     y_fit = np.array(x)*slope + constant
     delta_y = abs(y - y_fit)
-    inl = delta_y / (max(y)-min(y))
+    if (len(y) > 0 ):
+        if ( (max(y)-min(y)) > 0 ) :
+            inl = delta_y / (max(y)-min(y))
+        else:
+            inl = [-1]
+    else:
+        inl = [-1]
     peakinl = max(inl)
 
     return slope, constant, peakinl, error_gain
@@ -352,8 +367,12 @@ def cali_linear_calc(chn_cali_paras):
         arean_fit = None
 
     if (ampp_fit != None):
-        encperlsb = int(6250/ampp_fit[0])
-        chninl    = ampp_fit[2]
+        if (ampp_fit[0] != 0):
+            encperlsb = int(6250/ampp_fit[0])
+            chninl    = ampp_fit[2]
+        else:
+            encperlsb = None
+            chninl    = None
     else:
         encperlsb = None
         chninl    = None

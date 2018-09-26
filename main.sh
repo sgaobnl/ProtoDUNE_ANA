@@ -5,20 +5,42 @@
 ## apa_plot_main.py--> # apano   rmsdate      fpgdate     asidate     rmsrunno fpgarunno asicrunno apafolder 
 #python apa_plot_main.py  3   "06_05_2018" "06_05_2018" "06_05_2018" run01rms   run01fpg  run01asi  APA 
 #
-python APA_analysis.py   1   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
-python APA_analysis.py   2   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
-python APA_analysis.py   3   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
-python APA_analysis.py   4   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
-python APA_analysis.py   5   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
-python APA_analysis.py   6   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   1   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   2   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   3   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   4   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   5   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   6   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
 
 
-python APA_analysis.py   1   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
-python APA_analysis.py   2   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
-python APA_analysis.py   3   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
-python APA_analysis.py   4   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
-python APA_analysis.py   5   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
-python APA_analysis.py   6   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   1   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   2   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   3   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   4   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   5   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   6   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg   run01asi   APA    False 
+
+#python APA_analysis.py   1   "09_23_2018" "09_23_2018" "09_23_2018" run02rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   2   "09_23_2018" "09_23_2018" "09_23_2018" run02rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   3   "09_23_2018" "09_23_2018" "09_23_2018" run02rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   4   "09_23_2018" "09_23_2018" "09_23_2018" run02rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   5   "09_23_2018" "09_23_2018" "09_23_2018" run02rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run02rms run01fpg   run01asi   APA    False 
+
+#python APA_analysis.py   1   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   2   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   3   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   4   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   5   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
+#python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
+
+python APA_analysis.py   1   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+python APA_analysis.py   2   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+python APA_analysis.py   3   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+python APA_analysis.py   4   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+python APA_analysis.py   5   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+
 
 #python apa_plot_main.py  3   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg  run01asi  APA 
 #python APA_analysis.py   3   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 

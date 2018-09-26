@@ -1,8 +1,8 @@
 #!/bin/bash
                        # apano,   rmsdate,     fpgdate,     asidate, rmsrunno, fpgarunno, asicrunno, apafolder jumbo_flag tpcno wibno, fembno, chnno
-python chn_plot_main.py  1       "09_17_2018" "09_17_2018" "09_17_2018" run01rms   run01fpg  run01asi    APA      False  1 	    0	0	0 
-python chn_plot_main.py  1       "09_17_2018" "09_17_2018" "09_17_2018" run01rms   run01fpg  run01asi    APA      False  1 	    0	0	5 
-python chn_plot_main.py  1       "09_17_2018" "09_17_2018" "09_17_2018" run01rms   run01fpg  run01asi    APA      False  1 	    0	0	10 
+python chn_plot_main.py  1       "09_23_2018" "09_23_2018" "09_23_2018" run05rms   run02fpg  run01asi    APA      False  1 	    0	0	0 
+python chn_plot_main.py  1       "09_23_2018" "09_23_2018" "09_23_2018" run05rms   run02fpg  run01asi    APA      False  1 	    0	0	5 
+python chn_plot_main.py  1       "09_23_2018" "09_23_2018" "09_23_2018" run05rms   run02fpg  run01asi    APA      False  1 	    0	0	10 
 #python chn_plot_main.py  1       "09_14_2018" "09_14_2018" "09_14_2018" run02rms   run01fpg  run01asi    APA      False  176	    3	1	48 
 #python chn_plot_main.py  1       "09_14_2018" "09_14_2018" "09_14_2018" run02rms   run01fpg  run01asi    APA      False  476	    1	1	92 
 #python chn_plot_main.py  1       "09_14_2018" "09_14_2018" "09_14_2018" run02rms   run01fpg  run01asi    APA      False  618	    0	1	106 

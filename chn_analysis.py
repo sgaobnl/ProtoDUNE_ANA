@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Sep 27 14:57:43 2018
+Last modified: Thu 27 Sep 2018 10:05:38 PM CEST
 """
 
 #defaut setting for scientific caculation
@@ -158,9 +158,6 @@ def read_rawdata_coh(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, 
     return datas
 
 def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
-    print len(rmsdata[0][7][chnno])
-    print "remove later"
-    sys.exit()
     wdata = []
     for chni in range(16):
         if (asic_ccs[chni][2][0] in wiretype):
@@ -173,27 +170,26 @@ def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
         if i == 0:
             avgdata = wdata[0]
         else:
-            avgdata = avgdata + wdata[0]
+            avgdata = avgdata + wdata[i]
 
     if lenwdata >= 4 :
         coh_data = (avgdata*1.0/lenwdata) 
         coh_data = coh_data - np.mean( coh_data)
-        coh_flg = True
+        coh_flg = lenwdata
     else:
         coh_data = wdata*0 
-        coh_flg = False
+        coh_flg = 0
     return coh_data, coh_flg
 
 
 def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
-    coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
     asicchn = chnno % 16
     chnrmsdata = rmsdata[0][7][asicchn]
     len_chnrmsdata = len(chnrmsdata)
     if (len_chnrmsdata > 200000):
         len_chnrmsdata  = 200000
-    if (len_chnnrmsdata > len(coh_data) ):
-        len_chnnrmsdata = len(coh_data)
+    if (len_chnrmsdata > len(coh_data) ):
+        len_chnrmsdata = len(coh_data)
 
     chnrmsdata = np.array( chnrmsdata[0:len_chnrmsdata ]) 
     postdata = chnrmsdata - coh_data
@@ -231,7 +227,7 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
 #            break
     chn_noise_paras = [chnno, 
                        rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
-                       hfrms, hfped, hfdata_slice, hfdata_100us_slice, hff, hfp,
+                       hfrms, hfped, hfdata_slice, hfdata_200ms_slice, hff, hfp,
                        sfrms, sfped, unstk_ratio, f_l, p_l, hff_l, hfp_l,
                        wibno,  fembno ]
     return chn_noise_paras

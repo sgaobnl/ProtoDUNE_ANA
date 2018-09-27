@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Sep 27 15:20:56 2018
+Last modified: Thu 27 Sep 2018 10:03:39 PM CEST
 """
 
 #defaut setting for scientific caculation
@@ -27,16 +27,15 @@ import time
 import pickle
 from femb_position import femb_position
 from apa_mapping   import APA_MAP
+from chn_analysis  import read_rawdata_coh 
 from chn_analysis  import read_rawdata_fast 
-from chn_analysis  import noise_a_chn_fast
+from chn_analysis  import noise_a_coh
 from chn_analysis  import coh_noise_ana
 from chn_analysis  import cali_a_chn 
 from chn_analysis  import cali_linear_calc 
 from chn_analysis  import generate_rawpaths
 from multiprocessing import Pipe
 import multiprocessing as wib_mp
-
-
 
 def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",
@@ -74,7 +73,7 @@ def mp_ana_a_asic(mpout, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4,
                 wireinfo = onewire
                 break
         
-        chn_noise_paras = noise_a_chn_fast(rmsdata, chnno, fft_en = False)
+        chn_noise_paras = noise_a_coh(rmsdata, chnno, fft_en = False)
         rms          =  chn_noise_paras[1]
         ped          =  chn_noise_paras[2]
         hfrms        =  chn_noise_paras[7]
@@ -111,7 +110,7 @@ def pipe_ana_a_asic(cc, femb_ccs, rms_rootpath, fpga_rootpath, asic_rootpath,  A
 
     asic_ccs = []
     for ci in femb_ccs:
-        if (asicno == int(ci[5]) :
+        if (asicno == int(ci[5])) :
             asic_ccs.append(ci)
 
     femb_pos_np = femb_position (APAno)
@@ -163,7 +162,7 @@ def pipe_ana_a_asic(cc, femb_ccs, rms_rootpath, fpga_rootpath, asic_rootpath,  A
             cohdata = cohdatauv
             cohdata_flg = cohdatauv_flg
         
-        chn_noise_paras = noise_a_chn_fast(cohdata, cohdata_flg, rmsdata, chnno, fft_en = False)
+        chn_noise_paras = noise_a_coh(cohdata, cohdata_flg, rmsdata, chnno, fft_en = False)
         rms          =  chn_noise_paras[1]
         ped          =  chn_noise_paras[2]
         hfrms        =  chn_noise_paras[7]
@@ -240,7 +239,7 @@ def mp_ana_a_femb(cc, wib_ccs,  rms_rootpath, fpga_rootpath, asic_rootpath, APAn
     print "WIB#%d FEMB%d is being analyzed..." %(wibno, fembno)
     femb_ccs = []
     for ci in wib_ccs:
-        if (fembno == int(ci[4]) :
+        if (fembno == int(ci[4])) :
             femb_ccs.append(ci)
  
     tmp = pipe_ana_a_femb(femb_ccs, rms_rootpath, fpga_rootpath, asic_rootpath, APAno = APAno, rmsrunno=rmsrunno, fpgarunno =fpgarunno, asicrunno =asicrunno, \
@@ -377,7 +376,7 @@ def results_save(ccs, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrun
                 "unstk_ratio":None, "fpgadac_en":None, "fpg_gain":None, "fpg_inl":None, "asicdac_en":None, "asi_gain":None, "asi_inl":None }
  
     sumtodict = []
-    sumtocsv = [["apaloc", "wib", "femb", "cebox", "wire", "fembchn", "gain", "tp", "rms", "ped", "sfrms", "sfped", "unstk_ratio", "fpgadac_en", "fpga_gain", "fpga_inl" ], ]
+    sumtocsv = [["apaloc", "wib", "femb", "cebox", "wire", "fembchn", "gain", "tp", "rms", "ped", "hfrms", "hfped", "sfrms", "sfped", "unstk_ratio", "fpgadac_en", "fpga_gain", "fpga_inl" ], ]
     if (len(files) > 0 ):
         for sumfile in sumfiles:
             with open (sum_path+sumfile, 'rb') as fp:
@@ -423,6 +422,8 @@ def results_save(ccs, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrun
                                              ,chn_rec[2][1]           
                                              ,chn_rec[6]            
                                              ,chn_rec[7]           
+                                             ,chn_rec[8]           
+                                             ,chn_rec[9]           
                                              ,chn_rec[10]              
                                              ,chn_rec[11]              
                                              ,chn_rec[12]                    
@@ -482,10 +483,11 @@ if __name__ == '__main__':
     tps = ["05", "10", "20", "30"]
     tps = [ "20"]
 
+    rpath = "/nfs/home/shanshan/coh_study/"
     rpath = "./"
     t_pat = "Test035"
-    pre_ana = t_pat + "_ProtoDUNE_CE_characterization" + ".csv"
-    ppath = rpath + PCE
+    pre_ana = t_pat + "_ProtoDUNE_CE_characterization_summary" + ".csv"
+    ppath = rpath + pre_ana 
     ccs = []
     with open(ppath, 'r') as fp:
         for cl in fp:

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Sep 26 22:23:00 2018
+Last modified: Thu Sep 27 14:57:43 2018
 """
 
 #defaut setting for scientific caculation
@@ -141,12 +141,109 @@ def read_rawdata_fast(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
             datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
     return datas
 
+def read_rawdata_coh(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", jumbo_flag=False ):
+    files = generate_rawpaths(rootpath, runno, wibno,  fembno, chnno, gain, tp ) 
+    datas = []
+    for onefile in files:
+        with open(onefile, 'rb') as f:
+            raw_data = f.read()
+            filelength = len(raw_data )
+            smps = (filelength-1024)/2/16 
+            if smps > 200000:
+                smps = 200000
+
+            data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
+            ###############0         1      2       3       4     5    6    7      8           9         10#########
+            datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
+    return datas
+
+def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
+    print len(rmsdata[0][7][chnno])
+    print "remove later"
+    sys.exit()
+    wdata = []
+    for chni in range(16):
+        if (asic_ccs[chni][2][0] in wiretype):
+            if asic_ccs[chni][18] in ["C10", "C11", "C12"] : #only channel with ENC< 2000e- is considered
+                wdata.append(np.array(rmsdata[0][7][chni][0:200000]))
+
+    lenwdata = len(wdata)
+    avgdata = 0
+    for i in range(lenwdata):
+        if i == 0:
+            avgdata = wdata[0]
+        else:
+            avgdata = avgdata + wdata[0]
+
+    if lenwdata >= 4 :
+        coh_data = (avgdata*1.0/lenwdata) 
+        coh_data = coh_data - np.mean( coh_data)
+        coh_flg = True
+    else:
+        coh_data = wdata*0 
+        coh_flg = False
+    return coh_data, coh_flg
+
+
+def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
+    coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
+    asicchn = chnno % 16
+    chnrmsdata = rmsdata[0][7][asicchn]
+    len_chnrmsdata = len(chnrmsdata)
+    if (len_chnrmsdata > 200000):
+        len_chnrmsdata  = 200000
+    if (len_chnnrmsdata > len(coh_data) ):
+        len_chnnrmsdata = len(coh_data)
+
+    chnrmsdata = np.array( chnrmsdata[0:len_chnrmsdata ]) 
+    postdata = chnrmsdata - coh_data
+
+    rms =  np.std(chnrmsdata)
+    ped = np.mean(chnrmsdata)
+    cohrms =  np.std(coh_data)
+    cohped = np.mean(coh_data)
+    postrms =  np.std(postdata)
+    postped = np.mean(postdata)
+
+    data_slice =      chnrmsdata[0:500]
+    data_200ms_slice = postdata[0:500]
+    f = None
+    p = None
+    f_l = None
+    p_l = None
+    
+    hfrms = postrms
+    hfped = postped
+    hfdata_slice =    chnrmsdata[0:500]
+    hfdata_200ms_slice = postdata[0:500]
+    hff = None
+    hfp = None
+    hff_l = None
+    hfp_l = None
+
+    sfrms = cohrms
+    sfped = cohped
+
+    unstk_ratio = coh_flg
+#    for ci in asic_ccs:
+#        if int(ci[6]) == asicchn : 
+#            unstk_ratio = float(ci[13]) 
+#            break
+    chn_noise_paras = [chnno, 
+                       rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
+                       hfrms, hfped, hfdata_slice, hfdata_100us_slice, hff, hfp,
+                       sfrms, sfped, unstk_ratio, f_l, p_l, hff_l, hfp_l,
+                       wibno,  fembno ]
+    return chn_noise_paras
+
 
 def noise_a_chn_fast(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
     chnrmsdata = rmsdata[0][7][asicchn][0:20000]
     feed_loc = rmsdata[0][8]
     len_chnrmsdata = len(chnrmsdata)
+    if (len_chnrmsdata > 200000):
+        len_chnrmsdata  = 200000
     rms =  np.std(chnrmsdata[0:20000])
     ped = np.mean(chnrmsdata[0:20000])
     data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]

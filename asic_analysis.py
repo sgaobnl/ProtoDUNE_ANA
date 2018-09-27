@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Sep 27 11:28:20 2018
+Last modified: Thu Sep 27 11:30:24 2018
 """
 
 #defaut setting for scientific caculation
@@ -34,7 +34,7 @@ from chn_analysis  import noise_a_chn
 from fft_chn import chn_rfft_psd
 
 
-def wf_a_asic(out_path, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
+def wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi",\
                wibno=0,  fembno=0, asicno=0, gain="250", tp="05" ,\
                jumbo_flag=False, apa= "ProtoDUNE" ):
@@ -378,6 +378,8 @@ if __name__ == '__main__':
 
 
     print "Start..., please wait..."
+    print "Result saves at: "
+    print out_path 
     gains = ["250", "140"] 
     gains = [ "140"] 
     tps = ["05", "10", "20", "30"]

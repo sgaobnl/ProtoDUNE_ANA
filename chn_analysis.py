@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue 25 Sep 2018 04:11:57 PM CEST
+Last modified: Wed Sep 26 22:23:00 2018
 """
 
 #defaut setting for scientific caculation
@@ -213,23 +213,24 @@ def noise_a_chn_fast(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50
 
 def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
-
-    print asicchn
     chnrmsdata = rmsdata[0][7][asicchn]
     feed_loc = rmsdata[0][8]
-#   raw data
     len_chnrmsdata = len(chnrmsdata)
+    if (len_chnrmsdata > 200000):
+        len_chnrmsdata  = 200000
+    chnrmsdata = chnrmsdata[0:len_chnrmsdata ]
     rms =  np.std(chnrmsdata[0:100000])
     ped = np.mean(chnrmsdata[0:100000])
     if len(feed_loc) > 2:
-        data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
+        #data_slice = chnrmsdata[feed_loc[0]:feed_loc[0]+5000]
+        data_slice = chnrmsdata
         data_200ms_slice = chnrmsdata[0:200000:200]
     else:
-        data_slice = chnrmsdata[0:500]
+        data_slice = chnrmsdata
         data_200ms_slice = chnrmsdata[0:200000:200]
 
     avg_cycle_l = 1
-    if (len(chnrmsdata) >= 400000):
+    if (len_chnrmsdata >= 400000):
         fft_s_l = 400000//avg_cycle_l
     else:
         fft_s_l =len(chnrmsdata) 
@@ -259,9 +260,10 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
         hfp_l = None
         
     if len(feed_loc) > 2:
-        hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[1]]
+        #hfdata_slice = flt_chn_data[feed_loc[0]:feed_loc[0] + 5000]
+        hfdata_slice = flt_chn_data
     else:
-        hfdata_slice = flt_chn_data[0:500]
+        hfdata_slice = flt_chn_data
     hfdata_100us_slice = flt_chn_data[0:100000:200]
 
 #   data after stuck code filter

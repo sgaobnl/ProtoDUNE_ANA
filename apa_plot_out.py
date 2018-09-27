@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri 21 Sep 2018 10:36:34 PM CEST
+Last modified: Thu Sep 27 11:17:00 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -846,6 +846,8 @@ class APA_PLOT:
         ax.set_ylabel("Normalized counts")
         ax.set_xlabel("Gain / e$^-$/LSB")
         ax.legend(loc='best')
+
+
 
     def __init__(self):
         self.apa = 'ProtoDUNE'    

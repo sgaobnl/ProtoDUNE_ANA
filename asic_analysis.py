@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Sep 27 11:30:24 2018
+Last modified: Sat Sep 29 11:24:38 2018
 """
 
 #defaut setting for scientific caculation
@@ -30,8 +30,11 @@ import matplotlib.patches as mpatches
 import matplotlib.mlab as mlab
 from matplotlib.backends.backend_pdf import PdfPages
 from chn_analysis  import read_rawdata 
+from chn_analysis  import read_rawdata_coh 
 from chn_analysis  import noise_a_chn 
+from chn_analysis  import noise_a_coh 
 from fft_chn import chn_rfft_psd
+from chn_analysis  import coh_noise_ana
 
 
 def wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
@@ -51,7 +54,7 @@ def wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
     apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
-    rmsdata  = read_rawdata(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
+    rmsdata  = read_rawdata_coh(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)
 
     asic_results =[]
     for chni in range(16):
@@ -62,7 +65,7 @@ def wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                 wireinfo = onewire
                 break
         
-        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = True)
+        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = False)
         rms          =  chn_noise_paras[1]
         ped          =  chn_noise_paras[2]
         hfrms        =  chn_noise_paras[7]
@@ -390,19 +393,19 @@ if __name__ == '__main__':
                   wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
                   jumbo_flag=False, apa= "ProtoDUNE" )
  
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
     asic_coh_plot_wire(out_path, asic_results, wiretype = "UV")
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "UVX")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "UVX")
 
-    asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
-    asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
-    asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
+#    asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
+#    asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
+#    asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
 #
-    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
-    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
-    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
+#    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
+#    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
+#    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
     print "Done, please punch \"Eneter\" or \"return\" if necessary! "
 
  

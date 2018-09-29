@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu 27 Sep 2018 10:05:38 PM CEST
+Last modified: Fri Sep 28 14:12:21 2018
 """
 
 #defaut setting for scientific caculation
@@ -194,12 +194,22 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
     chnrmsdata = np.array( chnrmsdata[0:len_chnrmsdata ]) 
     postdata = chnrmsdata - coh_data
 
-    rms =  np.std(chnrmsdata)
-    ped = np.mean(chnrmsdata)
-    cohrms =  np.std(coh_data)
-    cohped = np.mean(coh_data)
-    postrms =  np.std(postdata)
-    postped = np.mean(postdata)
+    sp = len_chnrmsdata//20
+    rmsmin = 4000
+    k = 0
+    for i in range(20):
+        tmp = np.std(chnrmsdata[i*sp, i*sp + sp]) 
+        print tmp
+        if tmp < rmsmin :
+            k = i
+    sys.exit()
+
+    rms =  np.std(chnrmsdata[k*sp, k*sp + sp])
+    ped = np.mean(chnrmsdata[k*sp, k*sp + sp])
+    cohrms =  np.std(coh_data[k*sp, k*sp + sp])
+    cohped = np.mean(coh_data[k*sp, k*sp + sp])
+    postrms =  np.std(postdata[k*sp, k*sp + sp])
+    postped = np.mean(postdata[k*sp, k*sp + sp])
 
     data_slice =      chnrmsdata[0:500]
     data_200ms_slice = postdata[0:500]

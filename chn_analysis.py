@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri Sep 28 14:12:21 2018
+Last modified: Sun Sep 30 10:22:24 2018
 """
 
 #defaut setting for scientific caculation
@@ -199,10 +199,8 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
     k = 0
     for i in range(20):
         tmp = np.std(chnrmsdata[i*sp, i*sp + sp]) 
-        print tmp
         if tmp < rmsmin :
             k = i
-    sys.exit()
 
     rms =  np.std(chnrmsdata[k*sp, k*sp + sp])
     ped = np.mean(chnrmsdata[k*sp, k*sp + sp])

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun 30 Sep 2018 08:58:58 PM CEST
+Last modified: Sun Sep 30 15:16:40 2018
 """
 
 #defaut setting for scientific caculation
@@ -159,13 +159,14 @@ def read_rawdata_coh(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, 
 
 def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
     wdata = []
+    ext_chns = []
     for i in range(16):
         chni = int(asic_ccs[i][6] )
         if (asic_ccs[i][2][0] in wiretype):
             if asic_ccs[i][18] in ["C10", "C11", "C12"] : #only channel with ENC< 2000e- is considered
                 wdata.append(np.array(rmsdata[0][7][chni][0:200000]))
-               # if asic_ccs[i][2][0] == wiretype: 
-               #     print i, chni, wiretype, rmsdata[0][7][chni][0:5]
+            else:
+                ext_chns.append(chni)
 
     lenwdata = len(wdata)
     for i in range(lenwdata):
@@ -177,15 +178,21 @@ def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
     if lenwdata >= 4 :
         coh_data = (avgdata*1.0/lenwdata) 
         coh_data = coh_data - np.mean( coh_data)
-        coh_flg = lenwdata
+        coh_flg = [lenwdata, ext_chns]
     else:
         coh_data = wdata*0 
-        coh_flg = 0
+        coh_flg = [0, ext_chns]
     return coh_data, coh_flg
 
 
 def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
+    c_flg = coh_flg[0]
+    c_chns = coh_flg[1]
+
     asicchn = chnno % 16
+    if asicchn in c_chns:
+        c_flg = 0
+
     chnrmsdata = rmsdata[0][7][asicchn]
     len_chnrmsdata = len(chnrmsdata)
     if (len_chnrmsdata > 200000):
@@ -194,18 +201,20 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
         len_chnrmsdata = len(coh_data)
 
     chnrmsdata = np.array( chnrmsdata[0:len_chnrmsdata ]) 
-    postdata = chnrmsdata - coh_data
+    if (c_flg == 0):
+        coh_data = coh_data * 0
+        postdata = np.array( chnrmsdata[0:len_chnrmsdata ]) 
+    else:
+        coh_data = coh_data 
+        postdata = chnrmsdata - coh_data
 
     sp = len_chnrmsdata//20
-    rmsmin = 4000
     rms_tmp = []
-
     for i in range(20):
         tmp = np.std(chnrmsdata[i*sp: i*sp + sp]) 
         if math.isnan(tmp):
             tmp = 1000 + i
         rms_tmp.append(tmp)
-
     rms_tmp = np.array(rms_tmp)*100//1
     rms_tmp2 = sorted(rms_tmp)
     rms10th = rms_tmp2[9]
@@ -238,7 +247,7 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
     sfrms = cohrms
     sfped = cohped
 
-    unstk_ratio = coh_flg
+    unstk_ratio = c_flg
 
     chn_noise_paras = [chnno, 
                        rms,   ped,   data_slice,   data_200ms_slice,   f,   p,

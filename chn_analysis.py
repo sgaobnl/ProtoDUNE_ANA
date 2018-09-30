@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Sep 30 15:16:40 2018
+Last modified: Sun Sep 30 16:23:26 2018
 """
 
 #defaut setting for scientific caculation
@@ -180,7 +180,7 @@ def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
         coh_data = coh_data - np.mean( coh_data)
         coh_flg = [lenwdata, ext_chns]
     else:
-        coh_data = wdata*0 
+        coh_data = np.array(rmsdata[0][7][0][0:200000])*0 
         coh_flg = [0, ext_chns]
     return coh_data, coh_flg
 
@@ -221,13 +221,25 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
     pos = np.where(rms_tmp == rms10th) [0][0]
     k = pos
 
-    rms =  np.std(chnrmsdata[k*sp: k*sp + sp])
-    ped = np.mean(chnrmsdata[k*sp: k*sp + sp])
-    cohrms =  np.std(coh_data[k*sp: k*sp + sp])
-    cohped = np.mean(coh_data[k*sp: k*sp + sp])
+    rms =  np.std(chnrmsdata[k*sp: k*sp + sp])  
+    ped = np.mean(chnrmsdata[k*sp: k*sp + sp])  
+    cohrms =  np.std(coh_data[k*sp: k*sp + sp]) 
+    cohped = np.mean(coh_data[k*sp: k*sp + sp]) 
     postrms =  np.std(postdata[k*sp: k*sp + sp])
     postped = np.mean(postdata[k*sp: k*sp + sp])
-
+    if math.isnan(rms):
+        rms = 0
+    if math.isnan(ped):
+        ped = 0
+    if math.isnan(cohrms):
+        cohrms = 0
+    if math.isnan(cohped):
+        cohped = 0
+    if math.isnan(postrms):
+        postrms = 0
+    if math.isnan(postped):
+        postped = 0
+ 
     data_slice =   chnrmsdata[k*sp: k*sp + sp]
     data_200ms_slice = chnrmsdata[k*sp: k*sp + sp]
     f = None

@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Sep 30 10:22:24 2018
+Last modified: Sun Sep 30 14:04:10 2018
 """
 
 #defaut setting for scientific caculation
@@ -159,13 +159,15 @@ def read_rawdata_coh(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, 
 
 def coh_noise_ana(asic_ccs, rmsdata, wiretype = "X"):
     wdata = []
-    for chni in range(16):
-        if (asic_ccs[chni][2][0] in wiretype):
-            if asic_ccs[chni][18] in ["C10", "C11", "C12"] : #only channel with ENC< 2000e- is considered
+    for i in range(16):
+        chni = int(asic_ccs[i][6] )
+        if (asic_ccs[i][2][0] in wiretype):
+            if asic_ccs[i][18] in ["C10", "C11", "C12"] : #only channel with ENC< 2000e- is considered
                 wdata.append(np.array(rmsdata[0][7][chni][0:200000]))
+               # if asic_ccs[i][2][0] == wiretype: 
+               #     print i, chni, wiretype, rmsdata[0][7][chni][0:5]
 
     lenwdata = len(wdata)
-    avgdata = 0
     for i in range(lenwdata):
         if i == 0:
             avgdata = wdata[0]
@@ -196,21 +198,25 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
 
     sp = len_chnrmsdata//20
     rmsmin = 4000
-    k = 0
+    rms_tmp = []
+
     for i in range(20):
-        tmp = np.std(chnrmsdata[i*sp, i*sp + sp]) 
-        if tmp < rmsmin :
-            k = i
+        tmp = np.std(chnrmsdata[i*sp: i*sp + sp]) 
+        rms_tmp.append(tmp)
+    rms_tmp2 = sorted(rms_tmp)
+    rms10th = rms_tmp2[9]
+    pos = np.where(rms_tmp == rms10th) [0][0]
+    k = pos
 
-    rms =  np.std(chnrmsdata[k*sp, k*sp + sp])
-    ped = np.mean(chnrmsdata[k*sp, k*sp + sp])
-    cohrms =  np.std(coh_data[k*sp, k*sp + sp])
-    cohped = np.mean(coh_data[k*sp, k*sp + sp])
-    postrms =  np.std(postdata[k*sp, k*sp + sp])
-    postped = np.mean(postdata[k*sp, k*sp + sp])
+    rms =  np.std(chnrmsdata[k*sp: k*sp + sp])
+    ped = np.mean(chnrmsdata[k*sp: k*sp + sp])
+    cohrms =  np.std(coh_data[k*sp: k*sp + sp])
+    cohped = np.mean(coh_data[k*sp: k*sp + sp])
+    postrms =  np.std(postdata[k*sp: k*sp + sp])
+    postped = np.mean(postdata[k*sp: k*sp + sp])
 
-    data_slice =      chnrmsdata[0:500]
-    data_200ms_slice = postdata[0:500]
+    data_slice =   chnrmsdata[k*sp: k*sp + sp]
+    data_200ms_slice = chnrmsdata[k*sp: k*sp + sp]
     f = None
     p = None
     f_l = None
@@ -218,8 +224,8 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
     
     hfrms = postrms
     hfped = postped
-    hfdata_slice =    chnrmsdata[0:500]
-    hfdata_200ms_slice = postdata[0:500]
+    hfdata_slice =   postdata[k*sp: k*sp + sp]
+    hfdata_200ms_slice =  postdata[k*sp: k*sp + sp]
     hff = None
     hfp = None
     hff_l = None
@@ -229,10 +235,7 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
     sfped = cohped
 
     unstk_ratio = coh_flg
-#    for ci in asic_ccs:
-#        if int(ci[6]) == asicchn : 
-#            unstk_ratio = float(ci[13]) 
-#            break
+
     chn_noise_paras = [chnno, 
                        rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
                        hfrms, hfped, hfdata_slice, hfdata_200ms_slice, hff, hfp,
@@ -248,8 +251,8 @@ def noise_a_chn_fast(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50
     len_chnrmsdata = len(chnrmsdata)
     if (len_chnrmsdata > 200000):
         len_chnrmsdata  = 200000
-    rms =  np.std(chnrmsdata[0:20000])
-    ped = np.mean(chnrmsdata[0:20000])
+    rms =  np.std(chnrmsdata[0:10000])
+    ped = np.mean(chnrmsdata[0:10000])
     data_slice = chnrmsdata[feed_loc[0]:feed_loc[1]]
     data_200ms_slice = chnrmsdata[0:20000:20]
 
@@ -301,8 +304,8 @@ def noise_a_chn_fast(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50
             tmp_data.append(tmp)
     len_tmp_data = len(tmp_data)
     unstk_ratio =1.0 * len_tmp_data / lenonechn_data
-    sfrms =  np.std(tmp_data[0:100000])
-    sfped = np.mean(tmp_data[0:100000])
+    sfrms =  np.std(tmp_data[0:10000])
+    sfped = np.mean(tmp_data[0:10000])
 
     chn_noise_paras = [chnno, 
                        rms,   ped,   data_slice,   data_200ms_slice,   f,   p,
@@ -320,8 +323,8 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     if (len_chnrmsdata > 200000):
         len_chnrmsdata  = 200000
     chnrmsdata = chnrmsdata[0:len_chnrmsdata ]
-    rms =  np.std(chnrmsdata[0:100000])
-    ped = np.mean(chnrmsdata[0:100000])
+    rms =  np.std(chnrmsdata[0:10000])
+    ped = np.mean(chnrmsdata[0:10000])
     if len(feed_loc) > 2:
         #data_slice = chnrmsdata[feed_loc[0]:feed_loc[0]+5000]
         data_slice = chnrmsdata
@@ -383,8 +386,8 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
 #        stuck_type = "Middle"
 #    else:
 #        stuck_type = "Large"
-    sfrms =  np.std(tmp_data[0:100000])
-    sfped = np.mean(tmp_data[0:100000])
+    sfrms =  np.std(tmp_data[0:10000])
+    sfped = np.mean(tmp_data[0:10000])
 
     chn_noise_paras = [chnno, 
                        rms,   ped,   data_slice,   data_200ms_slice,   f,   p,

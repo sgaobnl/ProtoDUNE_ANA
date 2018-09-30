@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Sep 30 13:49:20 2018
+Last modified: Sun Sep 30 14:21:28 2018
 """
 
 #defaut setting for scientific caculation
@@ -169,24 +169,9 @@ def wfcoh_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
         ped_wf_subplot(axm[0], cohdata[0:1000],  cohped,  cohrms , t_rate=0.5, title="Waveforms of coherent noise (2MSPS)", label=label )
         ped_wf_subplot(axd[0], postdata[0:1000], postped, postrms, t_rate=0.5, title="Waveforms of post-filter data (2MSPS)", label=label )
 
-#        rf_l, rp_l = chn_rfft_psd(rawdata, fft_s = len(rawdata), avg_cycle = 1)
-#        cf_l, cp_l = chn_rfft_psd(coh_data, fft_s = len(coh_data), avg_cycle = 1)
-#        pf_l, pp_l = chn_rfft_psd(pos_data, fft_s = len(pos_data), avg_cycle = 1)
-#
-##        ped_wf_subplot(axu[1], rawdata[::200],    ped,   rms,    t_rate=100, title="Waveforms of raw data (10kSPS)", label=label )
-##        ped_wf_subplot(axm[1], coh_data[::200],   np.mean(coh_data), np.std(coh_data)  ,    t_rate=100, title="Waveforms of coherent noise (10kSPS)", label=label )
-##        ped_wf_subplot(axd[1], pos_data[::200],   pos_ped,   pos_rms,    t_rate=100, title="Waveforms of post-filter data (10kSPS)", label=label )
-# 
-#        ped_fft_subplot(axu[1], rf_l, rp_l, maxx=1000000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axm[1], cf_l, cp_l, maxx=1000000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axd[1], pf_l, pp_l, maxx=1000000,  title="FFT specturm", label=label, peaks_note = False )
-#
-#        ped_fft_subplot(axu[2], rf_l, rp_l, maxx=100000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axm[2], cf_l, cp_l, maxx=100000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axd[2], pf_l, pp_l, maxx=100000,  title="FFT specturm", label=label, peaks_note = False )
 
         fig_title = apainfo[0] + "_" + apainfo[1] + "_FE%d_%s"%(wireinfo[2], wiretype)
-#        plt.tight_layout( rect=[0, 0.05, 1, 0.95])
+        plt.tight_layout( rect=[0, 0.05, 1, 0.95])
         fig.suptitle(fig_title, fontsize = 20)
         plt.savefig(out_path + fig_title + "_coh_wf_%s.png"%label, format='png')
         plt.close()
@@ -498,10 +483,10 @@ if __name__ == '__main__':
     gains = [ "140"] 
     tps = ["05", "10", "20", "30"]
     tps = [ "20"]
-    asic_results = wfcoh_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
-                  rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
-                  wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
-                  jumbo_flag=False, apa= "ProtoDUNE" )
+#    asic_results = wfcoh_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
+#                  rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
+#                  wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
+#                  jumbo_flag=False, apa= "ProtoDUNE" )
  
     asic_results = wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
                   rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
@@ -510,17 +495,17 @@ if __name__ == '__main__':
  
     asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
     asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
-#    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
+    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "UV")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "UVX")
 
-#    asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
-#    asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
-#    asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
+    asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
+    asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
+    asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
 #
-#    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
-#    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
-#    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
+    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
+    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
+    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
     print "Done, please punch \"Eneter\" or \"return\" if necessary! "
 
  

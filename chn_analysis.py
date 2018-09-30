@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Sep 30 14:04:10 2018
+Last modified: Sun 30 Sep 2018 08:58:58 PM CEST
 """
 
 #defaut setting for scientific caculation
@@ -202,7 +202,11 @@ def noise_a_coh(coh_data, coh_flg, rmsdata, chnno, fft_en = True, fft_s=2000, ff
 
     for i in range(20):
         tmp = np.std(chnrmsdata[i*sp: i*sp + sp]) 
+        if math.isnan(tmp):
+            tmp = 1000 + i
         rms_tmp.append(tmp)
+
+    rms_tmp = np.array(rms_tmp)*100//1
     rms_tmp2 = sorted(rms_tmp)
     rms10th = rms_tmp2[9]
     pos = np.where(rms_tmp == rms10th) [0][0]

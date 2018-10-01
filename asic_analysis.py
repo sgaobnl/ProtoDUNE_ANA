@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Sep 30 14:21:28 2018
+Last modified: Sun Sep 30 21:30:56 2018
 """
 
 #defaut setting for scientific caculation
@@ -65,7 +65,7 @@ def wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
                 wireinfo = onewire
                 break
         
-        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = False)
+        chn_noise_paras = noise_a_chn(rmsdata, chnno, fft_en = True)
         rms          =  chn_noise_paras[1]
         ped          =  chn_noise_paras[2]
         hfrms        =  chn_noise_paras[7]
@@ -493,19 +493,19 @@ if __name__ == '__main__':
                   wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
                   jumbo_flag=False, apa= "ProtoDUNE" )
  
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
-    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
+#    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "UV")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "UVX")
 
     asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
     asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
     asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
-#
-    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
-    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
-    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
+
+#    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
+#    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
+#    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
     print "Done, please punch \"Eneter\" or \"return\" if necessary! "
 
  

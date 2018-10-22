@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 15:46:54 2018
+Last modified: 10/17/2018 4:36:48 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -123,7 +123,7 @@ def fembwire_cnts (dicts) :
     fembv_cnt = 0
     fembu_cnt = 0
     for i in range(len(dicts)):
-        if (dicts[i]["apaloc"] == dicts[0]["apaloc"])
+        if (dicts[i]["apaloc"] == dicts[0]["apaloc"]):
             if dicts[i]["wire"][0] == "X":
                 fembx_cnt = fembx_cnt + 1
             elif dicts[i]["wire"][0] == "V":
@@ -146,11 +146,11 @@ def draw_results (dicts) :
     fembx_cnt, fembv_cnt, fembu_cnt = fembwire_cnts (dicts) 
     for i in range(len(dicts)):
         if dicts[i]["wire"][0] == "X":
-            apachn.append(fembx_cnt*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append( int(dicts[i]["fembchn"] )) # int(dicts[i]["wire"][1:3]))
         elif dicts[i]["wire"][0] == "V":
-            apachn.append(fembv_cnt*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append( int(dicts[i]["fembchn"] )) #int(dicts[i]["wire"][1:3]))
         elif dicts[i]["wire"][0] == "U":
-            apachn.append(fembu_cnt*(int(dicts[i]["apaloc"][2:4])-1) + int(dicts[i]["wire"][1:3]))
+            apachn.append( int(dicts[i]["fembchn"] )) #int(dicts[i]["wire"][1:3]))
         rms.append(dicts[i]["rms"])
         hfrms.append(dicts[i]["hfrms"])
         sfrms.append(dicts[i]["sfrms"])
@@ -212,7 +212,8 @@ def sub_rms_c_plot5 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa =
                 ax.vlines((loc-1)*len(apachn), 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
  
     ax.set_ylim([0,ymax])
-    ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+    #ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+    ax.set_xlim([0,127 ] )
     tp = int( dicts[0]["tp"]) / 10.0
     gain = int(dicts[0]["gain"]) / 10.0
     ax.set_ylabel("ENC /e$^-$")
@@ -324,8 +325,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     e = [xenc_tps[0][1], xenc_tps[1][1], xenc_tps[2][1], xenc_tps[3][1]]
     label = "%d"%xchns +" X " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='g', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1500], textcoords='data', color='g') 
 
     y = [venc_tps[0][0], venc_tps[1][0], venc_tps[2][0], venc_tps[3][0]]
     if (np.max(y) >  maxy):
@@ -333,8 +334,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     e = [venc_tps[0][1], venc_tps[1][1], venc_tps[2][1], venc_tps[3][1]]
     label = "%d"%vchns +" V " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='b', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
+    #for xye in zip(x, y, e):                                   
+        #ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1650], textcoords='data', color='b') 
 
     y = [uenc_tps[0][0], uenc_tps[1][0], uenc_tps[2][0], uenc_tps[3][0]]
     if (np.max(y) >  maxy):
@@ -342,8 +343,8 @@ def sub_enctp_plot0 (ax, g,calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uc
     e = [uenc_tps[0][1], uenc_tps[1][1], uenc_tps[2][1], uenc_tps[3][1]]
     label = "%d"%uchns +" U " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='r', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 1800], textcoords='data', color='r') 
 
     ax.legend(loc=4)
     ax.set_xlim([0,4])
@@ -364,7 +365,7 @@ def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain"
     ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
     ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
 
-    gs=["250", "140"]
+    gs=["250", "140", "078", "047"]
     tps=["05", "10", "20", "30"]
 
     encgs = []
@@ -406,16 +407,23 @@ def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain"
  
         if ( g == "250" ):
             sub_enctp_plot0 (ax1, g, calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uchns, uenc_tps, note="Raw data") 
-            if (sfhf == "sf"):
-                sub_enctp_plot0 (ax3, g, calitype, tp_us, xchns, xsfenc_tps, vchns, vsfenc_tps, uchns, usfenc_tps, note="Stuck Free") 
-            else:
-                sub_enctp_plot0 (ax3, g, calitype, tp_us, xchns, xhfenc_tps, vchns, vhfenc_tps, uchns, uhfenc_tps, note="HPF data") 
-        else:
+            #if (sfhf == "sf"):
+            #    sub_enctp_plot0 (ax3, g, calitype, tp_us, xchns, xsfenc_tps, vchns, vsfenc_tps, uchns, usfenc_tps, note="Stuck Free") 
+            #else:
+            #    sub_enctp_plot0 (ax3, g, calitype, tp_us, xchns, xhfenc_tps, vchns, vhfenc_tps, uchns, uhfenc_tps, note="HPF data") 
+        elif ( g == "140" ):
             sub_enctp_plot0 (ax2, g, calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uchns, uenc_tps, note="Raw data") 
-            if (sfhf == "sf"):
-                sub_enctp_plot0 (ax4, g, calitype, tp_us, xchns, xsfenc_tps, vchns, vsfenc_tps, uchns, usfenc_tps, note="Stuck Free") 
-            else:
-                sub_enctp_plot0 (ax4, g, calitype, tp_us, xchns, xhfenc_tps, vchns, vhfenc_tps, uchns, uhfenc_tps, note="HPF data") 
+        elif ( g == "078" ):
+            sub_enctp_plot0 (ax3, g, calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uchns, uenc_tps, note="Raw data") 
+        elif ( g == "047" ):
+            sub_enctp_plot0 (ax4, g, calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uchns, uenc_tps, note="Raw data") 
+        else:
+            pass
+            #sub_enctp_plot0 (ax2, g, calitype, tp_us, xchns, xenc_tps, vchns, venc_tps, uchns, uenc_tps, note="Raw data") 
+            #if (sfhf == "sf"):
+            #    sub_enctp_plot0 (ax4, g, calitype, tp_us, xchns, xsfenc_tps, vchns, vsfenc_tps, uchns, usfenc_tps, note="Stuck Free") 
+            #else:
+            #    sub_enctp_plot0 (ax4, g, calitype, tp_us, xchns, xhfenc_tps, vchns, vhfenc_tps, uchns, uhfenc_tps, note="HPF data") 
 
     fig.suptitle("Noise Measurement", fontsize = 16)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
@@ -425,7 +433,7 @@ def plot0_overall_enc (pp, orgdicts, title="APA ENC vs. Tp", calitype="fpg_gain"
 
 ###############################################################################################################################
 ###############################################################################################################################
-def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs="fpg_gain", rms_cs = "raw", g="250" , fembs_on_apa = range(1, 21, 1)) : #enctype, raw, hf, sf
+def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp",  cali_cs="fpg_gain", rms_cs = "raw", g="250" , fembs_on_apa = range(1, 21, 1)) : #enctype, raw, hf, sf
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
     ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -439,7 +447,9 @@ def plot1_chns_enc (pp, orgdicts, title="APA ENC s. Tp", wiretype="X",  cali_cs=
     uenc_tps=[]
     for tp in tps:
         dicts_xvu = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
-        dicts = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype , fembs_on_apa = fembs_on_apa ) 
+        #dictsout = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype , fembs_on_apa = fembs_on_apa ) 
+        dictsout = dicts_xvu
+        dicts = enctp_sort_byfemb (dictsout ) 
         sub_chns_plot1 (ax1, dicts, rms_cs=rms_cs, cali_cs=cali_cs, fembs_on_apa = fembs_on_apa  ) 
         if ( tp == "05" ):
             sub_chns_hist_plot1 (ax2, dicts, rms_cs=rms_cs, cali_cs=cali_cs ) 
@@ -459,6 +469,7 @@ def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = 
     apachn = [] 
     for loc in fembs_on_apa:
         subdicts = enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
+        subdicts = enctp_sort_byfemb (subdicts ) 
         ymax = 2000
         tp = int( dicts[0]["tp"]) / 10.0
         if subdicts != None:
@@ -505,11 +516,13 @@ def sub_chns_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain", fembs_on_apa = 
  
     if (tp ==2):
         ax.set_ylim([0,ymax])
-        ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+        #ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+        ax.set_xlim([0,127 ] )
         gain = int(dicts[0]["gain"]) / 10.0
         ax.set_ylabel("ENC /e$^-$")
         ax.set_xlabel("%s wire no."%dicts[0]["wire"][0])
-        ax.set_title( "%s: ENC of %s wires @ (%2.1fmV/fC)"%(t, dicts[0]["wire"][0], gain) )
+        #ax.set_title( "%s: ENC of %s wires @ (%2.1fmV/fC)"%(t, dicts[0]["wire"][0], gain) )
+        ax.set_title( "%s: ENC  @ (%2.1fmV/fC)"%(t, gain) )
     ax.legend(loc=7)
 
 def sub_chns_hist_plot1 (ax, dicts, rms_cs="rms", cali_cs="fpg_gain" ) :
@@ -585,11 +598,12 @@ def sub_ped_plot2 (ax, dicts , fembs_on_apa = range(1, 21, 1) ) :
             if ( loc != 1):
                 ax.vlines((loc-1)*len(apachn), 0, ymax, color='b',linestyles="dotted", linewidth=0.8)
     ax.set_ylim([0,ymax])
-    ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+    #ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+    ax.set_xlim([0,127 ] )
     gain = int(dicts[0]["gain"]) / 10.0
     ax.set_ylabel("ADC output / LSB")
     ax.set_xlabel("%s wire no."%dicts[0]["wire"][0])
-    ax.set_title( "Pedestals of %s wires @ (%2.1fmV/fC)"%(dicts[0]["wire"][0], gain) )
+    ax.set_title( "Pedestals  @ (%2.1fmV/fC)"%( gain) )
     ax.legend(loc=4)
 
 def sub_ped_hist_plot2 (ax, dicts ) :
@@ -607,7 +621,7 @@ def sub_ped_hist_plot2 (ax, dicts ) :
     gaussian_y = mlab.normpdf(gaussian_x, pedmean, pedstd)
     ax.plot(gaussian_x, gaussian_y, color='r')
 
-    ax.set_title( "Histogram of %s wires "%dicts[0]["wire"][0])
+    ax.set_title( "Histogram ")
     ax.set_ylabel("Normalized counts")
     ax.set_xlabel("ADC output / LSB")
     ax.legend(loc='best')
@@ -623,12 +637,15 @@ def plot2_peds (pp, orgdicts, title="Pedestals", g="250", tp="20", fembs_on_apa 
 
     dicts_xvu = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
     dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "X" , fembs_on_apa = fembs_on_apa ) 
+    dicts = enctp_sort_byfemb (dicts ) 
+#    print len(dicts)
     sub_ped_plot2 (ax1, dicts, fembs_on_apa = fembs_on_apa) 
     sub_ped_hist_plot2 (ax4, dicts ) 
-    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "V" , fembs_on_apa = fembs_on_apa) 
-    sub_ped_plot2 (ax2, dicts, fembs_on_apa = fembs_on_apa) 
-    sub_ped_hist_plot2 (ax5, dicts ) 
+#    dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "V" , fembs_on_apa = fembs_on_apa) 
+#    sub_ped_plot2 (ax2, dicts, fembs_on_apa = fembs_on_apa) 
+#    sub_ped_hist_plot2 (ax5, dicts ) 
     dicts = enctp_sort_bywire (dicts_xvu,  wiretype = "U" , fembs_on_apa = fembs_on_apa) 
+    dicts = enctp_sort_byfemb (dicts ) 
     sub_ped_plot2 (ax3, dicts, fembs_on_apa = fembs_on_apa) 
     sub_ped_hist_plot2 (ax6, dicts ) 
 
@@ -647,27 +664,27 @@ def sub_gain_plot3 (ax, g, tp_us, xchns, xgain, vchns, vgain, uchns, ugain, titl
     e = [xgain[0][1], xgain[1][1], xgain[2][1], xgain[3][1]]
     label = "%d"%xchns + " X " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='g', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 475], textcoords='data', color='g') 
 
     y = [vgain[0][0], vgain[1][0], vgain[2][0], vgain[3][0]]
     e = [vgain[0][1], vgain[1][1], vgain[2][1], vgain[3][1]]
     label = "%d"%vchns +" V " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='b', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 450], textcoords='data', color='b') 
 
     y = [ugain[0][0], ugain[1][0], ugain[2][0], ugain[3][0]]
     e = [ugain[0][1], ugain[1][1], ugain[2][1], ugain[3][1]]
     label = "%d"%uchns +" U " +  "wires" 
     ax.errorbar(x, y, e, label=label, color='r', marker='o')
-    for xye in zip(x, y, e):                                   
-        ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
+    #for xye in zip(x, y, e):                                   
+    #    ax.annotate('%d$\pm$%d' % xye[1:3], xy=[xye[0], 425], textcoords='data', color='r') 
 
     ax.legend(loc=4)
     ax.set_xlim([0,4])
     ax.set_xlabel("Peaking time / ($\mu$s)")
-    maxy = 500 
+    maxy = 1000 
     ax.set_ylim([0,maxy])
     ax.set_ylabel("Gain  e$^-$/LSB")
     ax.set_title(title )
@@ -680,7 +697,7 @@ def plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement" ) :
     ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
     ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
 
-    gs=["250", "140"]
+    gs=["250", "140", "078", "047"]
     tps=["05", "10", "20", "30"]
 
     encgs = []
@@ -713,10 +730,17 @@ def plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement" ) :
  
         if ( g == "250" ):
             sub_gain_plot3 (ax1, g, tp_us, xchns, xfpg_dac, vchns, vfpg_dac, uchns, ufpg_dac, note="FPGA-DAC") 
-            sub_gain_plot3 (ax2, g, tp_us, xchns, xasi_dac, vchns, vasi_dac, uchns, uasi_dac, note="ASIC-DAC") 
-        else:
+            #sub_gain_plot3 (ax2, g, tp_us, xchns, xasi_dac, vchns, vasi_dac, uchns, uasi_dac, note="ASIC-DAC") 
+        elif ( g == "140" ):
+            sub_gain_plot3 (ax2, g, tp_us, xchns, xfpg_dac, vchns, vfpg_dac, uchns, ufpg_dac, note="FPGA-DAC") 
+        elif ( g == "078" ):
             sub_gain_plot3 (ax3, g, tp_us, xchns, xfpg_dac, vchns, vfpg_dac, uchns, ufpg_dac, note="FPGA-DAC") 
-            sub_gain_plot3 (ax4, g, tp_us, xchns, xasi_dac, vchns, vasi_dac, uchns, uasi_dac, note="ASIC-DAC") 
+        elif ( g == "047" ):
+            sub_gain_plot3 (ax4, g, tp_us, xchns, xfpg_dac, vchns, vfpg_dac, uchns, ufpg_dac, note="FPGA-DAC") 
+        else:
+            pass
+            #sub_gain_plot3 (ax3, g, tp_us, xchns, xfpg_dac, vchns, vfpg_dac, uchns, ufpg_dac, note="FPGA-DAC") 
+            #sub_gain_plot3 (ax4, g, tp_us, xchns, xasi_dac, vchns, vasi_dac, uchns, uasi_dac, note="ASIC-DAC") 
  
     fig.suptitle("Gain Measurement", fontsize = 16)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
@@ -726,7 +750,7 @@ def plot3_overall_gain (pp, orgdicts, title="APA Gain Measurement" ) :
 
 
 ###############################################################################################################################
-def plot4_chns_gain (pp, orgdicts, title="Gain Measurement", wiretype="X", g="250", cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1) ): #enctype, raw, hf, sf
+def plot4_chns_gain (pp, orgdicts, title="Gain Measurement",  g="250", cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1) ): #enctype, raw, hf, sf
     fig = plt.figure(figsize=(16,9))
     ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=4, rowspan=3)
     ax2 = plt.subplot2grid((4, 4), (3, 0), colspan=1, rowspan=1)
@@ -740,7 +764,9 @@ def plot4_chns_gain (pp, orgdicts, title="Gain Measurement", wiretype="X", g="25
     ug=[]
     for tp in tps:
         dicts_xvu = dict_filter(orgdicts, and_dnf =[["gain",g],  ["tp",tp] ], or_dnf = [["fpgadac_en", True], ["asicdac_en", True]] ) 
-        dicts = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype  ) 
+        #dictsout = enctp_sort_bywire (dicts_xvu,  wiretype=wiretype  ) 
+        dictsout = dicts_xvu
+        dicts = enctp_sort_byfemb (dictsout ) 
         sub_gain_plot4 (ax1, dicts, cali_cs=cali_cs , fembs_on_apa = fembs_on_apa) 
         if ( tp == "05" ):
             sub_hist_gain_plot4 (ax2, dicts, cali_cs=cali_cs ) 
@@ -760,6 +786,7 @@ def sub_gain_plot4 (ax, dicts, cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1
     apachn = []
     for loc in fembs_on_apa:
         subdicts = enctp_sort_byapaloc (dicts,  apaloc=loc  ) 
+        subdicts = enctp_sort_byfemb (subdicts ) 
         ymax = 500
         tp = int( dicts[0]["tp"]) / 10.0
         if subdicts != None:
@@ -790,11 +817,12 @@ def sub_gain_plot4 (ax, dicts, cali_cs="fpg_gain", fembs_on_apa = range(1, 21, 1
     if (tp ==2):
         ax.set_ylim([0,ymax])
         #ax.set_xlim([0,len(apachn)*len(fembs_on_apa) ])
-        ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+        #ax.set_xlim([len(apachn)*(fembs_on_apa[0]-1),len(apachn)*(fembs_on_apa[-1]) ])
+        ax.set_xlim([0,127 ] )
         gain = int(dicts[0]["gain"]) / 10.0
         ax.set_ylabel("Gain /e$^-$/LSB")
         ax.set_xlabel("%s wire no."%dicts[0]["wire"][0])
-        ax.set_title( "Gain of %s wires @ (%2.1fmV/fC)"%(dicts[0]["wire"][0], gain) )
+        ax.set_title( "Gain  @ (%2.1fmV/fC)"%( gain) )
     ax.legend(loc=7)
 
 def sub_hist_gain_plot4 (ax, dicts,  cali_cs="fpg_gain" ) :

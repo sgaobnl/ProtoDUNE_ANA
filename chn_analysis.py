@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Jul 19 16:45:39 2018
+Last modified: 10/16/2018 4:28:58 PM
 """
 
 #defaut setting for scientific caculation
@@ -104,7 +104,7 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
                     if (fe_set_rd == fecfg_reg0) and (rawfile.find(".bin") >=0 ):
                         files_cs.append(steppath + rawfile)
     else:
-        print runpath + " doesn't exist, ignore anyway!"
+        #print runpath + " doesn't exist, ignore anyway!"
         files_cs = []
 
     return files_cs
@@ -117,8 +117,8 @@ def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain
             raw_data = f.read()
             filelength = len(raw_data )
             smps = (filelength-1024)/2/16 
-#            if smps > 200000:
-#                smps = 200000
+            if smps > 200000:
+                smps = 200000
 
             data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
             ###############0         1      2       3       4     5    6    7      8           9         10#########

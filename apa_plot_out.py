@@ -5,10 +5,10 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 10/17/2018 4:36:48 PM
+Last modified: 10/23/2018 5:35:17 PM
 """
-import matplotlib
-matplotlib.use('Agg')
+#import matplotlib
+#matplotlib.use('Agg')
 #defaut setting for scientific caculation
 #import numpy
 #import scipy

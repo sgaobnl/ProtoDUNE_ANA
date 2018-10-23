@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 10/16/2018 4:28:58 PM
+Last modified: 10/23/2018 4:13:06 PM
 """
 
 #defaut setting for scientific caculation
@@ -140,6 +140,8 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     avg_cycle_l = 1
     if (len(chnrmsdata) >= 400000):
         fft_s_l = 400000//avg_cycle_l
+    else:
+        fft_s_l = len(chnrmsdata)
 
     if (fft_en):
         f,p = chn_rfft_psd(chnrmsdata,  fft_s = fft_s, avg_cycle = fft_avg_cycle)
@@ -237,14 +239,14 @@ def cali_linear_calc(chn_cali_paras):
 
     for onecp in chn_cali_paras:
         if (ped >1000): #induction plane
-            if onecp[4] < 3800 : #region inside linearity
+            if onecp[4] < 3100 : #region inside linearity
                 vdacs.append(onecp[2])
                 ampps.append(onecp[4])
                 ampns.append(onecp[5])
                 areaps.append(onecp[11])
                 areans.append(onecp[12])
-        elif (ped <1000): #induction plane
-            if onecp[4] < 3000 : #region inside linearity
+        elif (ped <=1000): #induction plane
+            if onecp[4] < 2800 : #region inside linearity
                 vdacs.append(onecp[2])
                 ampps.append(onecp[4])
                 ampns.append(onecp[5])

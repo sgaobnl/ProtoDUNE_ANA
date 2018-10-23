@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Jul 19 16:45:31 2018
+Last modified: 10/23/2018 4:26:10 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -89,14 +89,16 @@ def cali_linear_fitplot(pp, apainfo, wireinfo, cali_info, chn_cali_paras, ploten
 
     for onecp in chn_cali_paras:
         if (ped >1000): #induction plane
-            if onecp[4] < 3800 : #region inside linearity
+            #if onecp[4] < 3200 : #region inside linearity
+            if (True):
                 vdacs.append(onecp[2])
                 ampps.append(onecp[4])
                 ampns.append(onecp[5])
                 areaps.append(onecp[11])
                 areans.append(onecp[12])
         elif (ped <1000): #induction plane
-            if onecp[4] < 3000 : #region inside linearity
+            #if onecp[4] < 3000 : #region inside linearity
+            if (True):
                 vdacs.append(onecp[2])
                 ampps.append(onecp[4])
                 ampns.append(onecp[5])
@@ -104,15 +106,21 @@ def cali_linear_fitplot(pp, apainfo, wireinfo, cali_info, chn_cali_paras, ploten
                 areans.append(onecp[12])
     fc_dacs = np.array(vdacs) * fc_daclsb
     
+    print ampps
+    ampps = np.array(ampps)
     if (ped >1000): #induction plane
         #amplitude, positive pulse
-        ampp_fit = linear_fit(fc_dacs,  ampps )
-        ampn_fit = linear_fit(fc_dacs,  ampns )
-        areap_fit = linear_fit(fc_dacs, areaps)
-        arean_fit = linear_fit(fc_dacs, areans)
+        pos = np.where(ampps > 3000.0)[0][0]
+        print pos
+        ampp_fit = linear_fit(fc_dacs[0:pos],  ampps[0:pos] )
+        ampn_fit = linear_fit(fc_dacs[0:pos],  ampns[0:pos] )
+        areap_fit = linear_fit(fc_dacs[0:pos], areaps[0:pos])
+        arean_fit = linear_fit(fc_dacs[0:pos], areans[0:pos])
     else:
-        ampp_fit = linear_fit(fc_dacs, ampps)
-        areap_fit = linear_fit(fc_dacs,areaps)
+        pos = np.where(ampps > 3000.0)[0][0]
+        print pos
+        ampp_fit = linear_fit(fc_dacs[0:pos], ampps[0:pos])
+        areap_fit = linear_fit(fc_dacs[0:pos],areaps[0:pos])
         ampn_fit =  None
         arean_fit = None
 
@@ -427,6 +435,8 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
         cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
+
+    pp.close()
     print "results path: " + fp
 
 def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
@@ -584,6 +594,7 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
     fig.suptitle(title, fontsize = 12)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
     plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + "_max_psd" + pp[-4:] , format='png')
+    
     plt.close()
 
     return f_l, p_l, hff_l, hfp_l, maxp_f_chns

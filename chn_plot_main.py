@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 16:25:08 2018
+Last modified: 10/23/2018 3:58:32 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -42,14 +42,15 @@ if __name__ == '__main__':
     fembno  = int(sys.argv[10])
     chnno  = int(sys.argv[11])
 
+    print apafolder
     if (apafolder == "APA40"):
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
-    elif (apafolder != "APA"):
-        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
-        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
-        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+    elif (apafolder == "SBND"):
+        rms_rootpath =  "D:/Ledge_Study/Rawdata/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "D:/Ledge_Study/Rawdata/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "D:/Ledge_Study/Rawdata/Rawdata_" + asidate + "/"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
@@ -59,7 +60,7 @@ if __name__ == '__main__':
     s0= timer()
     print "Start...please wait..."
     
-    gains = ["250"] 
+    gains = ["140"] 
     #tps = ["05", "10", "20", "30"]
     tps = [  "20"]
     jumbo_flag = True

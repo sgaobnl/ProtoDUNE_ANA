@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Jun 20 09:03:03 2018
+Last modified: Tue Oct 30 16:36:16 2018
 """
 
 #defaut setting for scientific caculation
@@ -113,7 +113,19 @@ class APA_MAP:
                         fl_w = False
                         break
                 if (fl_w):
-                    chninfo = [ "V" + format(fl_i, "03d"), format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
+                    if ( self.femb == 0 ):
+                        if chn in [0,1,14,15]:
+                            chninfo = [ "C100" , format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
+                        elif chn in [16,17,30,31]:
+                            chninfo = [ "C150" , format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
+                        elif chn in [65,78,79]:
+                            chninfo = [ "C050" , format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
+                        elif chn in [80,81,94,95]:
+                            chninfo = [ "C027" , format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
+                        else:
+                            chninfo = [ "V" + format(fl_i, "03d"), format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
+                    if chninfo[0][0] == "C":
+                        print chninfo
                     apa_femb_loc.append(chninfo)
                     fl_i = fl_i + 1
 
@@ -203,7 +215,7 @@ class APA_MAP:
     def __init__(self):
         self.APA = 'LArIAT'
         self.femb = 4
-        self.path = "./LArIAT_Pin_Mapping_06202018.xlsx" #if the mapping file changes, self.mapping_rd ( ) need to run once to to generate new *.map file 
+        self.path = "./LArIAT_Pin_Mapping_06262018.xlsx" #if the mapping file changes, self.mapping_rd ( ) need to run once to to generate new *.map file 
         self.fpmap = "./LArIAT_pin_mapping.map"
 
 #        self.mapping_rd ( )

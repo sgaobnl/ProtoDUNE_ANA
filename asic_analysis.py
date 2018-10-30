@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Oct 30 12:06:18 2018
+Last modified: Tue Oct 30 16:40:18 2018
 """
 
 #defaut setting for scientific caculation
@@ -211,7 +211,7 @@ def asic_wf_plot_wire(out_path, asic_results, wiretype = "U"):
         
         APAno =  chn_noise_paras[1]
         #if (wireinfo[0][0] == wiretype):
-        if (True):
+        if (wireinfo[0][0] != "C"):
             rms =  chn_noise_paras[6]
             ped =  chn_noise_paras[7]
             data_slice = chn_noise_paras[13]
@@ -264,7 +264,8 @@ def asic_wf_plot_coh(out_path, asic_results, wiretype = "U"):
     wi = 0
     for chni in range(16):
         chn_noise_paras = asic_results[chni]
-        if (True):
+        #if (True):
+        if (wireinfo[0][0] != "C"):
             data_slice = chn_noise_paras[13]
             data_100us_slice = chn_noise_paras[14]
             if ( wi == 0):
@@ -282,12 +283,14 @@ def asic_wf_plot_coh(out_path, asic_results, wiretype = "U"):
     avgrms100us = np.std(avg_data_100us_slice)
  
     wi = 0
+    asicrms = []
     for chni in range(16):
         chn_noise_paras = asic_results[chni]
         wireinfo =  chn_noise_paras[19]
         
         APAno =  chn_noise_paras[1]
-        if (True):
+        #if (True):
+        if (wireinfo[0][0] != "C"):
             data_slice = chn_noise_paras[13]
             rms =  chn_noise_paras[6]
             ped =  chn_noise_paras[7]
@@ -306,7 +309,9 @@ def asic_wf_plot_coh(out_path, asic_results, wiretype = "U"):
             coh_slice = np.array(data_slice[0:2000])-np.array(avg_data[0:2000])
             ped_wf_subplot(axl[wi], data_slice[0:2000],         ped,   rms,    t_rate=0.5, title="Waveforms of raw data (2MSPS)", label=label )
             ped_wf_subplot(axr[wi], coh_slice,     np.mean(coh_slice),   np.std(coh_slice),    t_rate=0.5, title="Waveforms of data after filtering(2MSPS)", label=label )
-            print   np.std(coh_slice)
+
+            print ( [ wireinfo[0], str(chn_noise_paras[2]), str(chn_noise_paras[3]), str(chn_noise_paras[4]), str(chn_noise_paras[5]), str(np.std(data_slice[0:2000])), str(np.std(avg_data[0:2000])) , str(np.std(coh_slice)) ] )
+            asicrms.append( [ wireinfo[0], str(chn_noise_paras[2]), str(chn_noise_paras[3]), str(chn_noise_paras[4]), str(chn_noise_paras[5]),str(np.std(data_slice[0:2000])), str(np.std(avg_data[0:2000])) , str(np.std(coh_slice)) ] )
             #ped_wf_subplot(axr[wi], data_100us_slice,   ped,   rms,    t_rate=100, title="Waveforms of raw data (10kSPS)", label=label )
             wi = wi+1
 
@@ -320,6 +325,7 @@ def asic_wf_plot_coh(out_path, asic_results, wiretype = "U"):
     fig.suptitle(fig_title, fontsize = 20)
     plt.savefig(out_path+ fig_title + ".png", format='png')
     plt.close()
+    return asicrms
 
 
 def asic_coh_plot_wire(out_path, asic_results, wiretype = "U"):
@@ -331,7 +337,7 @@ def asic_coh_plot_wire(out_path, asic_results, wiretype = "U"):
         APAno =  chn_noise_paras[1]
         unstk_ratio  =  chn_noise_paras[12]
         #if (wireinfo[0][0] in  wiretype) :
-        if (True) :
+        if (wireinfo[0][0] != "C"):
             data_slice = chn_noise_paras[13]
             if ( wi == 0):
                 avg_data = np.array(data_slice)
@@ -427,7 +433,7 @@ def asic_fft_plot_wire(out_path, asic_results, wiretype = "U"):
         wireinfo =  chn_noise_paras[19]
         APAno =  chn_noise_paras[1]
         #if (wireinfo[0][0] == wiretype):
-        if (True):
+        if (wireinfo[0][0] != "C"):
             rms =  chn_noise_paras[6]
             ped =  chn_noise_paras[7]
             f = chn_noise_paras[15]
@@ -565,18 +571,37 @@ if __name__ == '__main__':
     tps = ["05", "10", "20", "30"]
     tps = [ "20"]
 
+#    PCE = rms_rootpath+ rmsrunno + "_ASICrms" + ".csv"
+#    ccs_title = ["wire", "wib", "femb", "asic", "chnno", "RawRMS", "CohRMS", "PostRMS"]
+#    with open (PCE, 'w') as fp:
+#        fp.write(",".join(str(i) for i in ccs_title) +  "," + "\n")
+# 
+#    for i in range(5):
+#        wibno = i//4
+#        fembno = i%4
+#        for asicno in range(8):
+#            asic_results = wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
+#                          rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
+#                          wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
+#                          jumbo_flag=False, apa= apa )
+#            asicrms = asic_wf_plot_coh(out_path, asic_results, wiretype = "U")
+#            with open (PCE, 'a+') as fp:
+#                for x in asicrms:
+#                    fp.write(",".join(str(i) for i in x) +  "," + "\n")
+#    print PCE
+
     asic_results = wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
                   rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
                   wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
                   jumbo_flag=False, apa= apa )
+    asicrms = asic_wf_plot_coh(out_path, asic_results, wiretype = "U")
  
-#    asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "UV")
 #    asic_coh_plot_wire(out_path, asic_results, wiretype = "UVX")
 
-    asic_wf_plot_coh(out_path, asic_results, wiretype = "U")
+#    asic_wf_plot_coh(out_path, asic_results, wiretype = "U")
 #    asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
 #    asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
 #    asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
@@ -587,111 +612,5 @@ if __name__ == '__main__':
     print "Done, please punch \"Eneter\" or \"return\" if necessary! "
 
  
-
-
-
-#####    asic_results = wfcoh_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
-#####                  rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
-#####                  wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
-#####                  jumbo_flag=False, apa= "ProtoDUNE" )
-#### 
-####    asic_results = wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
-####                  rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
-####                  wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\
-####                  jumbo_flag=False, apa= "ProtoDUNE" )
-#### 
-#####    asic_coh_plot_wire(out_path, asic_results, wiretype = "U")
-#####    asic_coh_plot_wire(out_path, asic_results, wiretype = "V")
-#####    asic_coh_plot_wire(out_path, asic_results, wiretype = "X")
-#####    asic_coh_plot_wire(out_path, asic_results, wiretype = "UV")
-#####    asic_coh_plot_wire(out_path, asic_results, wiretype = "UVX")
-####
-####    asic_wf_plot_wire(out_path, asic_results, wiretype = "U")
-####    asic_wf_plot_wire(out_path, asic_results, wiretype = "V")
-####    asic_wf_plot_wire(out_path, asic_results, wiretype = "X")
-####
-#####    asic_fft_plot_wire(out_path, asic_results, wiretype = "U")
-#####    asic_fft_plot_wire(out_path, asic_results, wiretype = "V")
-#####    asic_fft_plot_wire(out_path, asic_results, wiretype = "X")
-####    print "Done, please punch \"Eneter\" or \"return\" if necessary! "
-
- 
-
-#waveform
-#    ped_wf_subplot(ax2, hfdata_slice,       hfped, hfrms,  t_rate=0.5, title="Waveforms of data after HPF", label=hflabel )
-#    ped_wf_subplot(ax4, hfdata_100us_slice, hfped, hfrms,  t_rate=100, title="Waveforms of data after HPF", label=hflabel )
-#    fe_gain = int(rms_info[0])/10.0
-#    fe_tp = int(rms_info[1])/10.0
-#    feset_str = "\n Gain = %2.1fmV/fC, Tp = %1.1f$\mu$s; %s"%(fe_gain, fe_tp, rms_info[2])
-#    fig.suptitle(apainfo_str + wireinfo_str + ".png", fontsize = 16)
-
-##############backup
-#def asic_coh_plot(asic_results):
-#    w_results = []
-#    wi = 0
-#    for chni in range(16):
-#        chn_noise_paras = asic_results[chni]
-#        wireinfo =  chn_noise_paras[19]
-#        APAno =  chn_noise_paras[1]
-#        unstk_ratio  =  chn_noise_paras[12]
-#        if (unstk_ratio > 0.9) :
-#            data_slice = chn_noise_paras[13]
-#            if ( wi == 0):
-#                avg_data = np.array(data_slice)
-#            else:
-#                avg_data = avg_data + np.array(data_slice)
-#            wi = wi + 1
-#            w_results.append(asic_results[chni])
-# 
-#    coh_data = (avg_data*1.0/wi) 
-#    coh_data = coh_data - np.mean( coh_data)
-#    for chni in range(len(w_results)):
-#        fig = plt.figure(figsize=(32,18))
-#        axu = []
-#        axm = []
-#        axd = []
-#        for i in range(3):
-#            axu.append( plt.subplot2grid((3, 3), (0, i), colspan=1, rowspan=1)) 
-#            axm.append( plt.subplot2grid((3, 3), (1, i), colspan=1, rowspan=1)) 
-#            axd.append( plt.subplot2grid((3, 3), (2, i), colspan=1, rowspan=1)) 
-# 
-#        chn_noise_paras = w_results[chni]
-#        wireinfo =  chn_noise_paras[19]
-#        APAno =  chn_noise_paras[1]
-#        rms =  chn_noise_paras[6]
-#        ped =  chn_noise_paras[7]
-#        rawdata = chn_noise_paras[13]
-#        unstk_ratio  =  chn_noise_paras[12]
-#        pos_data = np.array (rawdata) - coh_data
-#        pos_ped = np.mean(pos_data[0:100000])
-#        pos_rms = np.std(pos_data[0:100000])
-#        apainfo =  chn_noise_paras[0]
-#        label = wireinfo[0] + "_ASIC" + str(wireinfo[2]) + "_CHN" + wireinfo[3]  
-#        ped_wf_subplot(axu[0], rawdata[0:2000],    ped,   rms,    t_rate=0.5, title="Waveforms of raw data (2MSPS)", label=label )
-#        ped_wf_subplot(axm[0], coh_data[0:2000],   np.mean(coh_data), np.std(coh_data)  ,    t_rate=0.5, title="Waveforms of coherent noise (2MSPS)", label=label )
-#        ped_wf_subplot(axd[0], pos_data[0:2000],   pos_ped,   pos_rms,    t_rate=0.5, title="Waveforms of post-filter data (2MSPS)", label=label )
-#
-#        rf_l, rp_l = chn_rfft_psd(rawdata, fft_s = len(rawdata), avg_cycle = 1)
-#        cf_l, cp_l = chn_rfft_psd(coh_data, fft_s = len(coh_data), avg_cycle = 1)
-#        pf_l, pp_l = chn_rfft_psd(pos_data, fft_s = len(pos_data), avg_cycle = 1)
-#
-##        ped_wf_subplot(axu[1], rawdata[::200],    ped,   rms,    t_rate=100, title="Waveforms of raw data (10kSPS)", label=label )
-##        ped_wf_subplot(axm[1], coh_data[::200],   np.mean(coh_data), np.std(coh_data)  ,    t_rate=100, title="Waveforms of coherent noise (10kSPS)", label=label )
-##        ped_wf_subplot(axd[1], pos_data[::200],   pos_ped,   pos_rms,    t_rate=100, title="Waveforms of post-filter data (10kSPS)", label=label )
-# 
-#        ped_fft_subplot(axu[1], rf_l, rp_l, maxx=1000000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axm[1], cf_l, cp_l, maxx=1000000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axd[1], pf_l, pp_l, maxx=1000000,  title="FFT specturm", label=label, peaks_note = False )
-#
-#        ped_fft_subplot(axu[2], rf_l, rp_l, maxx=100000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axm[2], cf_l, cp_l, maxx=100000,  title="FFT specturm", label=label, peaks_note = False )
-#        ped_fft_subplot(axd[2], pf_l, pp_l, maxx=100000,  title="FFT specturm", label=label, peaks_note = False )
-#
-#        fig_title = apainfo[0] + "_" + apainfo[1] + "_FE%d"%(wireinfo[2])
-#        plt.tight_layout( rect=[0, 0.05, 1, 0.95])
-#        fig.suptitle(fig_title, fontsize = 20)
-#        plt.savefig("./"+ fig_title + "_allcoh_%s.png"%label, format='png')
-#        plt.close()
-#
 
 

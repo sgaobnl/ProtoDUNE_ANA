@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Oct 30 17:25:05 2018
+Last modified: Tue Oct 30 17:21:59 2018
 """
 
 #defaut setting for scientific caculation
@@ -268,7 +268,7 @@ def asic_wf_plot_coh(out_path, asic_results, wiretype = "U"):
         wireinfo =  chn_noise_paras[19]
 
         wiretype = wireinfo[0][0] 
-        if (wireinfo[0][0] != "C"):
+        if (wireinfo[0][0] == "C"):
             wiretype = wireinfo[0][0] 
 
             data_slice = chn_noise_paras[13]
@@ -295,7 +295,7 @@ def asic_wf_plot_coh(out_path, asic_results, wiretype = "U"):
         
         APAno =  chn_noise_paras[1]
         #if (True):
-        if (wireinfo[0][0] != "C"):
+        if (wireinfo[0][0] == "C"):
             wiretype = wireinfo[0][0] 
             data_slice = chn_noise_paras[13]
             rms =  chn_noise_paras[6]
@@ -581,14 +581,14 @@ if __name__ == '__main__':
     tps = [ "20"]
 
     PCE = rms_rootpath+ rmsrunno + "_ASICrms" + ".csv"
-    ccs_title = ["wire", "wib", "femb", "asic", "chnno", "RawRMS", "CohRMS", "PostRMS"]
-    with open (PCE, 'w') as fp:
-        fp.write(",".join(str(i) for i in ccs_title) +  "," + "\n")
+#    ccs_title = ["wire", "wib", "femb", "asic", "chnno", "RawRMS", "CohRMS", "PostRMS"]
+#    with open (PCE, 'w') as fp:
+#        fp.write(",".join(str(i) for i in ccs_title) +  "," + "\n")
  
-    for i in range(5):
+    for i in range(1):
         wibno = i//4
         fembno = i%4
-        for asicno in range(8):
+        for asicno in [0,1,4,5]:
             asic_results = wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = APAno, \
                           rmsrunno = rmsrunno, fpgarunno = fpgarunno, asicrunno = asicrunno,\
                           wibno=wibno,  fembno=fembno, asicno=asicno, gain=gains[0], tp=tps[0] ,\

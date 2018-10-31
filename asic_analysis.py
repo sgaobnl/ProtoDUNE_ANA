@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Oct 30 17:25:05 2018
+Last modified: Tue Oct 30 22:51:20 2018
 """
 
 #defaut setting for scientific caculation
@@ -53,7 +53,7 @@ def wf_a_asic(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, \
     feset_info = [gain, tp]
     apa_map = APA_MAP()
     apa_map.APA = apa
-    apa_map.femb=fembno
+    apa_map.femb=fembno + wibno*4
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     rmsdata  = read_rawdata_coh(rms_rootpath, rmsrunno,  wibno,  fembno, 16*asicno, gain, tp, jumbo_flag)

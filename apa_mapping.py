@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Oct 30 16:36:16 2018
+Last modified: Tue Oct 30 22:52:51 2018
 """
 
 #defaut setting for scientific caculation
@@ -124,8 +124,8 @@ class APA_MAP:
                             chninfo = [ "C027" , format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
                         else:
                             chninfo = [ "V" + format(fl_i, "03d"), format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
-                    if chninfo[0][0] == "C":
-                        print chninfo
+                    else:
+                        chninfo = [ "V" + format(fl_i, "03d"), format(chn, "03d"), chn//16 , format(chn%15, "02d"), apa_femb_loc[0][4], apa_femb_loc[0][5]]
                     apa_femb_loc.append(chninfo)
                     fl_i = fl_i + 1
 

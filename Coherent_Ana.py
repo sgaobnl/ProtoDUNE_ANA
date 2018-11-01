@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Oct 31 15:59:33 2018
+Last modified: Thu Nov  1 00:45:22 2018
 """
 
 #defaut setting for scientific caculation
@@ -147,7 +147,43 @@ cols = sorted(cols, key= lambda i : int(i[0][1:]))
 
 ss = [open_inds, inds, open_cols,cols, c150s, c100s, c050s, c027s, bads]
 ts = ["Unused U", "U Plane", "Unused X", "X Plane", "150pF X", "100pF X", "50pF X", "27pF X", "Bad"] 
+fig = plt.figure(figsize=(16,8))
+i = 0
+for si in range(4):
+    ccs = ss[si]
+    print len(ccs)
+    plt.vlines(i, 0, 800, color='b', linestyles="dotted", linewidth=0.8)
+    x = []
+    y1 = []
+    y2 = []
+    y3 = []
+    for cs in ccs:
+        x.append(i)
+        y1.append(cs[5])
+        y2.append(cs[6])
+        y3.append(cs[7])
+        #plt.scatter([i], [cs[11]], marker="^", color = "C" + str(cs[3]))
+        #plt.scatter([i], [cs[12]], marker="o", color = "C" + str(cs[3]))
+        #plt.scatter([i], [cs[13]], marker="*", color = "C" + str(cs[3]))
+        i = i + 1
+    plt.plot(x, y1, color = "r" )
+    plt.plot(x, y2, color = "c" )
+    plt.plot(x, y3, color = "g" )
+    plt.text((i-len(x)/2-30), 4.5, ts[si], fontsize = 20)
+    plt.text((i-len(x)/2-30), 4, format(np.mean(y1), ".3f") + "$\pm$" + format(np.std(y1), ".3f") + " bin", color = 'r', fontsize = 20)
+    plt.text((i-len(x)/2-30), 3.5, format(np.mean(y3), ".3f") + "$\pm$" + format(np.std(y3), ".3f") + " bin", color = 'g', fontsize = 20)
 
+plt.title("Noise Performance", fontsize = 24 )
+plt.ylabel("RMS / bin", fontsize = 20 )
+plt.xlabel("Channel No. ", fontsize = 20 )
+plt.xlim([0,640])
+plt.ylim([0,5])
+plt.tick_params(labelsize=20)
+plt.grid(axis="y")
+plt.tight_layout( rect=[0.05, 0.05, 0.95, 0.95])
+plt.savefig(rpath + "/run51dat_rms_performance1.png")
+#plt.show()
+#
 #fig = plt.figure(figsize=(16,8))
 #i = 0
 #for si in range(4):
@@ -252,70 +288,106 @@ ts = ["Unused U", "U Plane", "Unused X", "X Plane", "150pF X", "100pF X", "50pF 
 
 
 
-fcss = ["0pF U", "0.45m U", "0pF X", "0.45m X", "150pF X", "100pF X", "50pF X", "27pF X", "Bad"] 
-fcs = [0, 0.45*18.1, 0, 0.45*18.1, 150, 100, 50, 27]
-
-fig = plt.figure(figsize=(16,8))
-i = 0
-yms1 = []
-yss1 = []
-yss3 = []
-yms3 = []
-for si in range(8):
-    ccs = ss[si]
-    x = []
-    y1 = []
-    y3 = []
-    for cs in ccs:
-        x.append(i)
-        y1.append(cs[11])
-        y3.append(cs[13])
-        i = i + 1
-    yms1.append(np.mean(y1))
-    yss1.append(np.std(y1))
-    yms3.append(np.mean(y3))
-    yss3.append(np.std(y3))
-ws = np.array(fcs)/18.1
-plt.errorbar(ws, yms1, yss1, label= "Raw Data", color='r', fmt='x')
-plt.errorbar(ws, yms3, yss3, label= "Filtered Data", color='g', fmt='o')
-
-yt = yms1
-yt = np.delete(yt, [4])
-wt = ws
-wt = np.delete(wt, [4])
-
-y1r = sm.OLS(yt, sm.add_constant(wt)).fit()
-y1r_a= y1r.params[1]
-y1r_b = y1r.params[0]
-plt.plot(ws, ws*y1r_a+y1r_b, label= "Raw Data (Fit)", color='r')
-
-y3r = sm.OLS(yms3,sm.add_constant(ws)).fit()
-y3r_a= y3r.params[1]
-y3r_b = y3r.params[0]
-plt.plot(ws, ws*y3r_a+y3r_b, label= "Filtered Data (Fit)", color='g')
-
-
-#ywr = sm.OLS(yms3[0:4],sm.add_constant(ws[0:4])).fit()
-#ywr_a= ywr.params[1]
-#ywr_b= ywr.params[0]
-#plt.plot(ws, ws*ywr_a+ywr_b, label= "Filtered Wire Data (Fit)", color='b')
-
-wssort = np.array(sorted(ws))
-plt.fill_between(wssort, wssort*y1r_a+y1r_b, wssort*y3r_a+y3r_b, color = 'y' )
-
-plt.title("Noise Performance", fontsize = 24 )
-plt.ylabel("ENC / e$^-$", fontsize = 20 )
-plt.xlabel("Equivalent Wire Length (18.1pF/m) / m ", fontsize = 20 )
-plt.xlim([-1,10])
-plt.ylim([0,800])
-plt.tick_params(labelsize=20)
-#plt.grid(axis="y")
-plt.grid()
-plt.tight_layout( rect=[0.05, 0.05, 0.95, 0.95])
-plt.legend(loc='best')
-#plt.show()
-plt.savefig(rpath + "/run51dat_noise_range.png")
-#
+####fcss = ["0pF U", "0.45m U", "0pF X", "0.45m X", "150pF X", "100pF X", "50pF X", "27pF X", "Bad"] 
+####fcs = [0, 0.45*18.1, 0, 0.45*18.1, 150, 100, 50, 27]
+####
+####fig = plt.figure(figsize=(16,8))
+####i = 0
+####yms1 = []
+####yss1 = []
+####yss3 = []
+####yms3 = []
+####for si in range(8):
+####    ccs = ss[si]
+####    x = []
+####    y1 = []
+####    y3 = []
+####    for cs in ccs:
+####        x.append(i)
+####        y1.append(cs[11])
+####        y3.append(cs[13])
+####        i = i + 1
+####    yms1.append(np.mean(y1))
+####    yss1.append(np.std(y1))
+####    yms3.append(np.mean(y3))
+####    yss3.append(np.std(y3))
+####ws = np.array(fcs)/18.1
+####plt.errorbar(ws, yms1, yss1, label= "VST Raw Data", color='r', fmt='x')
+####plt.errorbar(ws, yms3, yss3, label= "VST Filtered Data", color='g', fmt='o')
+####
+####yt = yms1
+####yt = np.delete(yt, [4])
+####wt = ws
+####wt = np.delete(wt, [4])
+####
+####y1r = sm.OLS(yt, sm.add_constant(wt)).fit()
+####y1r_a= y1r.params[1]
+####y1r_b = y1r.params[0]
+####plt.plot(ws, ws*y1r_a+y1r_b, label= "VST Raw Data (Fit)", color='r')
+####
+####y3r = sm.OLS(yms3,sm.add_constant(ws)).fit()
+####y3r_a= y3r.params[1]
+####y3r_b = y3r.params[0]
+####plt.plot(ws, ws*y3r_a+y3r_b, label= "VST Filtered Data (Fit)", color='g')
+####
+####bnlc = [  0,  22 , 27 , 33 , 47 , 50 ,100 ,150]
+####bnle =[207.0, 246.0, 241.5, 269.5, 298.5, 300.0, 411.0, 515.0]
+####bnlstd =[8.8801544388114593, 4.0, 7.5, 5.5, 4.5, 5.0, 5.3385391260156556, 9.8994949366116654]
+####bnlw = np.array(bnlc)/18.1
+####bnlr = sm.OLS(bnle,sm.add_constant(bnlw)).fit()
+####bnlr_a= bnlr.params[1]
+####bnlr_b= bnlr.params[0]
+####plt.errorbar(bnlw, bnle, bnlstd, fmt='s')
+####plt.plot(bnlw, bnlw*bnlr_a+bnlr_b, label= "BNL Caps Data", color='b')
+#####ywr = sm.OLS(yms3[0:4],sm.add_constant(ws[0:4])).fit()
+#####ywr_a= ywr.params[1]
+#####ywr_b= ywr.params[0]
+#####plt.plot(ws, ws*ywr_a+ywr_b, label= "Filtered Wire Data (Fit)", color='b')
+####
+####apa40x = [2.8, 4, 4]
+####apa40e = [332, 383, 395]
+####apa40s = [21, 24, 19]
+####plt.errorbar(apa40x, apa40e, apa40s, color = "m", fmt='d', label = "40% APA Raw Data")
+####
+####mbx = [2.5, 4.8, 4.8]
+####mbe = [350, 490, 480]
+####fmbe = [300, 380, 400]
+####plt.fill_between(mbx, mbe, fmbe, color = 'pink', interpolate=True )
+####plt.scatter(mbx, mbe, marker='D', color ='c', label = "MicroBooNE Raw Data")
+####plt.scatter(mbx, fmbe, marker='p', color ='brown', label = "MicroBooNE Filtered Data")
+####
+####pdx = [6, 7.39, 7.39]
+####pde = [565, 662, 651]
+####pds = [60, 56, 54]
+####plt.errorbar(pdx, pde, pds, color = "orange", fmt='P', label = "ProtoDUNE Raw Data")
+####
+####
+#####
+#####apa40x = [2.8, 4, 4]
+#####apa40e = [332, 351, 380]
+#####plt.scatter(apa40x, apa40e, marker='d', color ='m', label = "40% APA Raw Data")
+#####fapa40e = [318, 325, 352]
+#####plt.scatter(apa40x, fapa40e, marker='D', color ='m', label = "40% APA Filtered Data")
+####
+#####apa40s = [21, 24, 19]
+#####plt.errorbar(apa40x, apa40e, apa40s, fmt='d', label = "40% APA Raw Data")
+####
+####wssort = np.array(sorted(ws))
+#####plt.fill_between(wssort, wssort*y1r_a+y1r_b, wssort*y3r_a+y3r_b, color = 'y' )
+####
+####plt.title("Noise Performance", fontsize = 24 )
+####plt.ylabel("ENC / e$^-$", fontsize = 20 )
+####plt.xlabel("Equivalent Wire Length (18.1pF/m) / m ", fontsize = 20 )
+####plt.xlim([-1,10])
+####plt.ylim([0,1000])
+####plt.tick_params(labelsize=20)
+#####plt.grid(axis="y")
+####plt.grid()
+####plt.tight_layout( rect=[0.05, 0.05, 0.95, 0.95])
+####plt.legend(loc='best', fontsize=16)
+#####plt.show()
+####plt.savefig(rpath + "/run51dat_noise_range_all.png")
+#####
 
 
 

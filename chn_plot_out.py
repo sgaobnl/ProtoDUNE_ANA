@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: 10/23/2018 4:26:10 PM
+Last modified: 10/23/2018 7:20:21 PM
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -106,19 +106,16 @@ def cali_linear_fitplot(pp, apainfo, wireinfo, cali_info, chn_cali_paras, ploten
                 areans.append(onecp[12])
     fc_dacs = np.array(vdacs) * fc_daclsb
     
-    print ampps
     ampps = np.array(ampps)
     if (ped >1000): #induction plane
         #amplitude, positive pulse
         pos = np.where(ampps > 3000.0)[0][0]
-        print pos
         ampp_fit = linear_fit(fc_dacs[0:pos],  ampps[0:pos] )
         ampn_fit = linear_fit(fc_dacs[0:pos],  ampns[0:pos] )
         areap_fit = linear_fit(fc_dacs[0:pos], areaps[0:pos])
         arean_fit = linear_fit(fc_dacs[0:pos], areans[0:pos])
     else:
         pos = np.where(ampps > 3000.0)[0][0]
-        print pos
         ampp_fit = linear_fit(fc_dacs[0:pos], ampps[0:pos])
         areap_fit = linear_fit(fc_dacs[0:pos],areaps[0:pos])
         ampn_fit =  None
@@ -388,7 +385,8 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
                   "Tp = %1.1f$\mu$s"% (int(tp)/10.0)  ]
     out_fn = "APA%d"%APAno + "_WIB%d"%wibno + "_FEMB%d"%fembno + "_CHN%d"%chnno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno + ".pdf"
 
-    fp = out_path + out_fn
+    #fp = out_path + out_fn
+    fp = "C:/Users/Hibay/Google Drive/tmp/caps/"  + out_fn
     pp = PdfPages(fp)
     femb_pos_np = femb_position (APAno)
 

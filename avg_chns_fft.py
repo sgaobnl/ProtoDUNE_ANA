@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Fri 21 Sep 2018 10:06:56 PM CEST
+Last modified: Sun Dec 16 19:30:08 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -76,17 +76,25 @@ if __name__ == '__main__':
         asic_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
  
         apa = "ProtoDUNE"
+
+    rms_rootpath  =  "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
+    fpga_rootpath = "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
+    asic_rootpath = "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
+    apa = "ProtoDUNE"
+
  
     from timeit import default_timer as timer
     s0= timer()
     print "Start...please wait..."
     
-    if (apa == "APA40"):
-        wibnos = [0]
-        fembnos = [0,1,2,3] #0~3
-    else:
-        wibnos = [0,1,2,3,4]
-        fembnos = [0,1,2,3] #0~3
+#    if (apa == "APA40"):
+#        wibnos = [0]
+#        fembnos = [0,1,2,3] #0~3
+#    else:
+#        wibnos = [0,1,2,3,4]
+#        fembnos = [0,1,2,3] #0~3
+    wibnos = [1]
+    fembnos = [0] #0~3
     #wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     #gains = ["250"]  #["250", "140"]
@@ -154,11 +162,11 @@ if __name__ == '__main__':
                 fp = out_path + title  + ".png"
             fft_pp = fp
             ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
-            avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
+            #avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
 
-            ffp = out_path + title + ".fft"
-            with open(ffp, "wb") as ffp:
-                pickle.dump(avgffts, ffp)
+            #ffp = out_path + title + ".fft"
+            #with open(ffp, "wb") as ffp:
+            #    pickle.dump(avgffts, ffp)
 
     print "DONE"
 

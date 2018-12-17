@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Sep 30 16:23:26 2018
+Last modified: Sun Dec 16 18:45:00 2018
 """
 
 #defaut setting for scientific caculation
@@ -88,7 +88,9 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
         for onedir in dirs:
             wibpos = onedir.find("WIB")
             if ( wibpos >= 0 ):
-                if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
+                #if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
+                #print onedir, stepno
+                if ( int(onedir[wibpos+3:wibpos+4]) == wibno ) and (onedir.find(stepno) >=0 ) :
                     steppath = runpath + onedir + "/"
                     break
         if (steppath != None):
@@ -106,7 +108,6 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
     else:
         print runpath + " doesn't exist, ignore anyway!"
         files_cs = []
-
     return files_cs
 
 def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", jumbo_flag=False ):
@@ -351,16 +352,15 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     rms =  np.std(chnrmsdata[0:10000])
     ped = np.mean(chnrmsdata[0:10000])
     if len(feed_loc) > 2:
-        #data_slice = chnrmsdata[feed_loc[0]:feed_loc[0]+5000]
         data_slice = chnrmsdata
         data_200ms_slice = chnrmsdata[0:200000:200]
     else:
         data_slice = chnrmsdata
         data_200ms_slice = chnrmsdata[0:200000:200]
 
-    avg_cycle_l = 1
-    if (len_chnrmsdata >= 400000):
-        fft_s_l = 400000//avg_cycle_l
+    avg_cycle_l = 2 
+    if (len_chnrmsdata >= 200000):
+        fft_s_l = 200000//avg_cycle_l
     else:
         fft_s_l =len(chnrmsdata) 
 
@@ -372,7 +372,6 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
         p = None
         f_l = None
         p_l = None
-
 
 #   data after highpass filter
     flt_chn_data = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 1000, flt_order = 3)

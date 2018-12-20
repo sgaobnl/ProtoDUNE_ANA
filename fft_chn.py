@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Nov 12 08:54:54 2017
+Last modified: Sun Dec 16 18:31:52 2018
 """
 
 #defaut setting for scientific caculation
@@ -57,6 +57,8 @@ def chn_rfft_psd(chndata, fs = 2000000.0, fft_s = 2000, avg_cycle = 50):
     if ( len_chndata >= fft_s * avg_cycle_tmp):
         pass
     else:
+#        print len_chndata
+#        print fft_s
         avg_cycle_tmp = (len_chndata//fft_s)
         #fft_s = (len_chndata//(avg_cycle_tmp*1000))*1000
 

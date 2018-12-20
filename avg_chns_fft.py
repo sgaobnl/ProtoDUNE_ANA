@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Apr 15 16:18:59 2018
+Last modified: Wed Dec 19 12:14:34 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -47,34 +47,63 @@ if __name__ == '__main__':
     rmsrunno = sys.argv[5]
     fpgarunno = sys.argv[6]
     asicrunno = sys.argv[7]
-    apafolder = sys.argv[8]
+    apafolder = sys.argv[8] 
+    jumbo_flag = (sys.argv[9] == "True")
+    psd_en = (sys.argv[10] == "True")
+    psd = int(sys.argv[11])
+    wire_type = sys.argv[12]
+    gains = [sys.argv[13]]
+    tps = [sys.argv[14]]
+    wibx = int(sys.argv[15])
+    fembx = int(sys.argv[16])
+
 
     if (apafolder == "APA40"):
         rms_rootpath =  "D:/APA40/Rawdata/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "D:/APA40/Rawdata/Rawdata_" + fpgdate + "/"
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
+        apa = "APA40"
     elif (apafolder != "APA"):
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+        apa = "ProtoDUNE"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+        rms_rootpath =  "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
+        fpga_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
+        asic_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+ 
+        apa = "ProtoDUNE"
+
+    rms_rootpath  =  "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
+    fpga_rootpath = "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
+    asic_rootpath = "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
+    apa = "ProtoDUNE"
+    rms_rootpath =  "/Users/shanshangao/tmp/Rawdata_08_22_2018/"
+    fpga_rootpath =  "/Users/shanshangao/tmp/Rawdata_08_22_2018/"
+    asic_rootpath =  "/Users/shanshangao/tmp/Rawdata_08_22_2018/"
+    apa = "LArIAT"
+
  
     from timeit import default_timer as timer
     s0= timer()
     print "Start...please wait..."
     
-    wibnos = [0,1,2,3,4]
-    fembnos = [0,1,2,3] #0~3
-    jumbo_flag = False
-    wire_type = "V"
+#    if (apa == "APA40"):
+#        wibnos = [0]
+#        fembnos = [0,1,2,3] #0~3
+#    else:
+#        wibnos = [0,1,2,3,4]
+#        fembnos = [0,1,2,3] #0~3
+    wibnos = [wibx]
+    fembnos = [fembx] #0~3
+    #wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
-    gains = ["250"]  #["250", "140"]
-    tps = ["20"]#["05", "10", "20", "30"]
-    psd_en = False
-    psd = 0
+    #gains = ["250"]  #["250", "140"]
+    #tps = ["20"]#["05", "10", "20", "30"]
     
     out_path = rms_rootpath + "/" + "results/" + "Avg_fft_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+"/"
     if (os.path.exists(out_path)):
@@ -87,6 +116,8 @@ if __name__ == '__main__':
             sys.exit()
     
     apa_map = APA_MAP()
+    apa_map.APA = apa
+    apa_map.femb = wibnos[0] * 4 + fembnos[0]
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
     ffts = []
@@ -110,12 +141,13 @@ if __name__ == '__main__':
                         for chn_loc in All_sort:
                             if ( chn_loc[0][0] == wire_type ):
                                 chns.append(int(chn_loc[1]))
+                        print chns
                         mps = []
                         for chnno in chns:
                             chn_cnt = chn_cnt + 1 
                             pc, cc = Pipe()
                             fft_s = 5000
-                            ana_a_chn_args = (cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag, fft_s)
+                            ana_a_chn_args = (cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno, rmsrunno, fpgarunno, asicrunno, wibno,  fembno, chnno, gain, tp, jumbo_flag, fft_s, apa)
                             p = mp.Process(target=pipe_ana_a_chn, args = ana_a_chn_args ) 
                             mps.append([pc, cc, p])
 
@@ -137,11 +169,11 @@ if __name__ == '__main__':
                 fp = out_path + title  + ".png"
             fft_pp = fp
             ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
-            avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
+            #avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
 
-            ffp = out_path + title + ".fft"
-            with open(ffp, "wb") as ffp:
-                pickle.dump(avgffts, ffp)
+            #ffp = out_path + title + ".fft"
+            #with open(ffp, "wb") as ffp:
+            #    pickle.dump(avgffts, ffp)
 
     print "DONE"
 

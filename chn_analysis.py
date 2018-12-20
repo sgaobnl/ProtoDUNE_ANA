@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Oct 30 00:49:50 2018
+Last modified: Wed Dec 19 12:01:42 2018
 """
 
 #defaut setting for scientific caculation
@@ -67,10 +67,10 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
         runcode = "1"
     elif runno[5:8] == "fpg" :
         runcode = "2"
-    elif runno.find("dat")>=0 :
-        runcode = "f"
     elif runno[5:8] == "asi" :
         runcode = "4"
+    elif runno.find("dat")>=0 :
+        runcode = "f"
 
     if sg == 3:
         stepno = "step" + "3" + runcode 
@@ -91,7 +91,7 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
         for onedir in dirs:
             wibpos = onedir.find("WIB")
             if ( wibpos >= 0 ):
-                if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
+                #if ( int(onedir[wibpos+3:wibpos+4]) == wibno ) and (onedir.find(stepno) >=0 ) :
                     steppath = runpath + onedir + "/"
                     break
         if (steppath != None):
@@ -110,8 +110,6 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
     else:
         print runpath + " doesn't exist, ignore anyway!"
         files_cs = []
-    print files_cs
-
     return files_cs
 
 def read_rawdata(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, gain="250", tp="20", jumbo_flag=False ):
@@ -151,7 +149,6 @@ def read_rawdata_coh(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, 
     datas = []
     for onefile in files:
         with open(onefile, 'rb') as f:
-            print onefile
             raw_data = f.read()
             filelength = len(raw_data )
             smps = (filelength-1024)/2/16 
@@ -159,8 +156,6 @@ def read_rawdata_coh(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0, 
                 smps = 200000
 
             data, feed_loc, chn_peakp, chn_peakn = raw_convertor_peak(raw_data, smps, jumbo_flag)
-
-            #flt_chn_data = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 1000, flt_order = 3)
             ###############0         1      2       3       4     5    6    7      8           9         10#########
             datas.append([onefile, runno, wibno,  fembno, chnno, gain, tp, data, feed_loc, chn_peakp, chn_peakn])
     return datas
@@ -351,9 +346,6 @@ def noise_a_chn_fast(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50
 def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wibno=0,  fembno=0 ):
     asicchn = chnno % 16
     chnrmsdata = rmsdata[0][7][asicchn]
-
-#    chnrmsdata = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 500, flt_order = 3)
-
     feed_loc = rmsdata[0][8]
     len_chnrmsdata = len(chnrmsdata)
     if (len_chnrmsdata > 200000):
@@ -362,16 +354,15 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
     rms =  np.std(chnrmsdata[0:10000])
     ped = np.mean(chnrmsdata[0:10000])
     if len(feed_loc) > 2:
-        #data_slice = chnrmsdata[feed_loc[0]:feed_loc[0]+5000]
         data_slice = chnrmsdata
         data_200ms_slice = chnrmsdata[0:200000:200]
     else:
         data_slice = chnrmsdata
         data_200ms_slice = chnrmsdata[0:200000:200]
 
-    avg_cycle_l = 1
-    if (len_chnrmsdata >= 400000):
-        fft_s_l = 400000//avg_cycle_l
+    avg_cycle_l = 10 
+    if (len_chnrmsdata >= 200000):
+        fft_s_l = 200000//avg_cycle_l
     else:
         fft_s_l =len(chnrmsdata) 
 
@@ -383,7 +374,6 @@ def noise_a_chn(rmsdata, chnno, fft_en = True, fft_s=2000, fft_avg_cycle=50, wib
         p = None
         f_l = None
         p_l = None
-
 
 #   data after highpass filter
     flt_chn_data = hp_flt_applied(chnrmsdata, fs = 2000000, passfreq = 1000, flt_order = 3)

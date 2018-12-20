@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Jul 19 16:45:31 2018
+Last modified: Sun Dec 16 18:31:13 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -369,7 +369,7 @@ def ped_fft_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras, peaks_note = 
 def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi", 
                wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
-               jumbo_flag=False, fft_s=5000 ):
+               jumbo_flag=False, fft_s=5000, apa="ProtoDUNE", tpcno="0" ):
 
     input_info = ["RMS Raw data Path = %s"%rms_rootpath + rmsrunno, 
                   "Cali(FPGA DAC) Raw data Path = %s"%fpga_rootpath + fpgarunno, 
@@ -378,7 +378,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
                   "WIB#%d"%wibno , 
                   "Gain = %2.1f mV/fC"% (int(gain)/10.0) , 
                   "Tp = %1.1f$\mu$s"% (int(tp)/10.0)  ]
-    out_fn = "APA%d"%APAno + "_WIB%d"%wibno + "_FEMB%d"%fembno + "_CHN%d"%chnno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno + ".pdf"
+    out_fn = "APA%d_"%APAno + tpcno +"_WIB%d"%wibno + "_FEMB%d"%fembno + "_CHN%d"%chnno + "_Gain%s"%gain + "_Tp%s"%tp+  "_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno + ".pdf"
 
     fp = out_path + out_fn
     pp = PdfPages(fp)
@@ -393,6 +393,7 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
             break
 
     apa_map = APA_MAP()
+    apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
     wireinfo = None
     for onewire in All_sort:
@@ -427,12 +428,13 @@ def plot_a_chn(out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4,
         cali_linear_fitplot(pp, apainfo, wireinfo, asic_info, chn_cali_paras)
     else:
         print "Path: %s%s doesnt' exist, ignore anyway"%(asic_rootpath, asicrunno)
+    pp.close()
     print "results path: " + fp
 
 def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, APAno = 4, \
                rmsrunno = "run01rms", fpgarunno = "run01fpg", asicrunno = "run01asi", 
                wibno=0,  fembno=0, chnno=0, gain="250", tp="20", \
-               jumbo_flag=False, fft_s=5000 ):
+               jumbo_flag=False, fft_s=5000, apa = "ProtoDUNE" ):
 
     input_info = ["RMS Raw data Path = %s"%rms_rootpath + rmsrunno, 
                   "Cali(FPGA DAC) Raw data Path = %s"%fpga_rootpath + fpgarunno, 
@@ -442,7 +444,7 @@ def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, AP
                   "Gain = %2.1f mV/fC"% (int(gain)/10.0) , 
                   "Tp = %1.1f$\mu$s"% (int(tp)/10.0)  ]
     wibfemb= "WIB"+format(wibno,'02d') + "_" + "FEMB" + format(fembno,'1d') 
-    print wibfemb + "chn%d"%chnno
+    #print wibfemb + "chn%d"%chnno
     femb_pos_np = femb_position (APAno)
     apainfo = None
     for femb_pos in femb_pos_np:
@@ -451,7 +453,8 @@ def pipe_ana_a_chn(cc, out_path, rms_rootpath,  fpga_rootpath, asic_rootpath, AP
             break
 
     apa_map = APA_MAP()
-    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping_pd()
+    apa_map.APA = apa
+    All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
     wireinfo = None
     for onewire in All_sort:
         if (int(onewire[1]) == chnno):
@@ -504,9 +507,6 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
         maxp = np.max(chn_noise_paras[17][1:])
         maxp_loc = np.where (chn_noise_paras[17][1:] == maxp)[0][0] 
         maxp_f_chns.append([chn_noise_paras[16][maxp_loc], maxp, chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0],])
-        #if (lf_flg==True) and (int(chn_noise_paras[16][maxp_loc]) > 400 ): #(maxp > 0):
-        #if (lf_flg==True) and (maxp > 0):
-        #    print int(chn_noise_paras[16][maxp_loc]), int(maxp), chn_noise_paras[20], chn_noise_paras[21],  chn_noise_paras[0]
 
         if (psd_en):
             if np.max(chn_noise_paras[17][10:]) > psd:
@@ -548,43 +548,48 @@ def ped_fft_plot_avg(pp, ffs, title, lf_flg = False, psd_en = False, psd = 0):
         
         label = "Averaging FFT"
         hflabel = "Averaging FFT"
-        if (not lf_flg):
-            ped_fft_subplot(ax1, f_l, p_l, maxx=1000000, title="Spectrum of raw data", label=label, peaks_note = True )
-            ped_fft_subplot(ax2, hff_l, hfp_l, maxx=1000000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
-            ped_fft_subplot(ax3, f_l, p_l, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = True)
-            ped_fft_subplot(ax4, hff_l, hfp_l, maxx=100000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
-        else:
-            #peaks = detect_peaks(p_l, mph=None, mpd=20, threshold=10, edge='rising')
-            ped_fft_subplot(ax1, f_l, p_l, maxx=10000, title="Spectrum of raw data", label=label, peaks_note = True)
-            ped_fft_subplot(ax2, hff_l, hfp_l, maxx=10000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
-            ped_fft_subplot(ax3, f_l, p_l, maxx=1000, title="Spectrum of raw data", label=label, peaks_note = True)
-            ped_fft_subplot(ax4, hff_l, hfp_l, maxx=1000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+        ped_fft_subplot(ax1, f_l, p_l, maxx=1000000, title="Spectrum of raw data", label=label, peaks_note = True )
+        ped_fft_subplot(ax2, f_l, p_l, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = True )
+        ped_fft_subplot(ax3, f_l, p_l, maxx=10000, title="Spectrum of raw data", label=label, peaks_note = True)
+        ped_fft_subplot(ax4, f_l, p_l, maxx=1000, title="Spectrum of raw data", label=label, peaks_note = True)
+
+#        if (not lf_flg):
+#            ped_fft_subplot(ax1, f_l, p_l, maxx=1000000, title="Spectrum of raw data", label=label, peaks_note = True )
+#            ped_fft_subplot(ax2, hff_l, hfp_l, maxx=1000000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+#            ped_fft_subplot(ax3, f_l, p_l, maxx=100000, title="Spectrum of raw data", label=label, peaks_note = True)
+#            ped_fft_subplot(ax4, hff_l, hfp_l, maxx=100000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+#        else:
+#            #peaks = detect_peaks(p_l, mph=None, mpd=20, threshold=10, edge='rising')
+#            ped_fft_subplot(ax1, f_l, p_l, maxx=10000, title="Spectrum of raw data", label=label, peaks_note = True)
+#            ped_fft_subplot(ax2, hff_l, hfp_l, maxx=10000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
+#            ped_fft_subplot(ax3, f_l, p_l, maxx=1000, title="Spectrum of raw data", label=label, peaks_note = True)
+#            ped_fft_subplot(ax4, hff_l, hfp_l, maxx=1000, title="Spectrum of data after HPF", label=hflabel, peaks_note = True)
 
     fig.suptitle(title, fontsize = 12)
     plt.tight_layout( rect=[0, 0.05, 1, 0.95])
  
-    if (not lf_flg):
-        plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + pp[-4:], format='png')
-    else:
-        plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1k" + pp[-4:], format='png')
+    plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + pp[-4:], format='png')
+#    if (not lf_flg):
+#        plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + pp[-4:], format='png')
+#    else:
+#        plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1k" + pp[-4:], format='png')
     #plt.show()
     plt.close()
 
-
-    fig = plt.figure(figsize=(16,9))
-    ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
-    ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
-    ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
-    ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
-    maxpsd_subplot(ax1, maxp_f_chns, fmax = 200, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
-    maxpsd_subplot(ax2, maxp_f_chns, fmax = 1000, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
-    maxpsd_subplot(ax3, maxp_f_chns, fmax = 10000, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
-    maxpsd_subplot(ax4, maxp_f_chns, fmax = 100000, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
-
-    fig.suptitle(title, fontsize = 12)
-    plt.tight_layout( rect=[0, 0.05, 1, 0.95])
-    plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + "_max_psd" + pp[-4:] , format='png')
-    plt.close()
+#    fig = plt.figure(figsize=(16,9))
+#    ax1 = plt.subplot2grid((4, 4), (0, 0), colspan=2, rowspan=2)
+#    ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
+#    ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
+#    ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
+#    maxpsd_subplot(ax1, maxp_f_chns, fmax = 200, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
+#    maxpsd_subplot(ax2, maxp_f_chns, fmax = 1000, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
+#    maxpsd_subplot(ax3, maxp_f_chns, fmax = 10000, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
+#    maxpsd_subplot(ax4, maxp_f_chns, fmax = 100000, title="Max(CHN PSD) vs. Freq", label="Max(CHN PSD)" )
+#
+#    fig.suptitle(title, fontsize = 12)
+#    plt.tight_layout( rect=[0, 0.05, 1, 0.95])
+#    plt.savefig(pp[0:-4] + "wire%d_"%valid_chns + "_1M" + "_max_psd" + pp[-4:] , format='png')
+#    plt.close()
 
     return f_l, p_l, hff_l, hfp_l, maxp_f_chns
 

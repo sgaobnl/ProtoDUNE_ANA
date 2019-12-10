@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Dec 10 11:30:16 2019
+Last modified: Tue Dec 10 11:52:32 2019
 """
 
 #defaut setting for scientific caculation
@@ -442,7 +442,11 @@ if __name__ == '__main__':
         rms_rootpath =  "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
- 
+
+#        rms_rootpath =  "/dsk/1/tmp/ProtoDUNE/sw/APA%d/Rawdata_"%APAno + rmsdate + "/"
+#        fpga_rootpath = "/dsk/1/tmp/ProtoDUNE/sw/APA%d/Rawdata_"%APAno + fpgdate + "/"
+#        asic_rootpath = "/dsk/1/tmp/ProtoDUNE/sw/APA%d/Rawdata_"%APAno + asidate + "/"
+
         apa = "ProtoDUNE"
     from timeit import default_timer as timer
     s0= timer()

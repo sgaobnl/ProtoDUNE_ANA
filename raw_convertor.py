@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Thu Mar 22 11:59:55 2018
+Last modified: Tue Dec 10 15:19:15 2019
 """
 
 #defaut setting for scientific caculation
@@ -160,6 +160,22 @@ def raw_convertor_peak(raw_data, smps, jumbo_flag=True):
     else:
         chn_peakp = None
         chn_peakn = None
+
+    if len(chn_peakp[chn]) > 10:
+        for chn in range(16):
+            chn_peakp[chn].remove(np.max(chn_peakp[chn]))
+            chn_peakp[chn].remove(np.max(chn_peakp[chn]))
+            chn_peakp[chn].remove(np.max(chn_peakp[chn]))
+            chn_peakp[chn].remove(np.min(chn_peakp[chn]))
+            chn_peakp[chn].remove(np.min(chn_peakp[chn]))
+            chn_peakp[chn].remove(np.min(chn_peakp[chn]))
+
+            chn_peakn[chn].remove(np.max(chn_peakp[chn]))
+            chn_peakn[chn].remove(np.max(chn_peakp[chn]))
+            chn_peakn[chn].remove(np.max(chn_peakp[chn]))
+            chn_peakn[chn].remove(np.min(chn_peakp[chn]))
+            chn_peakn[chn].remove(np.min(chn_peakp[chn]))
+            chn_peakn[chn].remove(np.min(chn_peakp[chn]))
         
     return  chn_data, feed_loc, chn_peakp, chn_peakn
 

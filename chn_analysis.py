@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Dec 16 18:45:00 2018
+Last modified: Mon 17 Dec 2018 02:07:56 AM CET
 """
 
 #defaut setting for scientific caculation
@@ -88,9 +88,9 @@ def generate_rawpaths(rootpath, runno = "run01rms", wibno=0,  fembno=0, chnno=0,
         for onedir in dirs:
             wibpos = onedir.find("WIB")
             if ( wibpos >= 0 ):
-                #if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
+                if ( int(onedir[wibpos+3:wibpos+5]) == wibno ) and (onedir.find(stepno) >=0 ) :
                 #print onedir, stepno
-                if ( int(onedir[wibpos+3:wibpos+4]) == wibno ) and (onedir.find(stepno) >=0 ) :
+                #if ( int(onedir[wibpos+3:wibpos+4]) == wibno ) and (onedir.find(stepno) >=0 ) :
                     steppath = runpath + onedir + "/"
                     break
         if (steppath != None):

@@ -5,6 +5,8 @@
 ## apa_plot_main.py--> # apano   rmsdate      fpgdate     asidate     rmsrunno fpgarunno asicrunno apafolder 
 #python apa_plot_main.py  3   "06_05_2018" "06_05_2018" "06_05_2018" run01rms   run01fpg  run01asi  APA 
 #
+python APA_analysis.py   3   "11_06_2019" "11_06_2019" "11_06_2019" run01rms run01fpg   run01asi   APA    False 
+#python APA_analysis.py   4   "12_05_2019" "12_05_2019" "12_05_2019" run01rms run01fpg   run01asi   APA    False 
 #python APA_analysis.py   1   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
 #python APA_analysis.py   2   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
 #python APA_analysis.py   3   "09_17_2018" "09_17_2018" "09_17_2018" run01rms run01fpg   run01asi   APA    False 
@@ -34,12 +36,12 @@
 #python APA_analysis.py   5   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
 #python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run02fpg   run01asi   APA    False 
 
-python APA_analysis.py   1   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
-python APA_analysis.py   2   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
-python APA_analysis.py   3   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
-python APA_analysis.py   4   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
-python APA_analysis.py   5   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
-python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+#python APA_analysis.py   1   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+#python APA_analysis.py   2   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+#python APA_analysis.py   3   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+#python APA_analysis.py   4   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+#python APA_analysis.py   5   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run03fpg   run01asi   APA    False 
+#python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run0fpg   run01asi   APA    False 
 
 
 #python apa_plot_main.py  3   "09_17_2018" "09_17_2018" "09_17_2018" run02rms run02fpg  run01asi  APA 
@@ -83,20 +85,20 @@ python APA_analysis.py   6   "09_23_2018" "09_23_2018" "09_23_2018" run03rms run
 
 
 
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  05
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  10
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  30
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  05
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  10
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  30
 
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  05
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  10
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  30
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  05
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  10
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  30
 
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  05
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  10
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  30
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  05
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  10
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  30
 
 
 

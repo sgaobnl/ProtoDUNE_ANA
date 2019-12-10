@@ -1,19 +1,82 @@
 #!/bin/bash
+#python avg_chns_fft.py   1   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0 
+#python avg_chns_fft.py   1   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0 
+#python avg_chns_fft.py   1   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0  
+
+#python avg_chns_fft.py   2   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0 
+#python avg_chns_fft.py   2   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0 
+#python avg_chns_fft.py   2   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0  
+#
+#python avg_chns_fft.py   3   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0 
+#python avg_chns_fft.py   3   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0 
+#python avg_chns_fft.py   3   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0  
+
+#python avg_chns_fft.py   4   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0 
+#python avg_chns_fft.py   4   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0 
+#python avg_chns_fft.py   4   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0  
+#
+#python avg_chns_fft.py   5   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0 
+#python avg_chns_fft.py   5   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0 
+#python avg_chns_fft.py   5   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0  
+
+#python avg_chns_fft.py   6   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0 
+#python avg_chns_fft.py   6   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0 
+python avg_chns_fft.py   6   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0  
+#python avg_chns_fft.py   1   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 0 0
+#python avg_chns_fft.py   2   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 4 1
+#python avg_chns_fft.py   3   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 1 0
+#python avg_chns_fft.py   4   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       140  20 3 0
+#python avg_chns_fft.py   5   "09_19_2018" "09_19_2018" "09_19_2018" run02rms  run01fpg  run01asi     APA     False     False    0     X       140  20 1 2
+#python avg_chns_fft.py   6   "09_19_2018" "09_19_2018" "09_19_2018" run02rms  run01fpg  run01asi     APA     False     False    0     X       140  20 2 0
+
+#python avg_chns_fft.py   1   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 0 0
+#python avg_chns_fft.py   2   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 4 1
+#python avg_chns_fft.py   3   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 1 0
+#python avg_chns_fft.py   4   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       140  20 3 0
+#python avg_chns_fft.py   5   "09_19_2018" "09_19_2018" "09_19_2018" run02rms  run01fpg  run01asi     APA     False     False    0     U       140  20 1 2
+#python avg_chns_fft.py   6   "09_19_2018" "09_19_2018" "09_19_2018" run02rms  run01fpg  run01asi     APA     False     False    0     U       140  20 2 0
+
+
+#python avg_chns_fft.py   1   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 0 0 
+#python avg_chns_fft.py   2   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 4 1
+#python avg_chns_fft.py   3   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 1 0 
+#python avg_chns_fft.py   4   "09_19_2018" "09_19_2018" "09_19_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       140  20 3 0 
+#python avg_chns_fft.py   5   "09_19_2018" "09_19_2018" "09_19_2018" run02rms  run01fpg  run01asi     APA     False     False    0     V       140  20 1 2
+#python avg_chns_fft.py   6   "09_19_2018" "09_19_2018" "09_19_2018" run02rms  run01fpg  run01asi     APA     False     False    0     V       140  20 2 0
+
+
+#python avg_chns_fft.py   5   "04_12_2018" "02_06_2018" "02_06_2018" run09rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   5   "04_12_2018" "02_06_2018" "02_06_2018" run09rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   5   "04_12_2018" "02_06_2018" "02_06_2018" run09rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+#python avg_chns_fft.py   5   "04_18_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   5   "04_18_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   5   "04_18_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+
+
+#
+#python avg_chns_fft.py   4   "03_20_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   4   "03_20_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   4   "03_20_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+#python avg_chns_fft.py   4   "03_21_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   4   "03_21_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   4   "03_21_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+
+
+
+#python avg_chns_fft.py   3   "02_06_2018" "02_06_2018" "02_06_2018" run03rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   3   "02_06_2018" "02_06_2018" "02_06_2018" run03rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   3   "02_06_2018" "02_06_2018" "02_06_2018" run03rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+
+#python avg_chns_fft.py   3   "02_07_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   3   "02_07_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   3   "02_07_2018" "02_06_2018" "02_06_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+
+
+#python avg_chns_fft.py   3   "01_15_2018" "01_15_2018" "01_15_2018" run02rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   3   "01_15_2018" "01_15_2018" "01_15_2018" run02rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   3   "01_15_2018" "01_15_2018" "01_15_2018" run02rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+
 ## APA_analysis.py --> # apano   rmsdate      fpgdate     asidate     rmsrunno fpgarunno asicrunno apafolder jumbo_flag
-python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run30rms  run01fpg  run01asi     APA     False     False    0     U       250  20
-python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run30rms  run01fpg  run01asi     APA     False     False    0     V       250  20
-python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run30rms  run01fpg  run01asi     APA     False     False    0     X       250  20
-
-
-#python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run25rms  run01fpg  run01asi     APA     False     False    0     U       250  20
-#python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run25rms  run01fpg  run01asi     APA     False     False    0     V       250  20
-#python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run25rms  run01fpg  run01asi     APA     False     False    0     X       250  20
-
-#python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run25rms  run01fpg  run01asi     APA     False     False    0     U       250  30
-#python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run25rms  run01fpg  run01asi     APA     False     False    0     V       250  30
-#python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run25rms  run01fpg  run01asi     APA     False     False    0     X       250  30
-
-
 #python APA_analysis.py   1   "07_26_2018" "07_26_2018" "07_26_2018" run01rms run01fpg   run01asi   APA    False 
 #
 ## apa_plot_main.py--> # apano   rmsdate      fpgdate     asidate     rmsrunno fpgarunno asicrunno apafolder 
@@ -97,20 +160,20 @@ python avg_chns_fft.py   1   "11_17_2017" "11_17_2017" "11_17_2017" run30rms  ru
 
 
 
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  05
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  10
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  30
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  05
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  10
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  20
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     V       250  30
 
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  05
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  10
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  30
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  05
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  10
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  20
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     U       250  30
 
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  05
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  10
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
-#python avg_chns_fft.py   3   "07_26_2018" "07_26_2018" "07_26_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  30
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  05
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  10
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  20
+#python avg_chns_fft.py   3   "10_04_2018" "10_04_2018" "10_04_2018" run01rms  run01fpg  run01asi     APA     False     False    0     X       250  30
 
 
 

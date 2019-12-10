@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Wed Mar  6 14:55:54 2019
+Last modified: Fri Sep 21 15:52:20 2018
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -50,13 +50,9 @@ if __name__ == '__main__':
         asic_rootpath = "D:/APA40/Rawdata/Rawdata_" + asidate + "/"
         apa = "APA40"
     elif (apafolder != "APA"):
-        rms_rootpath =  "/home/nfs/dunecet/CET/ProtoDUNE_LD-01/data/ProtoDUNE/Rawdata/CHKOUT/Rawdata_" + rmsdate + "/"
-        fpga_rootpath = "/home/nfs/dunecet/CET/ProtoDUNE_LD-01/data/ProtoDUNE/Rawdata/CHKOUT/Rawdata_" + fpgdate + "/"
-        asic_rootpath = "/home/nfs/dunecet/CET/ProtoDUNE_LD-01/data/ProtoDUNE/Rawdata/CHKOUT/Rawdata_" + asidate + "/"
- 
-#        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
-#        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
-#        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
+        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + rmsdate + "/"
+        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + fpgdate + "/"
+        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
         apa = "ProtoDUNE"
     else:
         rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
@@ -65,9 +61,6 @@ if __name__ == '__main__':
         rms_rootpath =  "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
-        rms_rootpath =  "/home/nfs/dunecet/CET/ProtoDUNE_LD-01/data/ProtoDUNE/Rawdata/CHKOUT/Rawdata_" + rmsdate + "/"
-        fpga_rootpath = "/home/nfs/dunecet/CET/ProtoDUNE_LD-01/data/ProtoDUNE/Rawdata/CHKOUT/Rawdata_" + fpgdate + "/"
-        asic_rootpath = "/home/nfs/dunecet/CET/ProtoDUNE_LD-01/data/ProtoDUNE/Rawdata/CHKOUT/Rawdata_" + asidate + "/"
  
         apa = "ProtoDUNE"
  
@@ -76,10 +69,10 @@ if __name__ == '__main__':
     print "Start...please wait..."
     
     fft_s = 5000
-    gains = ["250", "140"] 
-#    gains = ["140"] 
+    gains = ["250"] 
+    gains = ["140"] 
     tps = ["05", "10", "20", "30"]
-    #tps = [  "20"]
+    tps = [  "20"]
     wib_femb_chns = [  
                         #wib(0-4), femb(0-3), chn(0~127)
                         #[0, 2, 120   ],

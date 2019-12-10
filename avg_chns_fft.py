@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sun Dec 16 19:30:08 2018
+Last modified: Mon 17 Dec 2018 05:52:32 PM CET
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -54,6 +54,8 @@ if __name__ == '__main__':
     wire_type = sys.argv[12]
     gains = [sys.argv[13]]
     tps = [sys.argv[14]]
+    wibx = int(sys.argv[15])
+    fembx = int(sys.argv[16])
 
  
 
@@ -68,21 +70,15 @@ if __name__ == '__main__':
         asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/Coldbox/Rawdata_" + asidate + "/"
         apa = "ProtoDUNE"
     else:
-        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
-        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
-        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
         rms_rootpath =  "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
         fpga_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
         asic_rootpath = "/nfs/sw/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
  
+#        rms_rootpath =  "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + rmsdate + "/"
+#        fpga_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + fpgdate + "/"
+#        asic_rootpath = "/nfs/rscratch/bnl_ce/shanshan/Rawdata/APA%d/Rawdata_"%APAno + asidate + "/"
+
         apa = "ProtoDUNE"
-
-    rms_rootpath  =  "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
-    fpga_rootpath = "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
-    asic_rootpath = "/Volumes/ProtoDUNE/CERN_cold_test/Rawdata_11_14_2017/"
-    apa = "ProtoDUNE"
-
- 
     from timeit import default_timer as timer
     s0= timer()
     print "Start...please wait..."
@@ -93,8 +89,10 @@ if __name__ == '__main__':
 #    else:
 #        wibnos = [0,1,2,3,4]
 #        fembnos = [0,1,2,3] #0~3
-    wibnos = [1]
-    fembnos = [0] #0~3
+    wibnos = [wibx]
+    fembnos = [fembx] #0~3
+    wibnos = [0,1,2,3,4]
+    fembnos = [0,1,2,3] #0~3
     #wire_type = "V"
     #only allow one gain and one peak time run at a time, otherwise memory excess error may happen
     #gains = ["250"]  #["250", "140"]
@@ -114,23 +112,17 @@ if __name__ == '__main__':
     apa_map.APA = apa
     All_sort, X_sort, V_sort, U_sort =  apa_map.apa_femb_mapping()
 
-    ffts = []
     for gain in gains:
         for tp in tps:
             log_str ="" 
-            chn_cnt = 0
+            #chn_cnt = 0
             for wibno in wibnos:
                 for fembno in fembnos:
-                    if (True):
-                    #if (not ((wibno == 0) and (fembno == 0) ) ) : #APA5
-                    #if (not ((wibno == 2) and (fembno == 2) ) ) : #APA2
-                    #if (not ((wibno == 1) and (fembno == 1) ) ) : #APA4
-                    #if (not ((wibno == 0) and (fembno == 3) ) ) and \
-                    #   (not ((wibno == 2) and (fembno == 0) ) ) and \
-                    #   (not ((wibno == 2) and (fembno == 1) ) ) and \
-                    #   (not ((wibno == 3) and (fembno == 0) ) ) : #APA3
+                    chn_cnt = 0
+                    ffts = []
+                    if not((APAno == 1) and (wibno == 4) and (fembno == 2)):
+                        print APAno, wibno, fembno
                         log_str = log_str +str(wibno)+str(fembno)+"_" 
-                        #V plane
                         chns = []
                         for chn_loc in All_sort:
                             if ( chn_loc[0][0] == wire_type ):
@@ -155,13 +147,15 @@ if __name__ == '__main__':
 
                         print "time passed %d seconds"%(timer() - s0)
         
-            title = "APA" + str(APAno) + "_" + rmsrunno + "_" + log_str + wire_type + "_chns" + str(chn_cnt) + "_" + "gain" + gain + "tp" + tp
-            if (psd_en):
-                fp = out_path + title + "_psd%d"%psd + ".png"
-            else:
-                fp = out_path + title  + ".png"
-            fft_pp = fp
-            ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
+                    #title = "APA" + str(APAno) + "_" + rmsrunno + "_" + log_str + wire_type + "_chns" + str(chn_cnt) + "_" + "gain" + gain + "tp" + tp
+                    title = "APA" + str(APAno) + "_" + rmsrunno + "_" + wire_type + "_chns" + str(chn_cnt) + "_" + "gain" + gain + "tp" + tp
+                    if (psd_en):
+                        fp = out_path + "%d_%d_%d"%(APAno, wibno, fembno) + title + "_psd%d"%psd + ".png"
+                    else:
+                        fp = out_path + "%d_%d_%d"%(APAno, wibno, fembno) + title  + ".png"
+                    fft_pp = fp
+                    print fft_pp
+                    ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = True, psd_en = psd_en, psd = psd)
             #avgffts = ped_fft_plot_avg(fft_pp, ffs=ffts, title=title, lf_flg = False, psd_en = psd_en, psd = psd)
 
             #ffp = out_path + title + ".fft"

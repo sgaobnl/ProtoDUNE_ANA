@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Dec 10 11:26:53 2019
+Last modified: Tue Dec 10 11:30:16 2019
 """
 
 #defaut setting for scientific caculation
@@ -159,7 +159,7 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
         else:
             asi_encperlsb, asi_chninl, asi_areaperlsb, asi_areachninl  = [-1, -1, -1, -1]
         asic_results.append([apainfo, wireinfo, feset_info, wibno, fembno, chnno, rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio, \
-                             fpg_cali_flg, fpg_encperlsb, fpg_chninl, asi_cali_flg, asi_encperlsb, asi_chninl, fpg_areaperlsb, fpg_areachninl, asi_areaperlsb asi_areachninl, ])
+                             fpg_cali_flg, fpg_encperlsb, fpg_chninl, asi_cali_flg, asi_encperlsb, asi_chninl, fpg_areaperlsb, fpg_areachninl, asi_areaperlsb,asi_areachninl, ])
 
     toqueue =  asic_results
     cc.send(toqueue)

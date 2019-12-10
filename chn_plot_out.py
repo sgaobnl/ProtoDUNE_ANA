@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Tue Dec 10 11:04:08 2019
+Last modified: Tue Dec 10 11:13:57 2019
 """
 import matplotlib
 matplotlib.use('Agg')
@@ -257,10 +257,10 @@ def ped_wf_plot(pp, apainfo, wireinfo, rms_info, chn_noise_paras):
     ax2 = plt.subplot2grid((4, 4), (0, 2), colspan=2, rowspan=2)
     ax3 = plt.subplot2grid((4, 4), (2, 0), colspan=2, rowspan=2)
     ax4 = plt.subplot2grid((4, 4), (2, 2), colspan=2, rowspan=2)
-    ped_wf_subplot(ax1, data_slice[0:500],         ped,   rms,    t_rate=0.5, title="Waveforms of raw data", label=label )
-    ped_wf_subplot(ax2, hfdata_slice,       hfped, hfrms,  t_rate=0.5, title="Waveforms of data after HPF", label=hflabel )
-    ped_wf_subplot(ax3, data_100us_slice[0:500],   ped,   rms,    t_rate=100, title="Waveforms of raw data", label=label )
-    ped_wf_subplot(ax4, hfdata_100us_slice, hfped, hfrms,  t_rate=100, title="Waveforms of data after HPF", label=hflabel )
+    ped_wf_subplot(ax1, data_slice[0:1000],         ped,   rms,    t_rate=0.5, title="Waveforms of raw data (2Ms/s)", label=label )
+    ped_wf_subplot(ax2, hfdata_slice[0:1000],       hfped, hfrms,  t_rate=0.5, title="Waveforms of data after HPF (2Ms/s)", label=hflabel )
+    ped_wf_subplot(ax3, data_100us_slice[0:1000],   ped,   rms,    t_rate=100, title="Waveforms of raw data (10ks/s)", label=label )
+    ped_wf_subplot(ax4, hfdata_100us_slice[0:1000], hfped, hfrms,  t_rate=100, title="Waveforms of data after HPF (10ks/s) ", label=hflabel )
 
     apainfo_str = apainfo[0] + ", " + apainfo[1] + ", " + apainfo[2]  + "  ;  "
     wireinfo_str = "Wire = " + wireinfo[0] + ", FEMB CHN =" + wireinfo[1] 

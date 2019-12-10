@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Mon 17 Dec 2018 02:07:56 AM CET
+Last modified: Tue Dec 10 11:24:25 2019
 """
 
 #defaut setting for scientific caculation
@@ -500,14 +500,20 @@ def cali_linear_calc(chn_cali_paras):
         if (ampp_fit[0] != 0):
             encperlsb = int(6250/ampp_fit[0])
             chninl    = ampp_fit[2]
+            areaperlsb = int(6250/areap_fit[0])
+            areachninl = areap_fit[2]
         else:
             encperlsb = None
             chninl    = None
+            areaperlsb = None
+            areachninl = None
     else:
         encperlsb = None
         chninl    = None
+        areaperlsb = None
+        areachninl = None
 
-    return  encperlsb, chninl
+    return  encperlsb, chninl, areaperlsb, areachninl
 
 def cali_a_chn(calidata, chnno, cap=1.85E-13, wibno=0,  fembno=0 ):
     asicchn = chnno % 16

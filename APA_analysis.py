@@ -5,7 +5,7 @@ Author: GSS
 Mail: gao.hillhill@gmail.com
 Description: 
 Created Time: 7/15/2016 11:47:39 AM
-Last modified: Sat 22 Sep 2018 01:55:50 PM CEST
+Last modified: Tue Dec 10 11:26:53 2019
 """
 
 #defaut setting for scientific caculation
@@ -150,15 +150,16 @@ def pipe_ana_a_asic(cc, rms_rootpath, fpga_rootpath, asic_rootpath,  APAno = 4, 
 
         if (fpg_cali_flg):
             chn_fpga_paras = cali_a_chn(fpgadata, chnno )
-            fpg_encperlsb, fpg_chninl = cali_linear_calc(chn_fpga_paras)
+            fpg_encperlsb, fpg_chninl , fpg_areaperlsb, fpg_areachninl = cali_linear_calc(chn_fpga_paras)
         else:
-            fpg_encperlsb, fpg_chninl = [-1, -1]
+            fpg_encperlsb, fpg_chninl, fpg_areaperlsb, fpg_areachninl  = [-1, -1,-1, -1]
         if (asi_cali_flg):
             chn_asic_paras = cali_a_chn(asicdata, chnno )
-            asi_encperlsb, asi_chninl = cali_linear_calc(chn_asic_paras)
+            asi_encperlsb, asi_chninl , asi_areaperlsb, asi_areachninl = cali_linear_calc(chn_asic_paras)
         else:
-            asi_encperlsb, asi_chninl = [-1, -1]
-        asic_results.append([apainfo, wireinfo, feset_info, wibno, fembno, chnno, rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio, fpg_cali_flg, fpg_encperlsb, fpg_chninl, asi_cali_flg, asi_encperlsb, asi_chninl])
+            asi_encperlsb, asi_chninl, asi_areaperlsb, asi_areachninl  = [-1, -1, -1, -1]
+        asic_results.append([apainfo, wireinfo, feset_info, wibno, fembno, chnno, rms ,ped ,hfrms ,hfped ,sfrms ,sfped  ,unstk_ratio, \
+                             fpg_cali_flg, fpg_encperlsb, fpg_chninl, asi_cali_flg, asi_encperlsb, asi_chninl, fpg_areaperlsb, fpg_areachninl, asi_areaperlsb asi_areachninl, ])
 
     toqueue =  asic_results
     cc.send(toqueue)
@@ -344,7 +345,7 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
                 "unstk_ratio":None, "fpgadac_en":None, "fpg_gain":None, "fpg_inl":None, "asicdac_en":None, "asi_gain":None, "asi_inl":None }
  
     sumtodict = []
-    sumtocsv = [["apaloc", "wib", "femb", "cebox", "wire", "fembchn", "gain", "tp", "rms", "ped", "sfrms", "sfped", "unstk_ratio", "fpgadac_en", "fpga_gain", "fpga_inl" ], ]
+    sumtocsv = [["apaloc", "wib", "femb", "cebox", "wire", "fembchn", "gain", "tp", "rms", "ped", "sfrms", "sfped", "unstk_ratio", "fpgadac_en", "fpga_gain", "fpga_inl",  "fpga_areagain", "fpga_areainl", ], ]
     if (len(files) > 0 ):
         for sumfile in sumfiles:
             with open (sum_path+sumfile, 'rb') as fp:
@@ -396,6 +397,8 @@ def results_save(rms_rootpath, fpga_rootpath, asic_rootpath,  APAno, rmsrunno, f
                                              ,chn_rec[13]                   
                                              ,chn_rec[14]                 
                                              ,chn_rec[15]                
+                                             ,chn_rec[19]                
+                                             ,chn_rec[20]                
                                              ])
 #            os.remove(sum_path+sumfile)
     out_fn = "APA%d"%APAno + "_"+fpgdate +"_" + rmsrunno + "_" + fpgarunno + "_" + asicrunno+ ".allsum"
